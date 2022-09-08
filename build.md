@@ -71,3 +71,21 @@ Then run `make` and `make static` inside each submodule.
 Finally, run `make` inside `gf3d/src`
 
 The executable should be in the `gf3d` folder.
+
+
+### VK_NULL_HANDLE error
+If you get the following error:
+```
+error: incompatible types when returning type 'void *' but 'VkFormat' was expected
+   42 |             #define VK_NULL_HANDLE ((void*)0)
+      |                                    ^
+gf3d_pipeline.c:99:12: note: in expansion of macro 'VK_NULL_HANDLE'
+   99 |     return VK_NULL_HANDLE;
+      |            ^~~~~~~~~~~~~~
+gf3d_pipeline.c:100:1: warning: control reaches end of non-void function [-Wreturn-type]
+  100 | }
+      | ^
+make: *** [gf3d_pipeline.o] Error 1
+```
+
+Then you need to change the following in `gf3d/src/gf3d_pipeline.c` line 99 from `return VK_NULL_HANDLE;` to `return VK_FORMAT_UNDEFINED;`
