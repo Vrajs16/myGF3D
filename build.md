@@ -64,7 +64,7 @@ to use gnu gcc compiler.
 
 - Change flag `-soname` to `-install_name` 
 
-Then run `make` and `make static` inside each submodule.
+Then run `make clean`, `make` and `make static` inside each submodule (aka each src folder from the most nested folder to the top).
 
 Finally, run `make` inside `gf3d/src`
 
@@ -90,4 +90,4 @@ Then you need to change the following in `gf3d/src/gf3d_pipeline.c` line 99:
 
 `return VK_NULL_HANDLE;` to `return VK_FORMAT_UNDEFINED;` 
 
-Finally run make again inside `gf3d/src`.
+Finally run `make clean`  and `make` again inside `gf3d/src` and the executable should be in the `gf3d` folder.
