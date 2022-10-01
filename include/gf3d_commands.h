@@ -8,26 +8,26 @@
 
 typedef struct
 {
-    Uint8               _inuse;
-    VkCommandPool       commandPool;
-    VkCommandBuffer    *commandBuffers;
-    Uint32              commandBufferCount;
-    Uint32              commandBufferNext;
-}Command;
+    Uint8 _inuse;
+    VkCommandPool commandPool;
+    VkCommandBuffer *commandBuffers;
+    Uint32 commandBufferCount;
+    Uint32 commandBufferNext;
+} Command;
 
 /**
  * @brief initialize the command pool subsystem
  * @param max_commands how many different command pools you want to support
  * @param device the default logical device to create the command pool for
  */
-void gf3d_command_system_init(Uint32 max_commands,VkDevice defaultDevice);
+void gf3d_command_system_init(Uint32 max_commands, VkDevice defaultDevice);
 
 /**
  * @brief setup up the command pool for graphics commands
  * @param count the number of command buffers to create
  * @return NULL on error or a pointer to a setup command pool
  */
-Command * gf3d_command_graphics_pool_setup(Uint32 count);
+Command *gf3d_command_graphics_pool_setup(Uint32 count);
 
 VkCommandBuffer gf3d_command_begin_single_time(Command *com);
 
@@ -35,7 +35,7 @@ void gf3d_command_end_single_time(Command *com, VkCommandBuffer commandBuffer);
 
 Uint32 gf3d_command_pool_get_used_buffer_count(Command *com);
 
-VkCommandBuffer * gf3d_command_pool_get_used_buffers(Command *com);
+VkCommandBuffer *gf3d_command_pool_get_used_buffers(Command *com);
 
 /**
  * @brief begin recording a command that will take rendering pass information.  Submit all draw commands between this and gf3d_command_rendering_end
@@ -43,12 +43,10 @@ VkCommandBuffer * gf3d_command_pool_get_used_buffers(Command *com);
  * @param pipe the pipeline to send the command to
  * @return the command buffer used for this drawing pass.
  */
-VkCommandBuffer gf3d_command_rendering_begin(Uint32 index,Pipeline *pipe);
+VkCommandBuffer gf3d_command_rendering_begin(Uint32 index, Pipeline *pipe);
 
 void gf3d_command_rendering_end(VkCommandBuffer commandBuffer);
 
 void gf3d_command_configure_render_pass_end(VkCommandBuffer commandBuffer);
 
-
 #endif
-

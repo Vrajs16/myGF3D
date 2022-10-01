@@ -10,25 +10,25 @@ typedef struct
     Vector3D vertex;
     Vector3D normal;
     Vector2D texel;
-}Vertex;
+} Vertex;
 
 typedef struct
 {
-    Uint32  verts[3];
-}Face;
+    Uint32 verts[3];
+} Face;
 
 typedef struct
 {
-    TextLine        filename;
-    Uint32          _refCount;
-    Uint8           _inuse;
-    Uint32          vertexCount;
-    VkBuffer        buffer;
-    VkDeviceMemory  bufferMemory;
-    Uint32          faceCount;
-    VkBuffer        faceBuffer;
-    VkDeviceMemory  faceBufferMemory;
-}Mesh;
+    TextLine filename;
+    Uint32 _refCount;
+    Uint8 _inuse;
+    Uint32 vertexCount;
+    VkBuffer buffer;
+    VkDeviceMemory bufferMemory;
+    Uint32 faceCount;
+    VkBuffer faceBuffer;
+    VkDeviceMemory faceBufferMemory;
+} Mesh;
 
 /**
  * @brief initializes the mesh system / configures internal data about mesh based rendering
@@ -49,13 +49,13 @@ Mesh *gf3d_mesh_load(char *filename);
  * @param count (optional, output) the number of attributes
  * @return a pointer to a vertex input attribute description array
  */
-VkVertexInputAttributeDescription * gf3d_mesh_get_attribute_descriptions(Uint32 *count);
+VkVertexInputAttributeDescription *gf3d_mesh_get_attribute_descriptions(Uint32 *count);
 
 /**
  * @brief get the binding description for mesh based rendering
  * @return vertex input binding descriptions compatible with mesh data
  */
-VkVertexInputBindingDescription * gf3d_mesh_get_bind_description();
+VkVertexInputBindingDescription *gf3d_mesh_get_bind_description();
 
 /**
  * @brief free a mesh that has been loaded from memory
@@ -68,7 +68,7 @@ void gf3d_mesh_free(Mesh *mesh);
  * @param mesh the mesh to render
  * @param com the command pool to use to handle the request we are rendering with
  */
-void gf3d_mesh_render(Mesh *mesh,VkCommandBuffer commandBuffer, VkDescriptorSet * descriptorSet);
+void gf3d_mesh_render(Mesh *mesh, VkCommandBuffer commandBuffer, VkDescriptorSet *descriptorSet);
 
 /**
  * @brief create a mesh's internal buffers based on vertices
@@ -78,6 +78,6 @@ void gf3d_mesh_render(Mesh *mesh,VkCommandBuffer commandBuffer, VkDescriptorSet 
  * @param faces an array of faces to make the mesh with
  * @param fcount how many faces are in the array
  */
-void gf3d_mesh_create_vertex_buffer_from_vertices(Mesh *mesh,Vertex *vertices,Uint32 vcount,Face *faces,Uint32 fcount);
+void gf3d_mesh_create_vertex_buffer_from_vertices(Mesh *mesh, Vertex *vertices, Uint32 vcount, Face *faces, Uint32 fcount);
 
 #endif

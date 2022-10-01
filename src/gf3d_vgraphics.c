@@ -279,6 +279,7 @@ void gf3d_vgraphics_setup(
     gf3d_vgraphics.vk_instance_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     gf3d_vgraphics.vk_instance_info.pNext = NULL;
     gf3d_vgraphics.vk_instance_info.pApplicationInfo = &gf3d_vgraphics.vk_app_info;
+    gf3d_vgraphics.vk_instance_info.flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
     
     if (enableValidation)
     {

@@ -10,5 +10,4 @@
  */
 Entity *agumon_new(Vector3D position);
 
-
 #endif

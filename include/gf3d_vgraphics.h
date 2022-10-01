@@ -9,7 +9,7 @@
 #include "gf3d_commands.h"
 
 #define GF3D_VGRAPHICS_DISCRETE 1
-//Choosing whether to use discrete [1] or integrated graphics [0]
+// Choosing whether to use discrete [1] or integrated graphics [0]
 
 /**
  * @brief init Vulkan / SDL, setup device and initialize infrastructure for 3d graphics
@@ -32,7 +32,7 @@ void gf3d_vgraphics_render_end();
  * @note: THIS SHOULD ONLY BE CALLED BETWEEN CALLS TO gf3d_vgraphics_render_start() and gf3d_vgraphics_render_end()
  * @param the active buffer frame (swap chain link number)
  */
-Uint32  gf3d_vgraphics_get_current_buffer_frame();
+Uint32 gf3d_vgraphics_get_current_buffer_frame();
 
 /**
  * @brief get the handle to the active command buffer for the current 3d model rendering context
@@ -48,9 +48,8 @@ VkCommandBuffer gf3d_vgraphics_get_current_command_model_buffer();
  */
 VkCommandBuffer gf3d_vgraphics_get_current_command_overlay_buffer();
 
-
 /**
- * @brief After initialization 
+ * @brief After initialization
  */
 VkDevice gf3d_vgraphics_get_default_logical_device();
 
@@ -76,7 +75,6 @@ void gf3d_vgraphics_rotate_camera(float degrees);
  */
 Matrix4 *gf3d_vgraphics_get_view_matrix();
 
-
 VkBuffer gf3d_vgraphics_get_uniform_buffer_by_index(Uint32 index);
 UniformBufferObject gf3d_vgraphics_get_uniform_buffer_object();
 
@@ -95,6 +93,5 @@ Pipeline *gf3d_vgraphics_get_graphics_overlay_pipeline();
 Command *gf3d_vgraphics_get_graphics_command_pool();
 
 VkImageView gf3d_vgraphics_create_image_view(VkImage image, VkFormat format);
-
 
 #endif

@@ -8,15 +8,14 @@ void gf3d_buffer_copy(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
     VkBufferCopy copyRegion = {0};
 
     VkCommandBuffer commandBuffer = gf3d_command_begin_single_time(gf3d_vgraphics_get_graphics_command_pool());
-    
-        copyRegion.size = size;
-        vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
+
+    copyRegion.size = size;
+    vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
 
     gf3d_command_end_single_time(gf3d_vgraphics_get_graphics_command_pool(), commandBuffer);
-    
 }
 
-int gf3d_buffer_create(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer * buffer, VkDeviceMemory * bufferMemory)
+int gf3d_buffer_create(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer *buffer, VkDeviceMemory *bufferMemory)
 {
     VkBufferCreateInfo bufferInfo = {0};
     VkMemoryRequirements memRequirements;
@@ -39,7 +38,6 @@ int gf3d_buffer_create(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryProp
     allocInfo.allocationSize = memRequirements.size;
     allocInfo.memoryTypeIndex = gf3d_vgraphics_find_memory_type(memRequirements.memoryTypeBits, properties);
 
-    
     if (vkAllocateMemory(gf3d_vgraphics_get_default_logical_device(), &allocInfo, NULL, bufferMemory) != VK_SUCCESS)
     {
         slog("failed to allocate buffer memory!");

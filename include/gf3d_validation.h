@@ -32,6 +32,6 @@ Uint32 gf3d_validation_get_enabled_layer_count();
  * @brief get an array of pointers to the validation layer names
  * @return NULL on error,no layers, or if init has not been called yet
  */
-const char* const* gf3d_validation_get_enabled_layer_names();
+const char *const *gf3d_validation_get_enabled_layer_names();
 
 #endif

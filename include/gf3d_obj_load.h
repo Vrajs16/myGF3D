@@ -4,25 +4,25 @@
 #include "gf3d_mesh.h"
 
 typedef struct
-{    
+{
     Vector3D *vertices;
     Uint32 vertex_count;
     Vector3D *normals;
     Uint32 normal_count;
     Vector2D *texels;
     Uint32 texel_count;
-    
+
     Face *faceVerts;
     Face *faceNormals;
     Face *faceTexels;
-    
+
     Uint32 face_count;
 
     Face *outFace;
-    
+
     Vertex *faceVertices;
-    Uint32  face_vert_count;
-}ObjData;
+    Uint32 face_vert_count;
+} ObjData;
 
 /**
  * @brief parse an OBJ file into ObjData;

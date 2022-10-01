@@ -5,12 +5,11 @@
 
 typedef struct
 {
-    Matrix4 cameraMat;      //final matrix to become the view matrix
+    Matrix4 cameraMat; // final matrix to become the view matrix
     Vector3D scale;
     Vector3D position;
-    Vector3D rotation;      // pitch, roll, yaw
-}Camera;
-
+    Vector3D rotation; // pitch, roll, yaw
+} Camera;
 
 /**
  * @brief take the position,scale, and rotation to calculate the view matrix
@@ -38,8 +37,7 @@ void gf3d_camera_set_view_mat4(Matrix4 *view);
 void gf3d_camera_look_at(
     Vector3D position,
     Vector3D target,
-    Vector3D up
-);
+    Vector3D up);
 
 /**
  * @brief explicitely set the camera positon, holding all other parameters the same
@@ -58,6 +56,5 @@ void gf3d_camera_set_scale(Vector3D scale);
  * @param rotation the new rotation for the camera (pitch[x], roll[y], yaw[z])
  */
 void gf3d_camera_set_rotation(Vector3D rotation);
-
 
 #endif

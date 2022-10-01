@@ -31,19 +31,19 @@
 
 typedef struct
 {
-    Uint8                       _inuse;
-    TextLine                    filename;               /**<the name of the file used to create the sprite*/
-    Uint32                      frameCount;             /**<how many frames are loaded for this model*/
-    Texture                    *texture;                /**<texture memory pointer*/
-    Uint8                       framesPerLine;          /**<how many frames are per line in the sprite sheet*/
-    Uint32                      frameWidth,frameHeight; /*<the size, in pixels, of the individual sprite frames*/
-    VkBuffer                    buffer;                 /**<vertex buffer for the sprite (always 4 vertices)*/
-    VkDeviceMemory              bufferMemory;           /**<memory handle for the vertex buffer*/
-    VkDescriptorSet            *descriptorSet;          /**<descriptor sets used for this sprite to render*/
-    VkBuffer                   *uniformBuffers;         /**<handles for the UBO*/
-    VkDeviceMemory             *uniformBuffersMemory;   /**<memory handle for the UBO memory*/
-    Uint32                      uniformBufferCount;     /**<how many UBOs for the sprite*/
-}Sprite;
+    Uint8 _inuse;
+    TextLine filename;                    /**<the name of the file used to create the sprite*/
+    Uint32 frameCount;                    /**<how many frames are loaded for this model*/
+    Texture *texture;                     /**<texture memory pointer*/
+    Uint8 framesPerLine;                  /**<how many frames are per line in the sprite sheet*/
+    Uint32 frameWidth, frameHeight;       /*<the size, in pixels, of the individual sprite frames*/
+    VkBuffer buffer;                      /**<vertex buffer for the sprite (always 4 vertices)*/
+    VkDeviceMemory bufferMemory;          /**<memory handle for the vertex buffer*/
+    VkDescriptorSet *descriptorSet;       /**<descriptor sets used for this sprite to render*/
+    VkBuffer *uniformBuffers;             /**<handles for the UBO*/
+    VkDeviceMemory *uniformBuffersMemory; /**<memory handle for the UBO memory*/
+    Uint32 uniformBufferCount;            /**<how many UBOs for the sprite*/
+} Sprite;
 
 /**
  * @brief initialize the internal management system for sprites, auto-cleaned up on program exit
@@ -51,7 +51,7 @@ typedef struct
  * @param chain_length how many images are available in the swap chain
  * @param device the logical vulkan device to be rendering to
  */
-void gf3d_sprite_manager_init(Uint32 max_sprites,Uint32 chain_length,VkDevice device);
+void gf3d_sprite_manager_init(Uint32 max_sprites, Uint32 chain_length, VkDevice device);
 
 /**
  * @brief loads a sprite sheet into memory
@@ -60,7 +60,7 @@ void gf3d_sprite_manager_init(Uint32 max_sprites,Uint32 chain_length,VkDevice de
  * @param frames_per_line how many frames across are on the sprite sheet
  * @return NULL on error (check logs) or a pointer to a sprite that can be draw to the 2d overlay
  */
-Sprite * gf3d_sprite_load(char * filename,int frame_width,int frame_height, Uint32 frames_per_line);
+Sprite *gf3d_sprite_load(char *filename, int frame_width, int frame_height, Uint32 frames_per_line);
 
 /**
  * @brief free a previously loaded sprite
@@ -75,14 +75,13 @@ void gf3d_sprite_free(Sprite *sprite);
  * @param scale amount to scale the sprite by.  (1,1) is no scale
  * @param frame the frame of the sprite to draw
  */
-void gf3d_sprite_draw(Sprite *sprite,Vector2D position,Vector2D scale,Uint32 frame);
+void gf3d_sprite_draw(Sprite *sprite, Vector2D position, Vector2D scale, Uint32 frame);
 
 /**
  * @brief get the binding description for a sprite
  */
-VkVertexInputBindingDescription * gf3d_sprite_get_bind_description();
+VkVertexInputBindingDescription *gf3d_sprite_get_bind_description();
 
-VkVertexInputAttributeDescription * gf3d_sprite_get_attribute_descriptions(Uint32 *count);
-
+VkVertexInputAttributeDescription *gf3d_sprite_get_attribute_descriptions(Uint32 *count);
 
 #endif

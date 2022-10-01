@@ -4,7 +4,6 @@
 #include <vulkan/vulkan.h>
 #include "simple_json.h"
 
-
 /**
  * @brief parse a VkPipelineBindPoint from a str
  * @param str the string to parse
@@ -67,6 +66,6 @@ VkImageLayout gf3d_config_image_layer_from_str(const char *str);
  * @param format provide this, as it may need to come from screen format, configured elsewhere
  * @return an empty description on error or a configured on otherwise
  */
-VkAttachmentDescription gf3d_config_attachment_description(SJson *config,VkFormat format);
+VkAttachmentDescription gf3d_config_attachment_description(SJson *config, VkFormat format);
 
 #endif

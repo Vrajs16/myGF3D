@@ -8,7 +8,7 @@ typedef enum
 {
     ET_Instance,
     ET_Device
-}ExtensionType;
+} ExtensionType;
 
 /**
  * @brief initialize gf3d vulkan extension system
@@ -29,7 +29,7 @@ Bool gf3d_extensions_enable(ExtensionType extType, const char *extensionName);
  * @returns an array of pointers to the names of the extensions to be enabled.
  * @note: Do not free this array, its managed internally to gf3d_extensions.
  */
-const char* const* gf3d_extensions_get_instance_enabled_names(Uint32 *count);
+const char *const *gf3d_extensions_get_instance_enabled_names(Uint32 *count);
 
 /**
  * @brief get the names of device extensions to support and the count
@@ -37,16 +37,15 @@ const char* const* gf3d_extensions_get_instance_enabled_names(Uint32 *count);
  * @returns an array of pointers to the names of the extensions to be enabled.
  * @note: Do not free this array, its managed internally to gf3d_extensions.
  */
-const char* const* gf3d_extensions_get_device_enabled_names(Uint32 *count);
+const char *const *gf3d_extensions_get_device_enabled_names(Uint32 *count);
 
 /**
  * @brief after device creation, setup vulkan extension support
  * @param device the physical device to setup extensions for
  * @param config a json file containing a list device_extensions to enable
  */
-void gf3d_extensions_device_init(VkPhysicalDevice device,const char *config);
+void gf3d_extensions_device_init(VkPhysicalDevice device, const char *config);
 
-
-const char* const* gf3d_extensions_get_instance_available_names(Uint32 *count);
+const char *const *gf3d_extensions_get_instance_available_names(Uint32 *count);
 
 #endif

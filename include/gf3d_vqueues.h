@@ -11,15 +11,14 @@ typedef enum
     VQ_Present,
     VQ_Transfer,
     VQ_MAX
-}VQ_Types;
-
+} VQ_Types;
 
 /**
  * @brief initialize the vulkan queues
  * @param device the device to use for setup
  * @param surface the vulkan surface to check for compatibility
  */
-void gf3d_vqueues_init(VkPhysicalDevice device,VkSurfaceKHR surface);
+void gf3d_vqueues_init(VkPhysicalDevice device, VkSurfaceKHR surface);
 
 /**
  * @brief get graphics queue information needed to create a logical device based on discovered queue properties

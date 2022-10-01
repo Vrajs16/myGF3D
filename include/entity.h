@@ -5,32 +5,30 @@
 
 #include "gf3d_model.h"
 
-
 typedef struct Entity_S
 {
-    Uint8       _inuse;     /**<keeps track of memory usage*/
-    Matrix4     modelMat;   /**<orientation matrix for the model*/
-    Model      *model;      /**<pointer to the entity model to draw  (optional)*/
-    void       (*think)(struct Entity_S *self); /**<pointer to the think function*/
-    void       (*update)(struct Entity_S *self); /**<pointer to the update function*/
-    void       (*draw)(struct Entity_S *self); /**<pointer to an optional extra draw funciton*/
-    void       (*damage)(struct Entity_S *self, float damage, struct Entity_S *inflictor); /**<pointer to the think function*/
-    void       (*onDeath)(struct Entity_S *self); /**<pointer to an funciton to call when the entity dies*/
-    
-    Vector3D    position;  
-    Vector3D    velocity;
-    Vector3D    acceleration;
-    
-    
-    Vector3D    scale;
-    Vector3D    rotation;
-    
-    Uint32      health;     /**<entity dies when it reaches zero*/
+    Uint8 _inuse;                                                                    /**<keeps track of memory usage*/
+    Matrix4 modelMat;                                                                /**<orientation matrix for the model*/
+    Model *model;                                                                    /**<pointer to the entity model to draw  (optional)*/
+    void (*think)(struct Entity_S *self);                                            /**<pointer to the think function*/
+    void (*update)(struct Entity_S *self);                                           /**<pointer to the update function*/
+    void (*draw)(struct Entity_S *self);                                             /**<pointer to an optional extra draw funciton*/
+    void (*damage)(struct Entity_S *self, float damage, struct Entity_S *inflictor); /**<pointer to the think function*/
+    void (*onDeath)(struct Entity_S *self);                                          /**<pointer to an funciton to call when the entity dies*/
+
+    Vector3D position;
+    Vector3D velocity;
+    Vector3D acceleration;
+
+    Vector3D scale;
+    Vector3D rotation;
+
+    Uint32 health; /**<entity dies when it reaches zero*/
     // WHATEVER ELSE WE MIGHT NEED FOR ENTITIES
-    struct Entity_S *target;    /**<entity to target for weapons / ai*/
-    
-    void *customData;   /**<IF an entity needs to keep track of extra data, we can do it here*/
-}Entity;
+    struct Entity_S *target; /**<entity to target for weapons / ai*/
+
+    void *customData; /**<IF an entity needs to keep track of extra data, we can do it here*/
+} Entity;
 
 /**
  * @brief initializes the entity subsystem
@@ -49,7 +47,6 @@ Entity *entity_new();
  * @param self the entity in question
  */
 void entity_free(Entity *self);
-
 
 /**
  * @brief Draw an entity in the current frame

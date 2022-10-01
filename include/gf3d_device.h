@@ -3,14 +3,13 @@
 
 #include <vulkan/vulkan.h>
 
-
 typedef struct
 {
-    VkPhysicalDevice device;                        /**vulkan device handle*/
-    VkPhysicalDeviceProperties  deviceProperties;   /**<properties of the device*/
-    VkPhysicalDeviceFeatures    deviceFeatures;     /**<features of the device*/
-    int score;                                      /**<how many device features match ideal*/
-}GF3D_Device;
+    VkPhysicalDevice device;                     /**vulkan device handle*/
+    VkPhysicalDeviceProperties deviceProperties; /**<properties of the device*/
+    VkPhysicalDeviceFeatures deviceFeatures;     /**<features of the device*/
+    int score;                                   /**<how many device features match ideal*/
+} GF3D_Device;
 
 /**
  * @brief initialize the internal manager for vulkan devices
@@ -47,10 +46,9 @@ GF3D_Device *gf3d_device_get_chosen_gpu_info();
 
 /**
  * @brief get the creation info needed to create a logical device based on what has been loaded and configured so far
- * @param enableValidationLayers if true, this will turn on validation layers. 
+ * @param enableValidationLayers if true, this will turn on validation layers.
  * @return an empty (all zeros) logical device create info, or a configured one otherwise
  */
 VkDeviceCreateInfo gf3d_device_get_logical_device_info(Bool enableValidationLayers);
-
 
 #endif

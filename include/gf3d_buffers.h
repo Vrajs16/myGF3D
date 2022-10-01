@@ -24,7 +24,7 @@ int gf3d_buffer_create(
     VkDeviceSize size,
     VkBufferUsageFlags usage,
     VkMemoryPropertyFlags properties,
-    VkBuffer * buffer,
-    VkDeviceMemory * bufferMemory);
+    VkBuffer *buffer,
+    VkDeviceMemory *bufferMemory);
 
 #endif
