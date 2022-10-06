@@ -1,2 +1,1 @@
-make -C src/
-./gf3d
+make -C src/ && ./gf3d
