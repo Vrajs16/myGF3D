@@ -1,5 +1,10 @@
 {
   "files.associations": {
-    "random": "c"
+    "random": "c",
+    "__bit_reference": "c",
+    "__string": "c",
+    "deque": "c",
+    "ios": "c",
+    "string": "c"
   }
 }

@@ -31,43 +31,42 @@ void player_think(Entity *self)
     Vector3D forward;
     Vector3D right;
     Vector3D up;
+    Vector3D moveDir;
     const Uint8 *keys;
     keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
 
-    vector3d_angle_vectors(self->rotation, &forward, &right, &up);
-    vector3d_set_magnitude(&forward, 0.1);
-    vector3d_set_magnitude(&right, 0.1);
-    vector3d_set_magnitude(&up, 0.1);
+    if (keys[SDL_SCANCODE_RIGHT])
+        self->rotation.z -= 0.0075;
+    if (keys[SDL_SCANCODE_LEFT])
+        self->rotation.z += 0.0075;
+    if (keys[SDL_SCANCODE_UP])
+        self->rotation.x -= 0.0075;
+    if (keys[SDL_SCANCODE_DOWN])
+        self->rotation.x += 0.0075;
+
+    // z is up
+    float yaw = self->rotation.z;
+
+    vector3d_set(right, cos(yaw), sin(yaw), 0);
+    vector3d_set(forward, -right.y, right.x, 0);
+    vector3d_set(up, 0, 0, 1);
+    vector3d_set(moveDir, 0, 0, 0);
 
     if (keys[SDL_SCANCODE_W])
-    {
-        vector3d_add(self->position, self->position, forward);
-    }
+        vector3d_add(moveDir, moveDir, forward);
     if (keys[SDL_SCANCODE_S])
-    {
-        vector3d_add(self->position, self->position, -forward);
-    }
+        vector3d_add(moveDir, moveDir, -forward);
     if (keys[SDL_SCANCODE_D])
-    {
-        vector3d_add(self->position, self->position, right);
-    }
+        vector3d_add(moveDir, moveDir, right);
     if (keys[SDL_SCANCODE_A])
-    {
-        vector3d_add(self->position, self->position, -right);
-    }
+        vector3d_add(moveDir, moveDir, -right);
     if (keys[SDL_SCANCODE_SPACE])
-        self->position.z += 0.10;
-    if (keys[SDL_SCANCODE_Z])
-        self->position.z -= 0.10;
+        vector3d_add(moveDir, moveDir, up);
+    if (keys[SDL_SCANCODE_LSHIFT])
+        vector3d_add(moveDir, moveDir, -up);
 
-    if (keys[SDL_SCANCODE_UP])
-        self->rotation.x -= 0.0050;
-    if (keys[SDL_SCANCODE_DOWN])
-        self->rotation.x += 0.0050;
-    if (keys[SDL_SCANCODE_RIGHT])
-        self->rotation.z -= 0.0050;
-    if (keys[SDL_SCANCODE_LEFT])
-        self->rotation.z += 0.0050;
+    vector3d_normalize(&moveDir);
+    vector3d_add(self->position, self->position, moveDir);
 }
 
 void player_update(Entity *self)
