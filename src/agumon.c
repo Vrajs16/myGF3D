@@ -15,10 +15,10 @@ Entity *agumon_new(Vector3D position, Vector3D rotation)
         return NULL;
     }
 
-    ent->model = gf3d_model_load("tyranitar");
+    ent->model = gf3d_model_load("growlithe");
     // ent->think = agumon_think;
 
-    vector3d_copy(ent->scale, vector3d(10, 10, 10));
+    vector3d_copy(ent->scale, vector3d(.5, .5, .5));
     vector3d_copy(ent->rotation, rotation);
     vector3d_copy(ent->position, position);
     return ent;

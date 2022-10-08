@@ -48,26 +48,42 @@ int main(int argc, char *argv[])
 
     mouse = gf3d_sprite_load("images/pointer.png", 32, 32, 16);
 
-    w = world_load("config/testworld.json");
+    w = world_load("config/world.json");
 
-    for (a = 0; a < 8; a++)
+    for (a = 0; a < 16; a++)
     {
-        if (a == 0)
-            agumon_new(vector3d(0, 100, 10), vector3d(0, 0, 0));
+        if (a == 1)
+            agumon_new(vector3d(0, 100, 10), vector3d(0, 0, 2 * M_PI));
+        if (a == 1)
+            agumon_new(vector3d(40, 95, 10), vector3d(0, 0, -M_PI_2 / 4));
+        if (a == 1)
+            agumon_new(vector3d(75, 75, 10), vector3d(0, 0, -M_PI_2 / 2));
+        if (a == 1)
+            agumon_new(vector3d(95, 40, 10), vector3d(0, 0, -M_PI_2 + M_PI_2 / 4));
         if (a == 1)
             agumon_new(vector3d(100, 0, 10), vector3d(0, 0, -M_PI_2));
-        if (a == 2)
+        if (a == 1)
+            agumon_new(vector3d(95, -40, 10), vector3d(0, 0, -M_PI_2 - M_PI_2 / 4));
+        if (a == 1)
+            agumon_new(vector3d(75, -75, 10), vector3d(0, 0, -M_PI_2 - M_PI_2 / 2));
+        if (a == 1)
+            agumon_new(vector3d(40, -95, 10), vector3d(0, 0, M_PI + M_PI_2 / 4));
+        if (a == 1)
             agumon_new(vector3d(0, -100, 10), vector3d(0, 0, M_PI));
-        if (a == 3)
+        if (a == 1)
+            agumon_new(vector3d(-40, -95, 10), vector3d(0, 0, M_PI - M_PI_2 / 4));
+        if (a == 1)
+            agumon_new(vector3d(-75, -75, 10), vector3d(0, 0, M_PI - M_PI_2 / 2));
+        if (a == 1)
+            agumon_new(vector3d(-95, -40, 10), vector3d(0, 0, M_PI - M_PI_2 + M_PI_2 / 4));
+        if (a == 1)
             agumon_new(vector3d(-100, 0, 10), vector3d(0, 0, M_PI_2));
-        if (a == 4)
-            agumon_new(vector3d(75, 75, 10), vector3d(0, 0, -M_PI_4));
-        if (a == 5)
-            agumon_new(vector3d(75, -75, 10), vector3d(0, 0, -M_PI_4 * 3));
-        if (a == 6)
-            agumon_new(vector3d(-75, -75, 10), vector3d(0, 0, M_PI_4 * 3));
-        if (a == 7)
-            agumon_new(vector3d(-75, 75, 10), vector3d(0, 0, M_PI_4));
+        if (a == 1)
+            agumon_new(vector3d(-95, 40, 10), vector3d(0, 0, M_PI_2 - M_PI_2 / 4));
+        if (a == 1)
+            agumon_new(vector3d(-75, 75, 10), vector3d(0, 0, M_PI_2 - M_PI_2 / 2));
+        if (a == 1)
+            agumon_new(vector3d(-40, 95, 10), vector3d(0, 0, M_PI_2 / 4));
     }
 
     slog_sync();

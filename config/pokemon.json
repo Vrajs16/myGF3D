@@ -1,0 +1,181 @@
+{
+  "pokedex": {
+    "total": 10,
+    "0": {
+      "growlithe": {
+        "type": "fire",
+        "level": "",
+        "evolution": true,
+        "moves": [
+          {
+            "move": "ember",
+            "type": "fire",
+            "power": 40,
+            "accuracy": 100,
+            "pp": 25
+          },
+          {
+            "move": "bite",
+            "type": "dark",
+            "power": 60,
+            "accuracy": 100,
+            "pp": 25
+          },
+          {
+            "move": "flame wheel",
+            "type": "fire",
+            "power": 60,
+            "accuracy": 100,
+            "pp": 25
+          },
+          {
+            "move": "roar",
+            "type": "normal",
+            "power": 0,
+            "accuracy": 100,
+            "pp": 20
+          }
+        ]
+      }
+    },
+    "1": {
+      "arcanine": {
+        "type": "fire",
+        "level": "",
+        "evolution": false,
+        "moves": [
+          {
+            "move": "extremespeed",
+            "type": "normal",
+            "power": 80,
+            "accuracy": 100,
+            "pp": 5
+          },
+          {
+            "move": "flamethrower",
+            "type": "fire",
+            "power": 90,
+            "accuracy": 100,
+            "pp": 15
+          },
+          {
+            "move": "bite",
+            "type": "dark",
+            "power": 60,
+            "accuracy": 100,
+            "pp": 25
+          },
+          {
+            "move": "fire blast",
+            "type": "fire",
+            "power": 110,
+            "accuracy": 85,
+            "pp": 5
+          }
+        ]
+      }
+    },
+    "2": {
+      "barboach": {
+        "type": "water",
+        "level": "",
+        "evolution": true,
+        "moves": []
+      }
+    },
+    "3": {
+      "whiscash": {
+        "type": "water",
+        "level": "",
+        "evolution": false,
+        "moves": []
+      }
+    },
+    "4": {
+      "budew": {
+        "type": "grass",
+        "level": "",
+        "evolution": true,
+        "moves": []
+      }
+    },
+    "5": {
+      "roserade": {
+        "type": "grass",
+        "level": "",
+        "evolution": false,
+        "moves": []
+      }
+    },
+    "6": {
+      "munna": {
+        "type": "physic",
+        "level": "",
+        "evolution": true,
+        "moves": []
+      }
+    },
+    "7": {
+      "musharna": {
+        "type": "physic",
+        "level": "",
+        "evolution": false,
+        "moves": []
+      }
+    },
+    "8": {
+      "zorua": {
+        "type": "dark",
+        "level": "",
+        "evolution": true,
+        "moves": []
+      }
+    },
+    "9": {
+      "zoroark": {
+        "type": "dark",
+        "level": "",
+        "ability": "",
+        "evolution": false,
+        "moves": []
+      }
+    }
+  },
+  "typeChart": {
+    "fire": {
+      "fire": 0.5,
+      "water": 0.5,
+      "grass": 2,
+      "physic": 1,
+      "dark": 1
+    },
+    "water": {
+      "fire": 2,
+      "water": 0.5,
+      "grass": 0.5,
+      "physic": 1,
+      "dark": 1
+    },
+    "grass": {
+      "fire": 0.5,
+      "water": 2,
+      "grass": 0.5,
+      "physic": 1,
+      "dark": 1
+    },
+    "physic": {
+      "fire": 1,
+      "water": 1,
+      "grass": 1,
+      "physic": 0.5,
+      "dark": 2
+    },
+    "dark": {
+      "fire": 1,
+      "water": 1,
+      "grass": 1,
+      "physic": 2,
+      "dark": 0.5
+    }
+  }
+}
