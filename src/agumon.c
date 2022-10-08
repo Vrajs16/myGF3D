@@ -4,7 +4,7 @@
 
 void agumon_think(Entity *self);
 
-Entity *agumon_new(Vector3D position)
+Entity *agumon_new(Vector3D position, Vector3D rotation)
 {
     Entity *ent = NULL;
 
@@ -15,8 +15,11 @@ Entity *agumon_new(Vector3D position)
         return NULL;
     }
 
-    ent->model = gf3d_model_load("dino");
-    ent->think = agumon_think;
+    ent->model = gf3d_model_load("tyranitar");
+    // ent->think = agumon_think;
+
+    vector3d_copy(ent->scale, vector3d(10, 10, 10));
+    vector3d_copy(ent->rotation, rotation);
     vector3d_copy(ent->position, position);
     return ent;
 }

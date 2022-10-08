@@ -50,14 +50,29 @@ int main(int argc, char *argv[])
 
     w = world_load("config/testworld.json");
 
-    for (a = 0; a < 10; a++)
+    for (a = 0; a < 8; a++)
     {
-        agumon_new(vector3d(a * 10 - 50, 0, 0));
+        if (a == 0)
+            agumon_new(vector3d(0, 100, 10), vector3d(0, 0, 0));
+        if (a == 1)
+            agumon_new(vector3d(100, 0, 10), vector3d(0, 0, -M_PI_2));
+        if (a == 2)
+            agumon_new(vector3d(0, -100, 10), vector3d(0, 0, M_PI));
+        if (a == 3)
+            agumon_new(vector3d(-100, 0, 10), vector3d(0, 0, M_PI_2));
+        if (a == 4)
+            agumon_new(vector3d(75, 75, 10), vector3d(0, 0, -M_PI_4));
+        if (a == 5)
+            agumon_new(vector3d(75, -75, 10), vector3d(0, 0, -M_PI_4 * 3));
+        if (a == 6)
+            agumon_new(vector3d(-75, -75, 10), vector3d(0, 0, M_PI_4 * 3));
+        if (a == 7)
+            agumon_new(vector3d(-75, 75, 10), vector3d(0, 0, M_PI_4));
     }
 
     slog_sync();
     gf3d_camera_set_scale(vector3d(1, 1, 1));
-    player_new(vector3d(0, 0, 20));
+    player_new(vector3d(0, 0, 30));
 
     // main game loop
     slog("gf3d main loop begin");
