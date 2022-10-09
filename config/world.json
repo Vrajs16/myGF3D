@@ -1,5 +1,6 @@
 {
   "world": {
-    "model": "world"
+    "model": "floor",
+    "scale": 1000
   }
 }

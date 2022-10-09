@@ -19,6 +19,7 @@ World *world_load(char *filename)
     SJson *json, *wjson;
     World *w = NULL;
     const char *modelName = NULL;
+    int *scale = NULL;
     w = gfc_allocate_array(sizeof(World), 1);
     if (w == NULL)
     {
@@ -35,22 +36,24 @@ World *world_load(char *filename)
     wjson = sj_object_get_value(json, "world");
     if (!wjson)
     {
-        slog("failed to find world object in %s world condig", filename);
+        slog("failed to find world object in %s world config", filename);
         free(w);
         sj_free(json);
         return NULL;
     }
     modelName = sj_get_string_value(sj_object_get_value(wjson, "model"));
+    sj_get_integer_value(sj_object_get_value(wjson, "scale"), &scale);
+
     if (modelName)
     {
         w->worldModel = gf3d_model_load((char *)modelName);
         gfc_matrix_identity(w->modelMat);
         gfc_matrix_scale(
             w->modelMat,
-            vector3d(10, 10, 10));
+            vector3d((int)scale, (int)scale, (int)scale));
         gfc_matrix_translate(
             w->modelMat,
-            vector3d(0, 0, -20));
+            vector3d(0, 0, 0));
     }
     else
     {
