@@ -50,45 +50,26 @@ int main(int argc, char *argv[])
 
     w = world_load("config/world.json");
 
-    for (a = 0; a < 16; a++)
-    {
-        if (a == 1)
-            agumon_new(vector3d(0, 100, 0), vector3d(0, 0, 2 * M_PI));
-        if (a == 1)
-            agumon_new(vector3d(40, 95, 0), vector3d(0, 0, -M_PI_2 / 4));
-        if (a == 1)
-            agumon_new(vector3d(75, 75, 0), vector3d(0, 0, -M_PI_2 / 2));
-        if (a == 1)
-            agumon_new(vector3d(95, 40, 0), vector3d(0, 0, -M_PI_2 + M_PI_2 / 4));
-        if (a == 1)
-            agumon_new(vector3d(100, 0, 0), vector3d(0, 0, -M_PI_2));
-        if (a == 1)
-            agumon_new(vector3d(95, -40, 0), vector3d(0, 0, -M_PI_2 - M_PI_2 / 4));
-        if (a == 1)
-            agumon_new(vector3d(75, -75, 0), vector3d(0, 0, -M_PI_2 - M_PI_2 / 2));
-        if (a == 1)
-            agumon_new(vector3d(40, -95, 0), vector3d(0, 0, M_PI + M_PI_2 / 4));
-        if (a == 1)
-            agumon_new(vector3d(0, -100, 0), vector3d(0, 0, M_PI));
-        if (a == 1)
-            agumon_new(vector3d(-40, -95, 0), vector3d(0, 0, M_PI - M_PI_2 / 4));
-        if (a == 1)
-            agumon_new(vector3d(-75, -75, 0), vector3d(0, 0, M_PI - M_PI_2 / 2));
-        if (a == 1)
-            agumon_new(vector3d(-95, -40, 0), vector3d(0, 0, M_PI - M_PI_2 + M_PI_2 / 4));
-        if (a == 1)
-            agumon_new(vector3d(-100, 0, 0), vector3d(0, 0, M_PI_2));
-        if (a == 1)
-            agumon_new(vector3d(-95, 40, 0), vector3d(0, 0, M_PI_2 - M_PI_2 / 4));
-        if (a == 1)
-            agumon_new(vector3d(-75, 75, 0), vector3d(0, 0, M_PI_2 - M_PI_2 / 2));
-        if (a == 1)
-            agumon_new(vector3d(-40, 95, 0), vector3d(0, 0, M_PI_2 / 4));
-    }
+    agumon_new(vector3d(0, 100, 0), vector3d(0, 0, 2 * M_PI));
+    agumon_new(vector3d(40, 95, 0), vector3d(0, 0, -M_PI_2 / 4));
+    agumon_new(vector3d(75, 75, 0), vector3d(0, 0, -M_PI_2 / 2));
+    agumon_new(vector3d(95, 40, 0), vector3d(0, 0, -M_PI_2 + M_PI_2 / 4));
+    agumon_new(vector3d(100, 0, 0), vector3d(0, 0, -M_PI_2));
+    agumon_new(vector3d(95, -40, 0), vector3d(0, 0, -M_PI_2 - M_PI_2 / 4));
+    agumon_new(vector3d(75, -75, 0), vector3d(0, 0, -M_PI_2 - M_PI_2 / 2));
+    agumon_new(vector3d(40, -95, 0), vector3d(0, 0, M_PI + M_PI_2 / 4));
+    agumon_new(vector3d(0, -100, 0), vector3d(0, 0, M_PI));
+    agumon_new(vector3d(-40, -95, 0), vector3d(0, 0, M_PI - M_PI_2 / 4));
+    agumon_new(vector3d(-75, -75, 0), vector3d(0, 0, M_PI - M_PI_2 / 2));
+    agumon_new(vector3d(-95, -40, 0), vector3d(0, 0, M_PI - M_PI_2 + M_PI_2 / 4));
+    agumon_new(vector3d(-100, 0, 0), vector3d(0, 0, M_PI_2));
+    agumon_new(vector3d(-95, 40, 0), vector3d(0, 0, M_PI_2 - M_PI_2 / 4));
+    agumon_new(vector3d(-75, 75, 0), vector3d(0, 0, M_PI_2 - M_PI_2 / 2));
+    agumon_new(vector3d(-40, 95, 0), vector3d(0, 0, M_PI_2 / 4));
 
     slog_sync();
     gf3d_camera_set_scale(vector3d(1, 1, 1));
-    player_new(vector3d(0, 0, 30));
+    player_new(vector3d(0, 0, 500));
 
     // main game loop
     slog("gf3d main loop begin");

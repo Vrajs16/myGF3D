@@ -29,8 +29,8 @@ void agumon_think(Entity *self)
     if (!self)
         return;
     self->rotation.z += -0.01;
-    self->position.x = 100 * cos(self->rotation.z);
-    self->position.y = 100 * sin(self->rotation.z);
+    self->position.x = 100 * cos(self->rotation.z + M_PI_2);
+    self->position.y = 100 * sin(self->rotation.z + M_PI_2);
 }
 
 /*eol@eof*/

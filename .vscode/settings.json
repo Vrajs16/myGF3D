@@ -5,6 +5,8 @@
     "__string": "c",
     "deque": "c",
     "ios": "c",
-    "string": "c"
+    "string": "c",
+    "complex": "c",
+    "cmath": "c"
   }
 }

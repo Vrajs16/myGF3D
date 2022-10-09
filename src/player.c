@@ -22,7 +22,7 @@ Entity *player_new(Vector3D position)
     ent->think = player_think;
     ent->update = player_update;
     vector3d_copy(ent->position, position);
-    ent->rotation.x = -M_PI;
+    ent->rotation.x = -M_PI_2;
     return ent;
 }
 
