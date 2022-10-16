@@ -19,8 +19,10 @@ World *world_load(char *filename)
     SJson *json, *wjson;
     World *w = NULL;
     const char *modelName = NULL;
-    int *scale = NULL;
-    w = gfc_allocate_array(sizeof(World), 1);
+    int scale;
+    int tileCount = 100;
+    w = gfc_allocate_array(sizeof(World), tileCount);
+    w->tileCount = tileCount;
     if (w == NULL)
     {
         slog("failed to allocate data for the world");
@@ -46,14 +48,35 @@ World *world_load(char *filename)
 
     if (modelName)
     {
-        w->worldModel = gf3d_model_load((char *)modelName);
-        gfc_matrix_identity(w->modelMat);
-        gfc_matrix_scale(
-            w->modelMat,
-            vector3d((int)scale, (int)scale, (int)scale));
-        gfc_matrix_translate(
-            w->modelMat,
-            vector3d(0, 0, 0));
+
+        for (int i = 0; i < tileCount / 4; i++)
+        {
+            w[i].worldModel = gf3d_model_load((char *)modelName);
+            gfc_matrix_identity(w[i].modelMat);
+            gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
+            gfc_matrix_translate(w[i].modelMat, vector3d(i * 100 - (tileCount / 8 * 100), -150, 0));
+        }
+        for (int i = tileCount / 4; i < tileCount / 2; i++)
+        {
+            w[i].worldModel = gf3d_model_load((char *)modelName);
+            gfc_matrix_identity(w[i].modelMat);
+            gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
+            gfc_matrix_translate(w[i].modelMat, vector3d((i - tileCount / 4) * 100 - (tileCount / 8 * 100), -50, 0));
+        }
+        for (int i = tileCount / 2; i < (tileCount / 4) + (tileCount / 2); i++)
+        {
+            w[i].worldModel = gf3d_model_load((char *)modelName);
+            gfc_matrix_identity(w[i].modelMat);
+            gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
+            gfc_matrix_translate(w[i].modelMat, vector3d((i - ((tileCount / 2))) * 100 - (tileCount / 8 * 100), 50, 0));
+        }
+        for (int i = (tileCount / 4) + (tileCount / 2); i < tileCount; i++)
+        {
+            w[i].worldModel = gf3d_model_load((char *)modelName);
+            gfc_matrix_identity(w[i].modelMat);
+            gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
+            gfc_matrix_translate(w[i].modelMat, vector3d((i - ((tileCount / 4) + (tileCount / 2))) * 100 - (tileCount / 8 * 100), 150, 0));
+        }
     }
     else
     {
@@ -68,8 +91,14 @@ void world_draw(World *world)
     if (!world)
         return;
     if (!world->worldModel)
+    {
+        slog("world has no model");
         return; // no model to draw, do nothing
-    gf3d_model_draw(world->worldModel, world->modelMat);
+    }
+    for (int i = 0; i < world->tileCount; i++)
+    {
+        gf3d_model_draw(world[i].worldModel, world[i].modelMat);
+    }
 }
 
 void world_delete(World *world)

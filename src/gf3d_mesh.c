@@ -254,7 +254,10 @@ Mesh *gf3d_mesh_load(char *filename)
     ObjData *obj;
     mesh = gf3d_mesh_get_by_filename(filename);
     if (mesh)
+    {
+        mesh->_refCount++;
         return mesh;
+    }
 
     obj = gf3d_obj_load_from_file(filename);
 

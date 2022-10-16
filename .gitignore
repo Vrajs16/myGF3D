@@ -54,5 +54,7 @@ gf3d
 *.log
 
 #Other
-.DS_Store
-.txt
+*.DS_Store
+*.txt
+
+*.blend1

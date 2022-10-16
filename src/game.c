@@ -49,23 +49,16 @@ int main(int argc, char *argv[])
     mouse = gf3d_sprite_load("images/pointer.png", 32, 32, 16);
 
     w = world_load("config/world.json");
-
-    agumon_new(vector3d(0, 100, 0), vector3d(0, 0, 2 * M_PI));
-    agumon_new(vector3d(40, 95, 0), vector3d(0, 0, -M_PI_2 / 4));
-    agumon_new(vector3d(75, 75, 0), vector3d(0, 0, -M_PI_2 / 2));
-    agumon_new(vector3d(95, 40, 0), vector3d(0, 0, -M_PI_2 + M_PI_2 / 4));
-    agumon_new(vector3d(100, 0, 0), vector3d(0, 0, -M_PI_2));
-    agumon_new(vector3d(95, -40, 0), vector3d(0, 0, -M_PI_2 - M_PI_2 / 4));
-    agumon_new(vector3d(75, -75, 0), vector3d(0, 0, -M_PI_2 - M_PI_2 / 2));
-    agumon_new(vector3d(40, -95, 0), vector3d(0, 0, M_PI + M_PI_2 / 4));
-    agumon_new(vector3d(0, -100, 0), vector3d(0, 0, M_PI));
-    agumon_new(vector3d(-40, -95, 0), vector3d(0, 0, M_PI - M_PI_2 / 4));
-    agumon_new(vector3d(-75, -75, 0), vector3d(0, 0, M_PI - M_PI_2 / 2));
-    agumon_new(vector3d(-95, -40, 0), vector3d(0, 0, M_PI - M_PI_2 + M_PI_2 / 4));
-    agumon_new(vector3d(-100, 0, 0), vector3d(0, 0, M_PI_2));
-    agumon_new(vector3d(-95, 40, 0), vector3d(0, 0, M_PI_2 - M_PI_2 / 4));
-    agumon_new(vector3d(-75, 75, 0), vector3d(0, 0, M_PI_2 - M_PI_2 / 2));
-    agumon_new(vector3d(-40, 95, 0), vector3d(0, 0, M_PI_2 / 4));
+    agumon_new(vector3d(100, 0, 0.0), vector3d(0.0, 0.0, -5 * M_PI / 10));
+    agumon_new(vector3d(100 * 0.80901699437, 100 * 0.58778525229, 0.0), vector3d(0.0, 0.0, -3 * M_PI / 10));
+    agumon_new(vector3d(100 * 0.30901699437, 100 * 0.95105651629, 0.0), vector3d(0.0, 0.0, -M_PI / 10));
+    agumon_new(vector3d(100 * -0.30901699437, 100 * 0.95105651629, 0.0), vector3d(0.0, 0.0, M_PI / 10));
+    agumon_new(vector3d(100 * -0.80901699437, 100 * 0.58778525229, 0.0), vector3d(0.0, 0.0, 3 * M_PI / 10));
+    agumon_new(vector3d(100 * -1.0, 100 * 0.0, 0.0), vector3d(0.0, 0.0, 5 * M_PI / 10));
+    agumon_new(vector3d(100 * -0.80901699437, 100 * -0.58778525229, 0.0), vector3d(0.0, 0.0, 7 * M_PI / 10));
+    agumon_new(vector3d(100 * -0.30901699437, 100 * -0.95105651629, 0.0), vector3d(0.0, 0.0, 9 * M_PI / 10));
+    agumon_new(vector3d(100 * 0.30901699437, 100 * -0.95105651629, 0.0), vector3d(0.0, 0.0, 11 * M_PI / 10));
+    agumon_new(vector3d(100 * 0.80901699437, 100 * -0.58778525229, 0.0), vector3d(0.0, 0.0, 13 * M_PI / 10));
 
     slog_sync();
     gf3d_camera_set_scale(vector3d(1, 1, 1));

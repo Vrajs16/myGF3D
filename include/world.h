@@ -14,6 +14,7 @@ typedef struct
     Model *worldModel;
     List *spawnList;  // entities to spawn
     List *entityList; // entities that exist in the world
+    int tileCount;
 } World;
 
 World *world_load(char *filename);

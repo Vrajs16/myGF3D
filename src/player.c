@@ -28,28 +28,31 @@ Entity *player_new(Vector3D position)
 
 void player_think(Entity *self)
 {
-    Vector3D forward;
-    Vector3D right;
-    Vector3D up;
-    Vector3D moveDir;
+    Vector3D rotate = {0};
+    Vector3D forward = {0};
+    Vector3D right = {0};
+    Vector3D up = {0};
+    Vector3D moveDir = {0};
     const Uint8 *keys;
     keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
 
     if (keys[SDL_SCANCODE_RIGHT])
-        self->rotation.z -= 0.0075;
+        rotate.z -= .02;
     if (keys[SDL_SCANCODE_LEFT])
-        self->rotation.z += 0.0075;
+        rotate.z += .02;
     if (keys[SDL_SCANCODE_UP])
-        self->rotation.x -= 0.0075;
+        rotate.x -= .02;
     if (keys[SDL_SCANCODE_DOWN])
-        self->rotation.x += 0.0075;
+        rotate.x += .02;
+
+    vector3d_add(self->rotation, self->rotation, rotate);
 
     // z is up
     float yaw = self->rotation.z;
 
-    vector3d_set(right, cos(yaw), sin(yaw), 0);
+    vector3d_set(right, cos(yaw) * 3, sin(yaw) * 3, 0);
     vector3d_set(forward, -right.y, right.x, 0);
-    vector3d_set(up, 0, 0, 1);
+    vector3d_set(up, 0, 0, 3);
     vector3d_set(moveDir, 0, 0, 0);
 
     if (keys[SDL_SCANCODE_W])
@@ -65,7 +68,6 @@ void player_think(Entity *self)
     if (keys[SDL_SCANCODE_LSHIFT])
         vector3d_add(moveDir, moveDir, -up);
 
-    vector3d_normalize(&moveDir);
     vector3d_add(self->position, self->position, moveDir);
 }
 

@@ -1,6 +1,6 @@
 {
   "world": {
-    "model": "floor",
-    "scale": 1000
+    "model": "grass",
+    "scale": 10
   }
 }
