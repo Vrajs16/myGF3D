@@ -14,7 +14,7 @@
 #include "gf3d_sprite.h"
 
 #include "entity.h"
-#include "agumon.h"
+#include "pokemon.h"
 #include "player.h"
 #include "world.h"
 
@@ -49,16 +49,16 @@ int main(int argc, char *argv[])
     mouse = gf3d_sprite_load("images/pointer.png", 32, 32, 16);
 
     w = world_load("config/world.json");
-    agumon_new(vector3d(100, 0, 0.0), vector3d(0.0, 0.0, -5 * M_PI / 10));
-    agumon_new(vector3d(100 * 0.80901699437, 100 * 0.58778525229, 0.0), vector3d(0.0, 0.0, -3 * M_PI / 10));
-    agumon_new(vector3d(100 * 0.30901699437, 100 * 0.95105651629, 0.0), vector3d(0.0, 0.0, -M_PI / 10));
-    agumon_new(vector3d(100 * -0.30901699437, 100 * 0.95105651629, 0.0), vector3d(0.0, 0.0, M_PI / 10));
-    agumon_new(vector3d(100 * -0.80901699437, 100 * 0.58778525229, 0.0), vector3d(0.0, 0.0, 3 * M_PI / 10));
-    agumon_new(vector3d(100 * -1.0, 100 * 0.0, 0.0), vector3d(0.0, 0.0, 5 * M_PI / 10));
-    agumon_new(vector3d(100 * -0.80901699437, 100 * -0.58778525229, 0.0), vector3d(0.0, 0.0, 7 * M_PI / 10));
-    agumon_new(vector3d(100 * -0.30901699437, 100 * -0.95105651629, 0.0), vector3d(0.0, 0.0, 9 * M_PI / 10));
-    agumon_new(vector3d(100 * 0.30901699437, 100 * -0.95105651629, 0.0), vector3d(0.0, 0.0, 11 * M_PI / 10));
-    agumon_new(vector3d(100 * 0.80901699437, 100 * -0.58778525229, 0.0), vector3d(0.0, 0.0, 13 * M_PI / 10));
+    pokemon_new(vector3d(1000, 0, 0.0), vector3d(0.0, 0.0, -5 * M_PI / 10), "growlithe", .5);
+    pokemon_new(vector3d(10000 * 0.80901699437, 10000 * 0.58778525229, 0.0), vector3d(0.0, 0.0, -3 * M_PI / 10), "arcanine", .2);
+    pokemon_new(vector3d(10000 * 0.30901699437, 10000 * 0.95105651629, 0.0), vector3d(0.0, 0.0, -M_PI / 10), "kirlia", 15);
+    pokemon_new(vector3d(10000 * -0.30901699437, 10000 * 0.95105651629, 0.0), vector3d(0.0, 0.0, M_PI / 10), "gallade", 10);
+    pokemon_new(vector3d(10000 * -0.80901699437, 10000 * 0.58778525229, 0.0), vector3d(0.0, 0.0, 3 * M_PI / 10), "krabby", .5);
+    pokemon_new(vector3d(10000 * -1.0, 10000 * 0.0, 0.0), vector3d(0.0, 0.0, 5 * M_PI / 10), "kingler", .25);
+    pokemon_new(vector3d(10000 * -0.80901699437, 10000 * -0.58778525229, 0.0), vector3d(0.0, 0.0, 7 * M_PI / 10), "skiddo", 15);
+    pokemon_new(vector3d(10000 * -0.30901699437, 10000 * -0.95105651629, 0.0), vector3d(0.0, 0.0, 9 * M_PI / 10), "gogoat", 10);
+    pokemon_new(vector3d(10000 * 0.30901699437, 10000 * -0.95105651629, 0.0), vector3d(0.0, 0.0, 11 * M_PI / 10), "zorua", 15);
+    pokemon_new(vector3d(10000 * 0.80901699437, 10000 * -0.58778525229, 0.0), vector3d(0.0, 0.0, 13 * M_PI / 10), "zoroark", 10);
 
     slog_sync();
     gf3d_camera_set_scale(vector3d(1, 1, 1));

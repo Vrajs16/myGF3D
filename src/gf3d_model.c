@@ -77,18 +77,30 @@ Model *gf3d_model_new()
     return NULL;
 }
 
-Model *gf3d_model_load(char *filename)
+Model *gf3d_model_load(char *filename, int is_pokemon)
 {
     TextLine assetname;
     Model *model;
     model = gf3d_model_new();
     if (!model)
         return NULL;
-    snprintf(assetname, GFCLINELEN, "models/%s.obj", filename);
-    model->mesh = gf3d_mesh_load(assetname);
 
-    snprintf(assetname, GFCLINELEN, "images/%s.png", filename);
-    model->texture = gf3d_texture_load(assetname);
+    if (is_pokemon)
+    {
+        snprintf(assetname, GFCLINELEN, "pokemon/%s/%s.obj", filename, filename);
+        model->mesh = gf3d_mesh_load(assetname);
+
+        snprintf(assetname, GFCLINELEN, "pokemon/%s/%s-bake.png", filename, filename);
+        model->texture = gf3d_texture_load(assetname);
+    }
+    else
+    {
+        snprintf(assetname, GFCLINELEN, "models/%s.obj", filename);
+        model->mesh = gf3d_mesh_load(assetname);
+
+        snprintf(assetname, GFCLINELEN, "images/%s.png", filename);
+        model->texture = gf3d_texture_load(assetname);
+    }
 
     return model;
 }
