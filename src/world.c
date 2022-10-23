@@ -20,7 +20,7 @@ World *world_load(char *filename)
     World *w = NULL;
     const char *modelName = NULL;
     int scale;
-    int tileCount = 100;
+    int tileCount = 12;
     w = gfc_allocate_array(sizeof(World), tileCount);
     w->tileCount = tileCount;
     if (w == NULL)
@@ -54,28 +54,28 @@ World *world_load(char *filename)
             w[i].worldModel = gf3d_model_load((char *)modelName, 0);
             gfc_matrix_identity(w[i].modelMat);
             gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
-            gfc_matrix_translate(w[i].modelMat, vector3d(i * 100 - (tileCount / 8 * 100), -150, 0));
+            gfc_matrix_translate(w[i].modelMat, vector3d(i * 1000 - (tileCount / 8 * 1000), -150 * 10, 0));
         }
         for (int i = tileCount / 4; i < tileCount / 2; i++)
         {
             w[i].worldModel = gf3d_model_load((char *)modelName, 0);
             gfc_matrix_identity(w[i].modelMat);
             gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
-            gfc_matrix_translate(w[i].modelMat, vector3d((i - tileCount / 4) * 100 - (tileCount / 8 * 100), -50, 0));
+            gfc_matrix_translate(w[i].modelMat, vector3d((i - tileCount / 4) * 1000 - (tileCount / 8 * 1000), -50 * 10, 0));
         }
         for (int i = tileCount / 2; i < (tileCount / 4) + (tileCount / 2); i++)
         {
             w[i].worldModel = gf3d_model_load((char *)modelName, 0);
             gfc_matrix_identity(w[i].modelMat);
             gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
-            gfc_matrix_translate(w[i].modelMat, vector3d((i - ((tileCount / 2))) * 100 - (tileCount / 8 * 100), 50, 0));
+            gfc_matrix_translate(w[i].modelMat, vector3d((i - ((tileCount / 2))) * 1000 - (tileCount / 8 * 1000), 50 * 10, 0));
         }
         for (int i = (tileCount / 4) + (tileCount / 2); i < tileCount; i++)
         {
             w[i].worldModel = gf3d_model_load((char *)modelName, 0);
             gfc_matrix_identity(w[i].modelMat);
             gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
-            gfc_matrix_translate(w[i].modelMat, vector3d((i - ((tileCount / 4) + (tileCount / 2))) * 100 - (tileCount / 8 * 100), 150, 0));
+            gfc_matrix_translate(w[i].modelMat, vector3d((i - ((tileCount / 4) + (tileCount / 2))) * 1000 - (tileCount / 8 * 1000), 150 * 10, 0));
         }
     }
     else

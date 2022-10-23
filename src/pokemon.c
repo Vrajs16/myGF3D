@@ -31,8 +31,8 @@ void pokemon_think(Entity *self)
 
     self->rotation.z += -0.001;
 
-    self->position.x = 200 * cos(self->rotation.z + M_PI_2);
-    self->position.y = 200 * sin(self->rotation.z + M_PI_2);
+    self->position.x = 1000 * cos(self->rotation.z + M_PI_2);
+    self->position.y = 1000 * sin(self->rotation.z + M_PI_2);
 }
 
 /*eol@eof*/

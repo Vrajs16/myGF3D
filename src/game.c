@@ -16,6 +16,7 @@
 #include "entity.h"
 #include "pokemon.h"
 #include "player.h"
+#include "trainer.h"
 #include "world.h"
 
 extern int __DEBUG;
@@ -49,20 +50,21 @@ int main(int argc, char *argv[])
     mouse = gf3d_sprite_load("images/pointer.png", 32, 32, 16);
 
     w = world_load("config/world.json");
-    pokemon_new(vector3d(1000, 0, 0.0), vector3d(0.0, 0.0, -5 * M_PI / 10), "growlithe", .5);
-    pokemon_new(vector3d(10000 * 0.80901699437, 10000 * 0.58778525229, 0.0), vector3d(0.0, 0.0, -3 * M_PI / 10), "arcanine", .2);
-    pokemon_new(vector3d(10000 * 0.30901699437, 10000 * 0.95105651629, 0.0), vector3d(0.0, 0.0, -M_PI / 10), "kirlia", 15);
-    pokemon_new(vector3d(10000 * -0.30901699437, 10000 * 0.95105651629, 0.0), vector3d(0.0, 0.0, M_PI / 10), "gallade", 10);
-    pokemon_new(vector3d(10000 * -0.80901699437, 10000 * 0.58778525229, 0.0), vector3d(0.0, 0.0, 3 * M_PI / 10), "krabby", .5);
-    pokemon_new(vector3d(10000 * -1.0, 10000 * 0.0, 0.0), vector3d(0.0, 0.0, 5 * M_PI / 10), "kingler", .25);
-    pokemon_new(vector3d(10000 * -0.80901699437, 10000 * -0.58778525229, 0.0), vector3d(0.0, 0.0, 7 * M_PI / 10), "skiddo", 15);
-    pokemon_new(vector3d(10000 * -0.30901699437, 10000 * -0.95105651629, 0.0), vector3d(0.0, 0.0, 9 * M_PI / 10), "gogoat", 10);
-    pokemon_new(vector3d(10000 * 0.30901699437, 10000 * -0.95105651629, 0.0), vector3d(0.0, 0.0, 11 * M_PI / 10), "zorua", 15);
-    pokemon_new(vector3d(10000 * 0.80901699437, 10000 * -0.58778525229, 0.0), vector3d(0.0, 0.0, 13 * M_PI / 10), "zoroark", 10);
+    pokemon_new(vector3d(800, 0, 0.0), vector3d(0.0, 0.0, -5 * M_PI / 10), "growlithe", 3);
+    pokemon_new(vector3d(800 * 0.80901699437, 800 * 0.58778525229, 0.0), vector3d(0.0, 0.0, -3 * M_PI / 10), "arcanine", 1.2);
+    pokemon_new(vector3d(800 * 0.30901699437, 800 * 0.95105651629, 0.0), vector3d(0.0, 0.0, -M_PI / 10), "kirlia", 90);
+    pokemon_new(vector3d(800 * -0.30901699437, 800 * 0.95105651629, 0.0), vector3d(0.0, 0.0, M_PI / 10), "gallade", 60);
+    pokemon_new(vector3d(800 * -0.80901699437, 800 * 0.58778525229, 0.0), vector3d(0.0, 0.0, 3 * M_PI / 10), "krabby", 3);
+    pokemon_new(vector3d(800 * -1.0, 800 * 0.0, 0.0), vector3d(0.0, 0.0, 5 * M_PI / 10), "kingler", 1.5);
+    pokemon_new(vector3d(800 * -0.80901699437, 800 * -0.58778525229, 0.0), vector3d(0.0, 0.0, 7 * M_PI / 10), "skiddo", 90);
+    pokemon_new(vector3d(800 * -0.30901699437, 800 * -0.95105651629, 0.0), vector3d(0.0, 0.0, 9 * M_PI / 10), "gogoat", 60);
+    pokemon_new(vector3d(800 * 0.30901699437, 800 * -0.95105651629, 0.0), vector3d(0.0, 0.0, 11 * M_PI / 10), "zorua", 90);
+    pokemon_new(vector3d(800 * 0.80901699437, 800 * -0.58778525229, 0.0), vector3d(0.0, 0.0, 13 * M_PI / 10), "zoroark", 60);
+    trainer_new(vector3d(0, 0, 0), vector3d(0, 0, M_PI), "calem", 120.0);
 
     slog_sync();
     gf3d_camera_set_scale(vector3d(1, 1, 1));
-    player_new(vector3d(0, 0, 500));
+    player_new(vector3d(0, -1300, 600));
 
     // main game loop
     slog("gf3d main loop begin");
@@ -78,6 +80,7 @@ int main(int argc, char *argv[])
         entity_update_all();
         gf3d_camera_update_view();
         gf3d_camera_get_view_mat4(gf3d_vgraphics_get_view_matrix());
+        // gf3d_camera_look_at(vector3d(100, 100, 100), vector3d(0, 0, 0), vector3d(0, 0, 1));
 
         // configure render command for graphics command pool
         // for each mesh, get a command and configure it from the pool
