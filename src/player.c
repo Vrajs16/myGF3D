@@ -20,8 +20,6 @@ Entity *player_new(Vector3D position)
         slog("UGH OHHHH, no player for you!");
         return NULL;
     }
-
-    //    ent->model = gf3d_model_load("dino");
     ent->think = player_think;
     ent->update = player_update;
     vector3d_copy(ent->position, position);

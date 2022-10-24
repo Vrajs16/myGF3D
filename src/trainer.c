@@ -10,15 +10,15 @@ void trainer_think(Entity *self);
 Entity *trainer_new(Vector3D position, Vector3D rotation, char *trainer, float scale)
 {
     Entity *ent = NULL;
-
+    TextLine filename;
     ent = entity_new();
     if (!ent)
     {
         slog("UGH OHHHH, no trainer for you!");
         return NULL;
     }
-
-    ent->model = gf3d_model_load(trainer, 0);
+    snprintf(filename, GFCLINELEN, "trainer/%s/%s", trainer, trainer);
+    ent->model = gf3d_model_load(filename);
     ent->think = trainer_think;
     vector3d_copy(ent->scale, vector3d(scale, scale, scale));
     vector3d_copy(ent->rotation, rotation);

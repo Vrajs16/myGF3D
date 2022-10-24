@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
     entity_system_init(1024);
 
-    mouse = gf3d_sprite_load("images/pointer.png", 32, 32, 16);
+    mouse = gf3d_sprite_load("assets/pointer.png", 32, 32, 16);
 
     w = world_load("config/world.json");
     pokemon_new(vector3d(800, 0, 0.0), vector3d(0.0, 0.0, -5 * M_PI / 10), "growlithe", 3);

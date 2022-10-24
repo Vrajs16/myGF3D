@@ -82,6 +82,7 @@ World *world_load(char *filename)
         for (int i = 0; i < floorCount; i++)
         {
             Vector3D loc;
+            TextLine filename;
             SJson *floorTileInfo = sj_array_get_nth(floor, i);
             if (!floorTileInfo)
             {
@@ -99,7 +100,8 @@ World *world_load(char *filename)
                 sj_free(json);
                 return NULL;
             }
-            w[i].worldModel = gf3d_model_load((char *)model, 0);
+            snprintf(filename, GFCLINELEN, "world/%s/%s", (char *)model, (char *)model);
+            w[i].worldModel = gf3d_model_load(filename);
             gfc_matrix_identity(w[i].modelMat);
             gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
             gfc_matrix_translate(w[i].modelMat, loc);
@@ -108,6 +110,7 @@ World *world_load(char *filename)
         for (int i = floorCount; i < floorCount + wallCount; i++)
         {
             Vector3D loc;
+            TextLine filename;
             SJson *wallTileInfo = sj_array_get_nth(wall, i - floorCount);
             if (!wallTileInfo)
             {
@@ -139,7 +142,8 @@ World *world_load(char *filename)
             sj_value_as_vector3d(sj_object_get_value(rotationInfo, "axis"), &axisVector);
             sj_get_integer_value(sj_object_get_value(rotationInfo, "angle"), &angle);
 
-            w[i].worldModel = gf3d_model_load((char *)model, 0);
+            snprintf(filename, GFCLINELEN, "world/%s/%s", (char *)model, (char *)model);
+            w[i].worldModel = gf3d_model_load(filename);
             gfc_matrix_identity(w[i].modelMat);
             gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
 
@@ -172,6 +176,7 @@ World *world_load(char *filename)
         for (int i = floorCount + wallCount; i < floorCount + wallCount + skyCount; i++)
         {
             Vector3D loc;
+            TextLine filename;
             SJson *skyTileInfo = sj_array_get_nth(sky, i - floorCount - wallCount);
             if (!skyTileInfo)
             {
@@ -189,41 +194,13 @@ World *world_load(char *filename)
                 sj_free(json);
                 return NULL;
             }
-            w[i].worldModel = gf3d_model_load((char *)model, 0);
+            snprintf(filename, GFCLINELEN, "world/%s/%s", (char *)model, (char *)model);
+            w[i].worldModel = gf3d_model_load(filename);
             gfc_matrix_identity(w[i].modelMat);
             gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
             gfc_matrix_rotate(w[i].modelMat, w[i].modelMat, M_PI, vector3d(1, 0, 0));
             gfc_matrix_translate(w[i].modelMat, loc);
         }
-
-        // for (int i = 0; i < tileCount / 4; i++)
-        // {
-        //     w[i].worldModel = gf3d_model_load((char *)modelName, 0);
-        //     gfc_matrix_identity(w[i].modelMat);
-        //     gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
-        //     gfc_matrix_translate(w[i].modelMat, vector3d(i * 1000 - (tileCount / 8 * 1000), -150 * 10, 0));
-        // }
-        // for (int i = tileCount / 4; i < tileCount / 2; i++)
-        // {
-        //     w[i].worldModel = gf3d_model_load((char *)modelName, 0);
-        //     gfc_matrix_identity(w[i].modelMat);
-        //     gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
-        //     gfc_matrix_translate(w[i].modelMat, vector3d((i - tileCount / 4) * 1000 - (tileCount / 8 * 1000), -50 * 10, 0));
-        // }
-        // for (int i = tileCount / 2; i < (tileCount / 4) + (tileCount / 2); i++)
-        // {
-        //     w[i].worldModel = gf3d_model_load("path", 0);
-        //     gfc_matrix_identity(w[i].modelMat);
-        //     gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
-        //     gfc_matrix_translate(w[i].modelMat, vector3d((i - ((tileCount / 2))) * 1000 - (tileCount / 8 * 1000), 50 * 10, 0));
-        // }
-        // for (int i = (tileCount / 4) + (tileCount / 2); i < tileCount; i++)
-        // {
-        //     w[i].worldModel = gf3d_model_load("grass", 0);
-        //     gfc_matrix_identity(w[i].modelMat);
-        //     gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
-        //     gfc_matrix_translate(w[i].modelMat, vector3d((i - ((tileCount / 4) + (tileCount / 2))) * 1000 - (tileCount / 8 * 1000), 150 * 10, 0));
-        // }
     }
     else
     {
