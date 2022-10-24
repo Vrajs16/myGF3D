@@ -1,6 +1,314 @@
 {
   "world": {
-    "model": "grass",
-    "scale": 100
+    "scale": 10,
+    "layout": {
+      "floor": [
+        {
+          "location": [-2000, 2000, 0],
+          "model": "grass"
+        },
+        {
+          "location": [-1000, 2000, 0],
+          "model": "grass"
+        },
+        {
+          "location": [0, 2000, 0],
+          "model": "path"
+        },
+        {
+          "location": [1000, 2000, 0],
+          "model": "grass"
+        },
+        {
+          "location": [2000, 2000, 0],
+          "model": "grass"
+        },
+        {
+          "location": [-2000, 1000, 0],
+          "model": "grass"
+        },
+        {
+          "location": [-1000, 1000, 0],
+          "model": "path"
+        },
+        {
+          "location": [0, 1000, 0],
+          "model": "path"
+        },
+        {
+          "location": [1000, 1000, 0],
+          "model": "path"
+        },
+        {
+          "location": [2000, 1000, 0],
+          "model": "grass"
+        },
+        {
+          "location": [-2000, 0, 0],
+          "model": "path"
+        },
+        {
+          "location": [-1000, 0, 0],
+          "model": "path"
+        },
+        {
+          "location": [0, 0, 0],
+          "model": "path"
+        },
+        {
+          "location": [1000, 0, 0],
+          "model": "path"
+        },
+        {
+          "location": [2000, 0, 0],
+          "model": "path"
+        },
+        {
+          "location": [-2000, -1000, 0],
+          "model": "grass"
+        },
+        {
+          "location": [-1000, -1000, 0],
+          "model": "path"
+        },
+        {
+          "location": [0, -1000, 0],
+          "model": "path"
+        },
+        {
+          "location": [1000, -1000, 0],
+          "model": "path"
+        },
+        {
+          "location": [2000, -1000, 0],
+          "model": "grass"
+        },
+        {
+          "location": [-2000, -2000, 0],
+          "model": "grass"
+        },
+        {
+          "location": [-1000, -2000, 0],
+          "model": "grass"
+        },
+        {
+          "location": [0, -2000, 0],
+
+          "model": "path"
+        },
+        {
+          "location": [1000, -2000, 0],
+          "model": "grass"
+        },
+        {
+          "location": [2000, -2000, 0],
+          "model": "grass"
+        }
+      ],
+      "wall": [
+        {
+          "location": [-1000, 2000, 0],
+          "model": "sky",
+          "rotation": { "axis": [1, 0, 0], "angle": 1 }
+        },
+        {
+          "location": [-2000, 2000, 0],
+          "model": "sky",
+          "rotation": { "axis": [1, 0, 0], "angle": 1 }
+        },
+        {
+          "location": [0, 2000, 0],
+          "model": "sky",
+          "rotation": { "axis": [1, 0, 0], "angle": 1 }
+        },
+        {
+          "location": [1000, 2000, 0],
+          "model": "sky",
+          "rotation": { "axis": [1, 0, 0], "angle": 1 }
+        },
+        {
+          "location": [2000, 2000, 0],
+          "model": "sky",
+          "rotation": { "axis": [1, 0, 0], "angle": 1 }
+        },
+        {
+          "location": [2000, 2000, 0],
+          "model": "sky",
+          "rotation": { "axis": [0, 1, 0], "angle": 2 }
+        },
+        {
+          "location": [2000, 1000, 0],
+          "model": "sky",
+          "rotation": { "axis": [0, 1, 0], "angle": 2 }
+        },
+        {
+          "location": [2000, 0, 0],
+          "model": "sky",
+          "rotation": { "axis": [0, 1, 0], "angle": 2 }
+        },
+        {
+          "location": [2000, -1000, 0],
+          "model": "sky",
+          "rotation": { "axis": [0, 1, 0], "angle": 2 }
+        },
+        {
+          "location": [2000, -2000, 0],
+          "model": "sky",
+          "rotation": { "axis": [0, 1, 0], "angle": 2 }
+        },
+        {
+          "location": [2000, -2000, 0],
+          "model": "sky",
+          "rotation": { "axis": [1, 0, 0], "angle": 3 }
+        },
+        {
+          "location": [1000, -2000, 0],
+          "model": "sky",
+          "rotation": { "axis": [1, 0, 0], "angle": 3 }
+        },
+        {
+          "location": [0, -2000, 0],
+          "model": "sky",
+          "rotation": { "axis": [1, 0, 0], "angle": 3 }
+        },
+        {
+          "location": [-1000, -2000, 0],
+          "model": "sky",
+          "rotation": { "axis": [1, 0, 0], "angle": 3 }
+        },
+        {
+          "location": [-2000, -2000, 0],
+          "model": "sky",
+          "rotation": { "axis": [1, 0, 0], "angle": 3 }
+        },
+        {
+          "location": [-2000, -2000, 0],
+          "model": "sky",
+          "rotation": { "axis": [0, 1, 0], "angle": 4 }
+        },
+        {
+          "location": [-2000, -1000, 0],
+          "model": "sky",
+          "rotation": { "axis": [0, 1, 0], "angle": 4 }
+        },
+        {
+          "location": [-2000, 0, 0],
+          "model": "sky",
+          "rotation": { "axis": [0, 1, 0], "angle": 4 }
+        },
+        {
+          "location": [-2000, 1000, 0],
+          "model": "sky",
+          "rotation": { "axis": [0, 1, 0], "angle": 4 }
+        },
+        {
+          "location": [-2000, 2000, 0],
+          "model": "sky",
+          "rotation": { "axis": [0, 1, 0], "angle": 4 }
+        }
+      ],
+      "sky": [
+        {
+          "location": [-2000, 2000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [-1000, 2000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [0, 2000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [1000, 2000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [2000, 2000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [-2000, 1000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [-1000, 1000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [0, 1000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [1000, 1000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [2000, 1000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [-2000, 0, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [-1000, 0, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [0, 0, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [1000, 0, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [2000, 0, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [-2000, -1000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [-1000, -1000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [0, -1000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [1000, -1000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [2000, -1000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [-2000, -2000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [-1000, -2000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [0, -2000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [1000, -2000, 1000],
+          "model": "sky"
+        },
+        {
+          "location": [2000, -2000, 1000],
+          "model": "sky"
+        }
+      ]
+    }
   }
 }

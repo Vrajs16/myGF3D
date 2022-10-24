@@ -11,6 +11,8 @@
     "agumon.h": "c",
     "simple_logger.h": "c",
     "player.h": "c",
-    "__node_handle": "c"
+    "__node_handle": "c",
+    "gf3d_swapchain.h": "c",
+    "sdl.h": "c"
   }
 }

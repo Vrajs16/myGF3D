@@ -121,7 +121,6 @@ void trainer_think(Entity *self)
         self->rotation.y = -.2;
         self->rotation.x = 0;
     }
-
     if (isLeft && !isForward && !isBackward)
     {
         self->rotation.y = .2;

@@ -3,6 +3,7 @@
 #include "gfc_types.h"
 
 #include "world.h"
+#include "gfc_config.h"
 
 /*
 typedef struct
@@ -16,67 +17,213 @@ typedef struct
 
 World *world_load(char *filename)
 {
-    SJson *json, *wjson;
-    World *w = NULL;
-    const char *modelName = NULL;
+    SJson *json, *wjson, *layout, *floor, *wall, *sky;
+    int floorCount;
+    int wallCount;
+    int skyCount;
     int scale;
-    int tileCount = 12;
-    w = gfc_allocate_array(sizeof(World), tileCount);
-    w->tileCount = tileCount;
-    if (w == NULL)
-    {
-        slog("failed to allocate data for the world");
-        return NULL;
-    }
     json = sj_load(filename);
     if (!json)
     {
         slog("failed to load json file (%s) for the world data", filename);
-        free(w);
         return NULL;
     }
     wjson = sj_object_get_value(json, "world");
     if (!wjson)
     {
         slog("failed to find world object in %s world config", filename);
-        free(w);
         sj_free(json);
         return NULL;
     }
-    modelName = sj_get_string_value(sj_object_get_value(wjson, "model"));
     sj_get_integer_value(sj_object_get_value(wjson, "scale"), &scale);
 
-    if (modelName)
+    layout = sj_object_get_value(wjson, "layout");
+    if (!layout)
     {
+        slog("failed to find layout in %s world config", filename);
+        sj_free(json);
+        return NULL;
+    }
+    floor = sj_object_get_value(layout, "floor");
+    if (!floor)
+    {
+        slog("failed to find floor in %s world config", filename);
+        sj_free(json);
+        return NULL;
+    }
+    floorCount = sj_array_get_count(floor);
+    wall = sj_object_get_value(layout, "wall");
+    if (!wall)
+    {
+        slog("failed to find wall in %s world config", filename);
+        sj_free(json);
+        return NULL;
+    }
+    wallCount = sj_array_get_count(wall);
+    sky = sj_object_get_value(layout, "sky");
+    if (!sky)
+    {
+        slog("failed to find sky in %s world config", filename);
+        sj_free(json);
+        return NULL;
+    }
+    skyCount = sj_array_get_count(sky);
+    World *w = NULL;
+    w = gfc_allocate_array(sizeof(World), floorCount + wallCount + skyCount); // Remember entity system max 1024
+    w->entityCount = floorCount + wallCount + skyCount;
+    if (w == NULL)
+    {
+        slog("failed to allocate data for the world");
+        return NULL;
+    }
 
-        for (int i = 0; i < tileCount / 4; i++)
+    if (floor)
+    {
+        for (int i = 0; i < floorCount; i++)
         {
-            w[i].worldModel = gf3d_model_load((char *)modelName, 0);
+            Vector3D loc;
+            SJson *floorTileInfo = sj_array_get_nth(floor, i);
+            if (!floorTileInfo)
+            {
+                slog("failed to find floorTileInfo in %s world config", filename);
+                free(w);
+                sj_free(json);
+                return NULL;
+            }
+            const char *model = sj_object_get_value_as_string(floorTileInfo, "model");
+            sj_value_as_vector3d(sj_object_get_value(floorTileInfo, "location"), &loc);
+            if (!model)
+            {
+                slog("failed to find model in %s world config", filename);
+                free(w);
+                sj_free(json);
+                return NULL;
+            }
+            w[i].worldModel = gf3d_model_load((char *)model, 0);
             gfc_matrix_identity(w[i].modelMat);
             gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
-            gfc_matrix_translate(w[i].modelMat, vector3d(i * 1000 - (tileCount / 8 * 1000), -150 * 10, 0));
+            gfc_matrix_translate(w[i].modelMat, loc);
         }
-        for (int i = tileCount / 4; i < tileCount / 2; i++)
+
+        for (int i = floorCount; i < floorCount + wallCount; i++)
         {
-            w[i].worldModel = gf3d_model_load((char *)modelName, 0);
+            Vector3D loc;
+            SJson *wallTileInfo = sj_array_get_nth(wall, i - floorCount);
+            if (!wallTileInfo)
+            {
+                slog("failed to find wallTileInfo in %s world config", filename);
+                free(w);
+                sj_free(json);
+                return NULL;
+            }
+            const char *model = sj_object_get_value_as_string(wallTileInfo, "model");
+            sj_value_as_vector3d(sj_object_get_value(wallTileInfo, "location"), &loc);
+            if (!model)
+            {
+                slog("failed to find model in %s world config", filename);
+                free(w);
+                sj_free(json);
+                return NULL;
+            }
+
+            SJson *rotationInfo = sj_object_get_value(wallTileInfo, "rotation");
+            if (!rotationInfo)
+            {
+                slog("failed to find rotation in %s world config", filename);
+                free(w);
+                sj_free(json);
+                return NULL;
+            }
+            Vector3D axisVector;
+            int angle;
+            sj_value_as_vector3d(sj_object_get_value(rotationInfo, "axis"), &axisVector);
+            sj_get_integer_value(sj_object_get_value(rotationInfo, "angle"), &angle);
+
+            w[i].worldModel = gf3d_model_load((char *)model, 0);
             gfc_matrix_identity(w[i].modelMat);
             gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
-            gfc_matrix_translate(w[i].modelMat, vector3d((i - tileCount / 4) * 1000 - (tileCount / 8 * 1000), -50 * 10, 0));
+
+            if (angle == 1)
+            {
+                gfc_matrix_rotate(w[i].modelMat, w[i].modelMat, M_PI / 2, axisVector);
+                gfc_matrix_translate(w[i].modelMat, vector3d(loc.x, loc.y + (scale * 100 / 2), loc.z + (scale * 100 / 2)));
+            }
+            else if (angle == 2)
+            {
+                gfc_matrix_rotate(w[i].modelMat, w[i].modelMat, -M_PI / 2, axisVector);
+                gfc_matrix_translate(w[i].modelMat, vector3d(loc.x + (scale * 100 / 2), loc.y, loc.z + (scale * 100 / 2)));
+            }
+            else if (angle == 3)
+            {
+                gfc_matrix_rotate(w[i].modelMat, w[i].modelMat, 3 * M_PI / 2, axisVector);
+                gfc_matrix_translate(w[i].modelMat, vector3d(loc.x, loc.y - (scale * 100 / 2), loc.z + (scale * 100 / 2)));
+            }
+            else if (angle == 4)
+            {
+                gfc_matrix_rotate(w[i].modelMat, w[i].modelMat, -3 * M_PI / 2, axisVector);
+                gfc_matrix_translate(w[i].modelMat, vector3d(loc.x - (scale * 100 / 2), loc.y, loc.z + (scale * 100 / 2)));
+            }
+            else
+            {
+                slog("ENTERED WRONG ANGGLE!, FIX THIS");
+            }
         }
-        for (int i = tileCount / 2; i < (tileCount / 4) + (tileCount / 2); i++)
+
+        for (int i = floorCount + wallCount; i < floorCount + wallCount + skyCount; i++)
         {
-            w[i].worldModel = gf3d_model_load((char *)modelName, 0);
+            Vector3D loc;
+            SJson *skyTileInfo = sj_array_get_nth(sky, i - floorCount - wallCount);
+            if (!skyTileInfo)
+            {
+                slog("failed to find skyTileInfo in %s world config", filename);
+                free(w);
+                sj_free(json);
+                return NULL;
+            }
+            const char *model = sj_object_get_value_as_string(skyTileInfo, "model");
+            sj_value_as_vector3d(sj_object_get_value(skyTileInfo, "location"), &loc);
+            if (!model)
+            {
+                slog("failed to find model in %s world config", filename);
+                free(w);
+                sj_free(json);
+                return NULL;
+            }
+            w[i].worldModel = gf3d_model_load((char *)model, 0);
             gfc_matrix_identity(w[i].modelMat);
             gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
-            gfc_matrix_translate(w[i].modelMat, vector3d((i - ((tileCount / 2))) * 1000 - (tileCount / 8 * 1000), 50 * 10, 0));
+            gfc_matrix_rotate(w[i].modelMat, w[i].modelMat, M_PI, vector3d(1, 0, 0));
+            gfc_matrix_translate(w[i].modelMat, loc);
         }
-        for (int i = (tileCount / 4) + (tileCount / 2); i < tileCount; i++)
-        {
-            w[i].worldModel = gf3d_model_load((char *)modelName, 0);
-            gfc_matrix_identity(w[i].modelMat);
-            gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
-            gfc_matrix_translate(w[i].modelMat, vector3d((i - ((tileCount / 4) + (tileCount / 2))) * 1000 - (tileCount / 8 * 1000), 150 * 10, 0));
-        }
+
+        // for (int i = 0; i < tileCount / 4; i++)
+        // {
+        //     w[i].worldModel = gf3d_model_load((char *)modelName, 0);
+        //     gfc_matrix_identity(w[i].modelMat);
+        //     gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
+        //     gfc_matrix_translate(w[i].modelMat, vector3d(i * 1000 - (tileCount / 8 * 1000), -150 * 10, 0));
+        // }
+        // for (int i = tileCount / 4; i < tileCount / 2; i++)
+        // {
+        //     w[i].worldModel = gf3d_model_load((char *)modelName, 0);
+        //     gfc_matrix_identity(w[i].modelMat);
+        //     gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
+        //     gfc_matrix_translate(w[i].modelMat, vector3d((i - tileCount / 4) * 1000 - (tileCount / 8 * 1000), -50 * 10, 0));
+        // }
+        // for (int i = tileCount / 2; i < (tileCount / 4) + (tileCount / 2); i++)
+        // {
+        //     w[i].worldModel = gf3d_model_load("path", 0);
+        //     gfc_matrix_identity(w[i].modelMat);
+        //     gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
+        //     gfc_matrix_translate(w[i].modelMat, vector3d((i - ((tileCount / 2))) * 1000 - (tileCount / 8 * 1000), 50 * 10, 0));
+        // }
+        // for (int i = (tileCount / 4) + (tileCount / 2); i < tileCount; i++)
+        // {
+        //     w[i].worldModel = gf3d_model_load("grass", 0);
+        //     gfc_matrix_identity(w[i].modelMat);
+        //     gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
+        //     gfc_matrix_translate(w[i].modelMat, vector3d((i - ((tileCount / 4) + (tileCount / 2))) * 1000 - (tileCount / 8 * 1000), 150 * 10, 0));
+        // }
     }
     else
     {
@@ -95,7 +242,7 @@ void world_draw(World *world)
         slog("world has no model");
         return; // no model to draw, do nothing
     }
-    for (int i = 0; i < world->tileCount; i++)
+    for (int i = 0; i < world->entityCount; i++)
     {
         gf3d_model_draw(world[i].worldModel, world[i].modelMat);
     }
