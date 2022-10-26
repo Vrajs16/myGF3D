@@ -41,97 +41,24 @@ void trainer_think(Entity *self)
     const Uint8 *keys;
     keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
 
-    if (keys[SDL_SCANCODE_RIGHT])
-    {
-        rotate.z -= .02;
-    }
-
-    if (keys[SDL_SCANCODE_LEFT])
-    {
-        rotate.z += .02;
-    }
+    if (keys[SDL_SCANCODE_D])
+        rotate.z -= .05;
+    if (keys[SDL_SCANCODE_A])
+        rotate.z += .05;
+    
     vector3d_add(self->rotation, self->rotation, rotate);
 
     // z is up
     float yaw = self->rotation.z;
 
-    vector3d_set(right, cos(yaw) * 5, sin(yaw) * 5, 0);
+    vector3d_set(right, cos(yaw) * 15, sin(yaw) * 15, 0);
     vector3d_set(forward, -right.y, right.x, 0);
     vector3d_set(moveDir, 0, 0, 0);
 
     if (keys[SDL_SCANCODE_W])
-    {
-        isForward = 1;
         vector3d_add(moveDir, moveDir, -forward);
-    }
     else if (keys[SDL_SCANCODE_S])
-    {
-        isBackward = 1;
         vector3d_add(moveDir, moveDir, forward);
-    }
-    if (keys[SDL_SCANCODE_D])
-    {
-        isRight = 1;
-        vector3d_add(moveDir, moveDir, -right);
-    }
-    else if (keys[SDL_SCANCODE_A])
-    {
-        isLeft = 1;
-        vector3d_add(moveDir, moveDir, right);
-    }
-
-    if (isForward && isRight)
-    {
-        self->rotation.y = -.2;
-        self->rotation.x = .4;
-    }
-
-    if (isForward && isLeft)
-    {
-        self->rotation.y = .2;
-        self->rotation.x = .4;
-    }
-
-    if (isBackward && isRight)
-    {
-        self->rotation.y = -.2;
-        self->rotation.x = -.4;
-    }
-
-    if (isBackward && isLeft)
-    {
-        self->rotation.y = .2;
-        self->rotation.x = -.4;
-    }
-
-    if (isForward && !isRight && !isLeft)
-    {
-        self->rotation.y = 0;
-        self->rotation.x = .4;
-    }
-
-    if (isBackward && !isRight && !isLeft)
-    {
-        self->rotation.y = 0;
-        self->rotation.x = -.4;
-    }
-
-    if (isRight && !isForward && !isBackward)
-    {
-        self->rotation.y = -.2;
-        self->rotation.x = 0;
-    }
-    if (isLeft && !isForward && !isBackward)
-    {
-        self->rotation.y = .2;
-        self->rotation.x = 0;
-    }
-
-    if (!isForward && !isBackward && !isRight && !isLeft)
-    {
-        self->rotation.y = 0;
-        self->rotation.x = 0;
-    }
 
     vector3d_add(self->position, self->position, moveDir);
     TRAINER_X = self->position.x;
