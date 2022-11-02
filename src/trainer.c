@@ -1,9 +1,12 @@
-
 #include "simple_logger.h"
+#include "gfc_primitives.h"
+#include "gf3d_draw.h"
 #include "trainer.h"
+
 
 float TRAINER_X = 0;
 float TRAINER_Y = 0;
+float TRAINER_ROT_Z = 0;
 
 void trainer_think(Entity *self);
 
@@ -20,6 +23,10 @@ Entity *trainer_new(Vector3D position, Vector3D rotation, char *trainer, float s
     }
     snprintf(modelfilename, GFCLINELEN, "assets/trainer/%s/%s.obj", trainer, trainer);
     snprintf(texturefilename, GFCLINELEN, "assets/trainer/%s/%s.png", trainer, trainer);
+
+    ent->showBox = 1;
+    ent->boundingBox = gfc_box(0,0,205,175,60,205);
+
     ent->model = gf3d_model_load_full(modelfilename, texturefilename);
     ent->think = trainer_think;
     vector3d_copy(ent->scale, vector3d(scale, scale, scale));
@@ -49,6 +56,7 @@ void trainer_think(Entity *self)
         rotate.z += .05;
     
     vector3d_add(self->rotation, self->rotation, rotate);
+    TRAINER_ROT_Z = self->rotation.z;
 
     // z is up
     float yaw = self->rotation.z;

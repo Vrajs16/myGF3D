@@ -4,6 +4,7 @@
 #include "simple_logger.h"
 
 #include "entity.h"
+#include "gf3d_draw.h"
 
 typedef struct
 {
@@ -72,6 +73,12 @@ void entity_draw(Entity *self)
     if (!self)
         return;
     gf3d_model_draw(self->model, self->modelMat, vector4d(1, 1, 1, 1), vector4d(0, 0, 0, 0));
+
+    // draw bounding box if it exists
+    if (self->showBox)
+    {
+        gf3d_draw_cube_wireframe(self->boundingBox, vector3d(self->position.x, self->position.y, 0), vector3d(0, 0, self->rotation.z), vector3d(1, 1, 1), gfc_color(0, 1, 0, 1));
+    }
 }
 
 void entity_draw_all()

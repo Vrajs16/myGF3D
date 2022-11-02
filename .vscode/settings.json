@@ -18,6 +18,12 @@
     "pokemon.h": "c",
     "gf3d_camera.h": "c",
     "gf3d_lights.h": "c",
-    "gf3d_draw.h": "c"
+    "gf3d_draw.h": "c",
+    "gf3d_model.h": "c",
+    "gfc_types.h": "c",
+    "stdlib.h": "c",
+    "gf3d_texture.h": "c",
+    "gf3d_mesh.h": "c",
+    "gfc_primitives.h": "c"
   }
 }

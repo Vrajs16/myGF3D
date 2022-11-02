@@ -30,6 +30,9 @@
 #include "world.h"
 
 extern int __DEBUG;
+extern float TRAINER_X;
+extern float TRAINER_Y;
+extern float TRAINER_ROT_Z;
 
 static int _done = 0;
 static Window *_quit = NULL;
@@ -132,7 +135,8 @@ int main(int argc, char *argv[])
 
         if ((gfc_input_command_down("exit")) && (_quit == NULL))
         {
-            exitCheck();
+            _done = 1;
+            // exitCheck();
         }
     }
 

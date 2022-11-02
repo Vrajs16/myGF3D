@@ -28,6 +28,8 @@ typedef struct Entity_S
     struct Entity_S *target; /**<entity to target for weapons / ai*/
 
     void *customData; /**<IF an entity needs to keep track of extra data, we can do it here*/
+    int showBox;
+    Box boundingBox; /**<bounding box for the entity*/
 } Entity;
 
 /**
