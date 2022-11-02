@@ -13,6 +13,11 @@
     "player.h": "c",
     "__node_handle": "c",
     "gf3d_swapchain.h": "c",
-    "sdl.h": "c"
+    "sdl.h": "c",
+    "vulkan.h": "c",
+    "pokemon.h": "c",
+    "gf3d_camera.h": "c",
+    "gf3d_lights.h": "c",
+    "gf3d_draw.h": "c"
   }
 }

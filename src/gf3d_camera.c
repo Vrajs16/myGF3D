@@ -70,6 +70,13 @@ void gf3d_camera_update_view()
     gf3d_camera.cameraMat[3][2] = vector3d_dot_product(zaxis, position);
 }
 
+Vector3D gf3d_camera_get_position()
+{
+    Vector3D position;
+    vector3d_negate(position, gf3d_camera.position);
+    return position;
+}
+
 void gf3d_camera_set_position(Vector3D position)
 {
     gf3d_camera.position.x = -position.x;

@@ -35,20 +35,6 @@ void gf3d_vgraphics_render_end();
 Uint32 gf3d_vgraphics_get_current_buffer_frame();
 
 /**
- * @brief get the handle to the active command buffer for the current 3d model rendering context
- * @note: THIS SHOULD ONLY BE CALLED BETWEEN CALLS TO gf3d_vgraphics_render_start() and gf3d_vgraphics_render_end()
- * @return the handle to the command buffer.
- */
-VkCommandBuffer gf3d_vgraphics_get_current_command_model_buffer();
-
-/**
- * @brief get the handle to the active command buffer for the current 2d overlay rendering context
- * @note: THIS SHOULD ONLY BE CALLED BETWEEN CALLS TO gf3d_vgraphics_render_start() and gf3d_vgraphics_render_end()
- * @return the handle to the command buffer.
- */
-VkCommandBuffer gf3d_vgraphics_get_current_command_overlay_buffer();
-
-/**
  * @brief After initialization
  */
 VkDevice gf3d_vgraphics_get_default_logical_device();
@@ -56,6 +42,11 @@ VkDevice gf3d_vgraphics_get_default_logical_device();
 VkPhysicalDevice gf3d_vgraphics_get_default_physical_device();
 
 VkExtent2D gf3d_vgraphics_get_view_extent();
+
+Vector2D gf3d_vgraphics_get_view_extent_as_vector2d();
+Vector2D gf3d_vgraphics_get_resolution();
+
+void gf3d_vgraphics_get_view(Matrix4 *view);
 
 void gf3d_vgraphics_clear();
 
@@ -75,14 +66,18 @@ void gf3d_vgraphics_rotate_camera(float degrees);
  */
 Matrix4 *gf3d_vgraphics_get_view_matrix();
 
+/**
+ * @brief get the projection matrix
+ * @param proj where to put the projection matrix
+ */
+void gf3d_vgraphics_get_projection_matrix(Matrix4 *proj);
+
 VkBuffer gf3d_vgraphics_get_uniform_buffer_by_index(Uint32 index);
-UniformBufferObject gf3d_vgraphics_get_uniform_buffer_object();
 
 /**
- * @brief get the pipeline that is used to render basic 3d models
- * @return NULL on error or the pipeline in question
+ * @brief get the current MVP matrix for the render calls.
  */
-Pipeline *gf3d_vgraphics_get_graphics_model_pipeline();
+UniformBufferObject gf3d_vgraphics_get_uniform_buffer_object();
 
 /**
  * @brief get the pipeline that is used to render 2d images to the overlay
@@ -90,8 +85,34 @@ Pipeline *gf3d_vgraphics_get_graphics_model_pipeline();
  */
 Pipeline *gf3d_vgraphics_get_graphics_overlay_pipeline();
 
+/**
+ * @brief get a command from the graphics command pool
+ * @return NULL if non are left, or an empty command
+ */
 Command *gf3d_vgraphics_get_graphics_command_pool();
 
+/**
+ * @brief create an image view in the given vulkan format
+ * @param image the image to create the view for
+ * @param format the format to create the view for
+ * @return VkNullHandle on error or an imageview handle otherwise
+ */
 VkImageView gf3d_vgraphics_create_image_view(VkImage image, VkFormat format);
+
+/**
+ * @brief create an empty SDL_Surface in the format supported by the screen
+ * @param w the width to create, should be non-zero
+ * @param h the hight to create, should be non-zero
+ * @return NULL on error, or an empty SDL_Surface in the proper format
+ */
+SDL_Surface *gf3d_vgraphics_create_surface(Uint32 w, Uint32 h);
+
+/**
+ * @brief convert a SDL_Surface to the format supported by the system
+ * @param surface a pointer to the SDL_Surface pointer that contains the image data to convert
+ * @return NULL on failure, or a new SDL surface of the same image, but in the supported format.
+ * @note this will clear the data of the original surface if it is successful automatically.
+ */
+SDL_Surface *gf3d_vgraphics_screen_convert(SDL_Surface **surface);
 
 #endif

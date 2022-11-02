@@ -71,7 +71,7 @@ void entity_draw(Entity *self)
 {
     if (!self)
         return;
-    gf3d_model_draw(self->model, self->modelMat);
+    gf3d_model_draw(self->model, self->modelMat, vector4d(1, 1, 1, 1), vector4d(0, 0, 0, 0));
 }
 
 void entity_draw_all()

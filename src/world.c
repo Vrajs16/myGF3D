@@ -1,10 +1,12 @@
 #include "simple_logger.h"
 #include "simple_json.h"
-#include "gfc_types.h"
 
-#include "world.h"
+#include "gfc_types.h"
 #include "gfc_config.h"
 
+#include "gf3d_lights.h"
+
+#include "world.h"
 /*
 typedef struct
 {
@@ -82,11 +84,12 @@ World *world_load(char *filename)
         for (int i = 0; i < floorCount; i++)
         {
             Vector3D loc;
-            TextLine filename;
+            TextLine modelfilename;
+            TextLine texturefilename;
             SJson *floorTileInfo = sj_array_get_nth(floor, i);
             if (!floorTileInfo)
             {
-                slog("failed to find floorTileInfo in %s world config", filename);
+                slog("failed to find floorTileInfo in %s world config", modelfilename);
                 free(w);
                 sj_free(json);
                 return NULL;
@@ -95,13 +98,15 @@ World *world_load(char *filename)
             sj_value_as_vector3d(sj_object_get_value(floorTileInfo, "location"), &loc);
             if (!model)
             {
-                slog("failed to find model in %s world config", filename);
+                slog("failed to find model in %s world config", modelfilename);
                 free(w);
                 sj_free(json);
                 return NULL;
             }
-            snprintf(filename, GFCLINELEN, "world/%s/%s", (char *)model, (char *)model);
-            w[i].worldModel = gf3d_model_load(filename);
+            snprintf(modelfilename, GFCLINELEN, "assets/world/%s/%s.obj", (char *)model, (char *)model);
+            snprintf(texturefilename, GFCLINELEN, "assets/world/%s/%s.png", (char *)model, (char *)model);
+            w[i].worldModel = gf3d_model_load_full(modelfilename, texturefilename);
+            w[i].color = gfc_color(1, 1, 1, 1);
             gfc_matrix_identity(w[i].modelMat);
             gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
             gfc_matrix_translate(w[i].modelMat, loc);
@@ -110,11 +115,12 @@ World *world_load(char *filename)
         for (int i = floorCount; i < floorCount + wallCount; i++)
         {
             Vector3D loc;
-            TextLine filename;
+            TextLine modelfilename;
+            TextLine texturefilename;
             SJson *wallTileInfo = sj_array_get_nth(wall, i - floorCount);
             if (!wallTileInfo)
             {
-                slog("failed to find wallTileInfo in %s world config", filename);
+                slog("failed to find wallTileInfo in %s world config", modelfilename);
                 free(w);
                 sj_free(json);
                 return NULL;
@@ -123,7 +129,7 @@ World *world_load(char *filename)
             sj_value_as_vector3d(sj_object_get_value(wallTileInfo, "location"), &loc);
             if (!model)
             {
-                slog("failed to find model in %s world config", filename);
+                slog("failed to find model in %s world config", modelfilename);
                 free(w);
                 sj_free(json);
                 return NULL;
@@ -132,7 +138,7 @@ World *world_load(char *filename)
             SJson *rotationInfo = sj_object_get_value(wallTileInfo, "rotation");
             if (!rotationInfo)
             {
-                slog("failed to find rotation in %s world config", filename);
+                slog("failed to find rotation in %s world config", modelfilename);
                 free(w);
                 sj_free(json);
                 return NULL;
@@ -142,8 +148,10 @@ World *world_load(char *filename)
             sj_value_as_vector3d(sj_object_get_value(rotationInfo, "axis"), &axisVector);
             sj_get_integer_value(sj_object_get_value(rotationInfo, "angle"), &angle);
 
-            snprintf(filename, GFCLINELEN, "world/%s/%s", (char *)model, (char *)model);
-            w[i].worldModel = gf3d_model_load(filename);
+            snprintf(modelfilename, GFCLINELEN, "assets/world/%s/%s.obj", (char *)model, (char *)model);
+            snprintf(texturefilename, GFCLINELEN, "assets/world/%s/%s.png", (char *)model, (char *)model);
+            w[i].worldModel = gf3d_model_load_full(modelfilename, texturefilename);
+            w[i].color = gfc_color(1, 1, 1, 1);
             gfc_matrix_identity(w[i].modelMat);
             gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
 
@@ -176,11 +184,12 @@ World *world_load(char *filename)
         for (int i = floorCount + wallCount; i < floorCount + wallCount + skyCount; i++)
         {
             Vector3D loc;
-            TextLine filename;
+            TextLine modelfilename;
+            TextLine texturefilename;
             SJson *skyTileInfo = sj_array_get_nth(sky, i - floorCount - wallCount);
             if (!skyTileInfo)
             {
-                slog("failed to find skyTileInfo in %s world config", filename);
+                slog("failed to find skyTileInfo in %s world config", modelfilename);
                 free(w);
                 sj_free(json);
                 return NULL;
@@ -189,13 +198,15 @@ World *world_load(char *filename)
             sj_value_as_vector3d(sj_object_get_value(skyTileInfo, "location"), &loc);
             if (!model)
             {
-                slog("failed to find model in %s world config", filename);
+                slog("failed to find model in %s world config", modelfilename);
                 free(w);
                 sj_free(json);
                 return NULL;
             }
-            snprintf(filename, GFCLINELEN, "world/%s/%s", (char *)model, (char *)model);
-            w[i].worldModel = gf3d_model_load(filename);
+            snprintf(modelfilename, GFCLINELEN, "assets/world/%s/%s.obj", (char *)model, (char *)model);
+            snprintf(texturefilename, GFCLINELEN, "assets/world/%s/%s.png", (char *)model, (char *)model);
+            w[i].worldModel = gf3d_model_load_full(modelfilename, texturefilename);
+            w[i].color = gfc_color(1, 1, 1, 1);
             gfc_matrix_identity(w[i].modelMat);
             gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
             gfc_matrix_rotate(w[i].modelMat, w[i].modelMat, M_PI, vector3d(1, 0, 0));
@@ -207,6 +218,7 @@ World *world_load(char *filename)
         slog("world data (%s) has no model", filename);
     }
     sj_free(json);
+    gf3d_lights_set_global_light(vector4d(1, 1, 1, 1), vector4d(-1, -1, 0, 1));
     return w;
 }
 
@@ -221,7 +233,7 @@ void world_draw(World *world)
     }
     for (int i = 0; i < world->entityCount; i++)
     {
-        gf3d_model_draw(world[i].worldModel, world[i].modelMat);
+        gf3d_model_draw(world[i].worldModel, world[i].modelMat, gfc_color_to_vector4f(world[i].color), vector4d(0, 0, 0, 0));
     }
 }
 

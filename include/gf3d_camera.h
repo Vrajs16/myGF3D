@@ -40,6 +40,12 @@ void gf3d_camera_look_at(
     Vector3D up);
 
 /**
+ * @brief get the current camera position in world space;
+ * @return the camera position.
+ */
+Vector3D gf3d_camera_get_position();
+
+/**
  * @brief explicitely set the camera positon, holding all other parameters the same
  * @param position the new position for the camera
  */
