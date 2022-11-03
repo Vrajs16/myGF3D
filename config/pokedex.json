@@ -1,8 +1,17 @@
 {
   "pokedex": {
     "total": 10,
-    "0": {
-      "growlithe": {
+    "pokemons": [
+      {
+        "name": "growlithe",
+        "boundingBox": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 100.0,
+          "w": 100.0,
+          "h": 100.0,
+          "d": 100.0
+        },
         "type": "fire",
         "level": "",
         "evolution": true,
@@ -36,10 +45,17 @@
             "pp": 20
           }
         ]
-      }
-    },
-    "1": {
-      "arcanine": {
+      },
+      {
+        "name": "arcanine",
+        "boundingBox": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 100.0,
+          "w": 100.0,
+          "h": 100.0,
+          "d": 100.0
+        },
         "type": "fire",
         "level": "",
         "evolution": false,
@@ -73,73 +89,129 @@
             "pp": 5
           }
         ]
-      }
-    },
-    "2": {
-      "barboach": {
-        "type": "water",
-        "level": "",
-        "evolution": true,
-        "moves": []
-      }
-    },
-    "3": {
-      "whiscash": {
-        "type": "water",
-        "level": "",
-        "evolution": false,
-        "moves": []
-      }
-    },
-    "4": {
-      "budew": {
-        "type": "grass",
-        "level": "",
-        "evolution": true,
-        "moves": []
-      }
-    },
-    "5": {
-      "roserade": {
-        "type": "grass",
-        "level": "",
-        "evolution": false,
-        "moves": []
-      }
-    },
-    "6": {
-      "munna": {
+      },
+      {
+        "name": "kirlia",
+        "boundingBox": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 100.0,
+          "w": 100.0,
+          "h": 100.0,
+          "d": 100.0
+        },
         "type": "physic",
         "level": "",
         "evolution": true,
         "moves": []
-      }
-    },
-    "7": {
-      "musharna": {
+      },
+      {
+        "name": "gallade",
+        "boundingBox": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 100.0,
+          "w": 100.0,
+          "h": 100.0,
+          "d": 100.0
+        },
         "type": "physic",
         "level": "",
         "evolution": false,
         "moves": []
-      }
-    },
-    "8": {
-      "zorua": {
+      },
+      {
+        "name": "krabby",
+        "boundingBox": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 100.0,
+          "w": 100.0,
+          "h": 100.0,
+          "d": 100.0
+        },
+        "type": "water",
+        "level": "",
+        "evolution": true,
+        "moves": []
+      },
+      {
+        "name": "kingler",
+        "boundingBox": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 100.0,
+          "w": 100.0,
+          "h": 100.0,
+          "d": 100.0
+        },
+        "type": "water",
+        "level": "",
+        "evolution": false,
+        "moves": []
+      },
+      {
+        "name": "skiddo",
+        "boundingBox": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 100.0,
+          "w": 100.0,
+          "h": 100.0,
+          "d": 100.0
+        },
+        "type": "grass",
+        "level": "",
+        "evolution": true,
+        "moves": []
+      },
+      {
+        "name": "gogoat",
+        "boundingBox": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 100.0,
+          "w": 100.0,
+          "h": 100.0,
+          "d": 100.0
+        },
+        "type": "grass",
+        "level": "",
+        "evolution": false,
+        "moves": []
+      },
+      {
+        "name": "zorua",
+        "boundingBox": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 100.0,
+          "w": 100.0,
+          "h": 100.0,
+          "d": 100.0
+        },
         "type": "dark",
         "level": "",
         "evolution": true,
         "moves": []
-      }
-    },
-    "9": {
-      "zoroark": {
+      },
+      {
+        "name": "zoroark",
+        "boundingBox": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 100.0,
+          "w": 100.0,
+          "h": 100.0,
+          "d": 100.0
+        },
         "type": "dark",
         "level": "",
         "ability": "",
         "evolution": false,
         "moves": []
       }
-    }
+    ]
   },
   "typeChart": {
     "fire": {

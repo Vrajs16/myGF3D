@@ -30,6 +30,7 @@ typedef struct Entity_S
     void *customData; /**<IF an entity needs to keep track of extra data, we can do it here*/
     int showBox;
     Box boundingBox; /**<bounding box for the entity*/
+    char* name;
 } Entity;
 
 /**

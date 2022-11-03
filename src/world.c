@@ -76,6 +76,7 @@ World *world_load(char *filename)
     if (w == NULL)
     {
         slog("failed to allocate data for the world");
+        free(w);
         return NULL;
     }
 

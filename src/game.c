@@ -65,6 +65,7 @@ int main(int argc, char *argv[])
     int a;
 
     World *w;
+    Pokedex *pokedex;
 
     for (a = 1; a < argc; a++)
     {
@@ -90,16 +91,19 @@ int main(int argc, char *argv[])
     slog_sync();
 
     w = world_load("config/world.json");
-    pokemon_new(vector3d(800, 0, 0.0), vector3d(0.0, 0.0, -5 * M_PI / 10), "growlithe", 3);
-    pokemon_new(vector3d(800 * 0.80901699437, 800 * 0.58778525229, 0.0), vector3d(0.0, 0.0, -3 * M_PI / 10), "arcanine", 1.2);
-    pokemon_new(vector3d(800 * 0.30901699437, 800 * 0.95105651629, 0.0), vector3d(0.0, 0.0, -M_PI / 10), "kirlia", 90);
-    pokemon_new(vector3d(800 * -0.30901699437, 800 * 0.95105651629, 0.0), vector3d(0.0, 0.0, M_PI / 10), "gallade", 60);
-    pokemon_new(vector3d(800 * -0.80901699437, 800 * 0.58778525229, 0.0), vector3d(0.0, 0.0, 3 * M_PI / 10), "krabby", 3);
-    pokemon_new(vector3d(800 * -1.0, 800 * 0.0, 0.0), vector3d(0.0, 0.0, 5 * M_PI / 10), "kingler", 1.5);
-    pokemon_new(vector3d(800 * -0.80901699437, 800 * -0.58778525229, 0.0), vector3d(0.0, 0.0, 7 * M_PI / 10), "skiddo", 90);
-    pokemon_new(vector3d(800 * -0.30901699437, 800 * -0.95105651629, 0.0), vector3d(0.0, 0.0, 9 * M_PI / 10), "gogoat", 60);
-    pokemon_new(vector3d(800 * 0.30901699437, 800 * -0.95105651629, 0.0), vector3d(0.0, 0.0, 11 * M_PI / 10), "zorua", 90);
-    pokemon_new(vector3d(800 * 0.80901699437, 800 * -0.58778525229, 0.0), vector3d(0.0, 0.0, 13 * M_PI / 10), "zoroark", 60);
+    pokedex = load_pokedex_json("config/pokedex.json");
+
+
+    pokemon_new(vector3d(800, 0, 0.0), vector3d(0.0, 0.0, -5 * M_PI / 10), pokedex->pokemon[0], 3);
+    pokemon_new(vector3d(800 * 0.80901699437, 800 * 0.58778525229, 0.0), vector3d(0.0, 0.0, -3 * M_PI / 10), pokedex->pokemon[1], 1.2);
+    pokemon_new(vector3d(800 * 0.30901699437, 800 * 0.95105651629, 0.0), vector3d(0.0, 0.0, -M_PI / 10), pokedex->pokemon[2], 90);
+    pokemon_new(vector3d(800 * -0.30901699437, 800 * 0.95105651629, 0.0), vector3d(0.0, 0.0, M_PI / 10), pokedex->pokemon[3], 60);
+    pokemon_new(vector3d(800 * -0.80901699437, 800 * 0.58778525229, 0.0), vector3d(0.0, 0.0, 3 * M_PI / 10), pokedex->pokemon[4], 3);
+    pokemon_new(vector3d(800 * -1.0, 800 * 0.0, 0.0), vector3d(0.0, 0.0, 5 * M_PI / 10), pokedex->pokemon[5], 1.5);
+    pokemon_new(vector3d(800 * -0.80901699437, 800 * -0.58778525229, 0.0), vector3d(0.0, 0.0, 7 * M_PI / 10), pokedex->pokemon[6], 90);
+    pokemon_new(vector3d(800 * -0.30901699437, 800 * -0.95105651629, 0.0), vector3d(0.0, 0.0, 9 * M_PI / 10), pokedex->pokemon[7], 60);
+    pokemon_new(vector3d(800 * 0.30901699437, 800 * -0.95105651629, 0.0), vector3d(0.0, 0.0, 11 * M_PI / 10), pokedex->pokemon[8], 90);
+    pokemon_new(vector3d(800 * 0.80901699437, 800 * -0.58778525229, 0.0), vector3d(0.0, 0.0, 13 * M_PI / 10), pokedex->pokemon[9], 60);
     trainer_new(vector3d(0, 0, 0), vector3d(0, 0, M_PI), "calem", 120.0);
 
     slog_sync();

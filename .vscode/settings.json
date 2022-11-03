@@ -24,6 +24,7 @@
     "stdlib.h": "c",
     "gf3d_texture.h": "c",
     "gf3d_mesh.h": "c",
-    "gfc_primitives.h": "c"
+    "gfc_primitives.h": "c",
+    "entity.h": "c"
   }
 }

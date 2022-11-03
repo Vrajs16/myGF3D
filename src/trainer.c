@@ -25,7 +25,8 @@ Entity *trainer_new(Vector3D position, Vector3D rotation, char *trainer, float s
     snprintf(texturefilename, GFCLINELEN, "assets/trainer/%s/%s.png", trainer, trainer);
 
     ent->showBox = 1;
-    ent->boundingBox = gfc_box(0,0,205,175,60,205);
+    ent->boundingBox = gfc_box(0,0,205,80,60,205);
+    ent->name = strdup(trainer);
 
     ent->model = gf3d_model_load_full(modelfilename, texturefilename);
     ent->think = trainer_think;
