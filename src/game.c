@@ -31,7 +31,7 @@
 #include "world.h"
 
 extern int __DEBUG;
-int BB = 0;
+int __BB = 0;
 
 static int _done = 0;
 static Window *_quit = NULL;
@@ -72,9 +72,9 @@ int main(int argc, char *argv[])
         {
             __DEBUG = 1;
         }
-        if (strcmp(argv[a], "--bb") == 0)
+        if (strcmp(argv[a], "--bb") == 0 || strcmp(argv[a], "--BB") == 0)
         {
-            BB = 1;
+            __BB = 1;
         }
     }
 
@@ -101,9 +101,11 @@ int main(int argc, char *argv[])
         pokemon_new(vector3d(800 * (i - pokedex->total / 2) , 2000, 0.0), vector3d(0.0, 0.0, 0.0), pokedex->pokemon[i], pokedex->pokemon[i].scale);
     }
     trainer_new(vector3d(0, 0, 0), vector3d(0, 0, M_PI), "calem", 200.0);
-    interactable_new(vector3d(0, -1000, 0), vector3d(0, 0, 0), "sign", 15);
-    interactable_new(vector3d(1000, -1000, 0), vector3d(0, 0, 0), "strength", 400);
-    interactable_new(vector3d(2000, -1000, 0), vector3d(0, 0, 0), "rock", 15);
+    interactable_new(vector3d(-2000, -2000, 0), vector3d(0, 0, 0), "sign", 15);
+    interactable_new(vector3d(-1000, -2000, 0), vector3d(0, 0, 0), "strength", 400);
+    interactable_new(vector3d(0, -2000, 0), vector3d(0, 0, 0), "rock", 15);
+    interactable_new(vector3d(1000, -2000, 0), vector3d(0, 0, 0), "pc", 250);
+    interactable_new(vector3d(2000, -2000, 0), vector3d(0, 0, 0), "tree", 250);
 
     slog_sync();
     gf3d_camera_set_scale(vector3d(1, 1, 1));
