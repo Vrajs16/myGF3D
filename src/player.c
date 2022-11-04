@@ -6,6 +6,7 @@
 
 extern float TRAINER_X;
 extern float TRAINER_Y;
+extern float TRAINER_ROT_Z;
 
 void player_think(Entity *self);
 void player_update(Entity *self);
@@ -31,38 +32,10 @@ void player_think(Entity *self)
 {
     if (!self)
         return;
-
-    Vector3D rotate = {0};
-    Vector3D forward = {0};
-    Vector3D right = {0};
-    Vector3D moveDir = {0};
-
-    const Uint8 *keys;
-    keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
-    if (keys[SDL_SCANCODE_D])
-        rotate.z += .05;
-    if (keys[SDL_SCANCODE_A])
-        rotate.z -= .05;
-
-    vector3d_sub(self->rotation, self->rotation, rotate);
-
-    // z is up
-    float yaw = self->rotation.z;
-
-    vector3d_set(right, cos(yaw) * 15, sin(yaw) * 15, 0);
-    vector3d_set(forward, -right.y, right.x, 0);
-    vector3d_set(moveDir, 0, 0, 0);
-
-    if (keys[SDL_SCANCODE_W])
-        vector3d_add(moveDir, moveDir, forward);
-    else if (keys[SDL_SCANCODE_S])
-        vector3d_add(moveDir, moveDir, -forward);
-
-    vector3d_add(self->position, self->position, moveDir);
-
-    float x = 1300 * cos(yaw - M_PI_2) + TRAINER_X;
-    float y = 1300 * sin(yaw - M_PI_2) + TRAINER_Y;
-    vector3d_set(self->position, x, y, 600);
+    vector3d_set(self->rotation, M_PI + .2,0,TRAINER_ROT_Z-M_PI);
+    float x = 1800 * cos(self->rotation.z - M_PI_2) + TRAINER_X;
+    float y = 1800 * sin(self->rotation.z - M_PI_2) + TRAINER_Y;
+    vector3d_set(self->position, x, y, 1000);
 }
 
 void player_update(Entity *self)

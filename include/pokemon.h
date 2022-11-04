@@ -41,6 +41,7 @@ typedef struct
 {
     char *name;
     int level;
+    float scale;
     int evolution;
     char *type;
     Box boundingBox;

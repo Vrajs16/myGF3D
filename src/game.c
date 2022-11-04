@@ -24,15 +24,13 @@
 #include "gf2d_windows_common.h"
 
 #include "entity.h"
+#include "interactable.h"
 #include "pokemon.h"
 #include "player.h"
 #include "trainer.h"
 #include "world.h"
 
 extern int __DEBUG;
-extern float TRAINER_X;
-extern float TRAINER_Y;
-extern float TRAINER_ROT_Z;
 
 static int _done = 0;
 static Window *_quit = NULL;
@@ -93,22 +91,18 @@ int main(int argc, char *argv[])
     w = world_load("config/world.json");
     pokedex = load_pokedex_json("config/pokedex.json");
 
-
-    pokemon_new(vector3d(800, 0, 0.0), vector3d(0.0, 0.0, -5 * M_PI / 10), pokedex->pokemon[0], 3);
-    pokemon_new(vector3d(800 * 0.80901699437, 800 * 0.58778525229, 0.0), vector3d(0.0, 0.0, -3 * M_PI / 10), pokedex->pokemon[1], 1.2);
-    pokemon_new(vector3d(800 * 0.30901699437, 800 * 0.95105651629, 0.0), vector3d(0.0, 0.0, -M_PI / 10), pokedex->pokemon[2], 90);
-    pokemon_new(vector3d(800 * -0.30901699437, 800 * 0.95105651629, 0.0), vector3d(0.0, 0.0, M_PI / 10), pokedex->pokemon[3], 60);
-    pokemon_new(vector3d(800 * -0.80901699437, 800 * 0.58778525229, 0.0), vector3d(0.0, 0.0, 3 * M_PI / 10), pokedex->pokemon[4], 3);
-    pokemon_new(vector3d(800 * -1.0, 800 * 0.0, 0.0), vector3d(0.0, 0.0, 5 * M_PI / 10), pokedex->pokemon[5], 1.5);
-    pokemon_new(vector3d(800 * -0.80901699437, 800 * -0.58778525229, 0.0), vector3d(0.0, 0.0, 7 * M_PI / 10), pokedex->pokemon[6], 90);
-    pokemon_new(vector3d(800 * -0.30901699437, 800 * -0.95105651629, 0.0), vector3d(0.0, 0.0, 9 * M_PI / 10), pokedex->pokemon[7], 60);
-    pokemon_new(vector3d(800 * 0.30901699437, 800 * -0.95105651629, 0.0), vector3d(0.0, 0.0, 11 * M_PI / 10), pokedex->pokemon[8], 90);
-    pokemon_new(vector3d(800 * 0.80901699437, 800 * -0.58778525229, 0.0), vector3d(0.0, 0.0, 13 * M_PI / 10), pokedex->pokemon[9], 60);
-    trainer_new(vector3d(0, 0, 0), vector3d(0, 0, M_PI), "calem", 120.0);
+    for (int i = 0; i < pokedex->total; i++)
+    {
+        pokemon_new(vector3d(800 * (i - pokedex->total / 2) , 2000, 0.0), vector3d(0.0, 0.0, 0.0), pokedex->pokemon[i], pokedex->pokemon[i].scale);
+    }
+    trainer_new(vector3d(0, 0, 0), vector3d(0, 0, M_PI), "calem", 200.0);
+    interactable_new(vector3d(0, -1000, 0), vector3d(0, 0, 0), "sign", 15);
+    interactable_new(vector3d(1000, -1000, 0), vector3d(0, 0, 0), "strength", 400);
+    interactable_new(vector3d(2000, -1000, 0), vector3d(0, 0, 0), "rock", 15);
 
     slog_sync();
     gf3d_camera_set_scale(vector3d(1, 1, 1));
-    player_new(vector3d(0, -1300, 600));
+    player_new(vector3d(0, -1800, 1000));
 
     // main game loop
     slog("gf3d main loop begin");

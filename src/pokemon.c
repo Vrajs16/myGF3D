@@ -17,17 +17,17 @@ Entity *pokemon_new(Vector3D position, Vector3D rotation, Pokemon pokemon, float
         return NULL;
     }
     snprintf(modelfilename, GFCLINELEN, "assets/pokemon/%s/%s.obj", pokemon.name, pokemon.name);
-    snprintf(texturefilename, GFCLINELEN, "assets/pokemon/%s/%s.png", pokemon.name, pokemon.name);
+    snprintf(texturefilename, GFCLINELEN, "assets/pokemon/%s/%s-bake.png", pokemon.name, pokemon.name);
     ent->model = gf3d_model_load_full(modelfilename, texturefilename);
     ent->think = pokemon_think;
 
     ent->showBox = 1;
     ent->boundingBox = pokemon.boundingBox;
     ent->name = strdup(pokemon.name);
-
     vector3d_copy(ent->scale, vector3d(scale, scale, scale));
-    vector3d_copy(ent->rotation, rotation);
     vector3d_copy(ent->position, position);
+    vector3d_copy(ent->rotation, rotation);
+
     return ent;
 }
 
@@ -36,10 +36,10 @@ void pokemon_think(Entity *self)
     if (!self)
         return;
 
-    self->rotation.z += -0.001;
+    // self->rotation.z += -0.005;
 
-    self->position.x = 1000 * cos(self->rotation.z + M_PI_2);
-    self->position.y = 1000 * sin(self->rotation.z + M_PI_2);
+    // self->position.x = 1000 * cos(self->rotation.z + M_PI_2);
+    // self->position.y = 1000 * sin(self->rotation.z + M_PI_2);
 }
 
 Pokedex *load_pokedex_json(char *filename)
@@ -90,6 +90,7 @@ Pokedex *load_pokedex_json(char *filename)
             sj_free(json);
             return NULL;
         }
+        sj_get_float_value(sj_object_get_value(pokemon, "scale"), &pokedex->pokemon[i].scale);
         pokedex->pokemon[i].name = strdup(name);
         SJson *boundingBox = sj_object_get_value(pokemon, "boundingBox");
         if (!boundingBox)

@@ -150,4 +150,31 @@ void entity_update_all()
     }
 }
 
+
+void entity_collide_check(Entity *ent)
+{
+    int i;
+    Box BoundA, BoundB;
+
+    if (!ent)
+        return;
+    
+
+}
+
+void entity_collide_check_all()
+{
+    int i;
+    for (i = 0; i < entity_manager.entity_count; i++)
+    {
+        if (!entity_manager.entity_list[i]._inuse) // not used yet
+        {
+            continue; // skip this iteration of the loop
+        }
+        entity_collide_check(&entity_manager.entity_list[i]);
+        
+    }
+}
+
+
 /*eol@eof*/

@@ -33,6 +33,18 @@
 2. Give them AI to walk around the map and battle the player
 
 
+checking for collision
+
+1. Update the position of the entity
+2. Check for collision
+   1. If true, then check if the entity is a pokemon or interactable
+      1. if pokemon, then start battle
+      2. if interactable, then interact with it by showing a ui layer
+      3. If there is a collision remeber to set the entites collision value to true so that I don't move until the collision is resolved
+      4. If there is a collision set the 
+      5. 
+
+
 
 
 
