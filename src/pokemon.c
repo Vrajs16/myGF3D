@@ -21,7 +21,7 @@ Entity *pokemon_new(Vector3D position, Vector3D rotation, Pokemon pokemon, float
     ent->model = gf3d_model_load_full(modelfilename, texturefilename);
     ent->think = pokemon_think;
 
-    ent->showBox = 1;
+    ent->isBox = 1;
     ent->boundingBox = pokemon.boundingBox;
     ent->name = strdup(pokemon.name);
     vector3d_copy(ent->scale, vector3d(scale, scale, scale));

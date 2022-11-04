@@ -6,6 +6,7 @@
 #include "entity.h"
 #include "gf3d_draw.h"
 
+extern int BB;
 typedef struct
 {
     Entity *entity_list;
@@ -75,7 +76,7 @@ void entity_draw(Entity *self)
     gf3d_model_draw(self->model, self->modelMat, vector4d(1, 1, 1, 1), vector4d(0, 0, 0, 0));
 
     // draw bounding box if it exists
-    if (self->showBox)
+    if (BB && self->isBox)
     {
         gf3d_draw_cube_wireframe(self->boundingBox, vector3d(self->position.x, self->position.y, 0), vector3d(0, 0, self->rotation.z), vector3d(1, 1, 1), gfc_color(0, 1, 0, 1));
     }

@@ -31,6 +31,7 @@
 #include "world.h"
 
 extern int __DEBUG;
+int BB = 0;
 
 static int _done = 0;
 static Window *_quit = NULL;
@@ -70,6 +71,10 @@ int main(int argc, char *argv[])
         if (strcmp(argv[a], "--debug") == 0)
         {
             __DEBUG = 1;
+        }
+        if (strcmp(argv[a], "--bb") == 0)
+        {
+            BB = 1;
         }
     }
 

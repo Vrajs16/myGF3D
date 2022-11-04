@@ -19,7 +19,7 @@ Entity *interactable_new(Vector3D position, Vector3D rotation, char *filename, f
     snprintf(texturefilename, GFCLINELEN, "assets/interactables/%s/%s-bake.png", filename, filename);
 
     ent->model = gf3d_model_load_full(modelfilename, texturefilename);
-    ent->showBox = 1;
+    ent->isBox = 1;
     ent->boundingBox = gfc_box(0, 0, 250, 250, 250, 250);
     ent->name = strdup(filename);
     vector3d_copy(ent->scale, vector3d(scale, scale, scale));
