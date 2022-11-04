@@ -5,6 +5,7 @@
 
 #include "entity.h"
 #include "gf3d_draw.h"
+#include "gfc_primitives.h"
 
 extern int __BB;
 typedef struct
@@ -151,7 +152,6 @@ void entity_update_all()
     }
 }
 
-
 void entity_collide_check(Entity *ent)
 {
     int i;
@@ -159,10 +159,28 @@ void entity_collide_check(Entity *ent)
 
     if (!ent)
         return;
-    
-
+    if (ent->type == ET_TRAINER)
+    {
+        BoundA = ent->boundingBox;
+        vector3d_add(BoundA, BoundA, ent->position);
+        for (i = 0; i < entity_manager.entity_count; i++)
+        {
+            if (!entity_manager.entity_list[i]._inuse || entity_manager.entity_list[i].type == ET_TRAINER) // not used yet
+            {
+                continue; // skip this iteration of the loop
+            }
+            BoundB = entity_manager.entity_list[i].boundingBox;
+            vector3d_add(BoundB, BoundB, entity_manager.entity_list[i].position);
+            if (gfc_box_overlap(BoundA, BoundB))
+            {
+                if (ent->collide)
+                {
+                    ent->collide(ent, &entity_manager.entity_list[i]);
+                }
+            }
+        }
+    }
 }
-
 void entity_collide_check_all()
 {
     int i;
@@ -173,9 +191,7 @@ void entity_collide_check_all()
             continue; // skip this iteration of the loop
         }
         entity_collide_check(&entity_manager.entity_list[i]);
-        
     }
 }
-
 
 /*eol@eof*/

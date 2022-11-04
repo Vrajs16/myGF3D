@@ -23,7 +23,8 @@ Entity *pokemon_new(Vector3D position, Vector3D rotation, Pokemon pokemon, float
 
     ent->isBox = 1;
     ent->boundingBox = pokemon.boundingBox;
-    ent->name = strdup(pokemon.name);
+    ent->name = pokemon.name;
+    ent->type = ET_POKEMON;
     vector3d_copy(ent->scale, vector3d(scale, scale, scale));
     vector3d_copy(ent->position, position);
     vector3d_copy(ent->rotation, rotation);
@@ -46,7 +47,8 @@ Pokedex *load_pokedex_json(char *filename)
 {
     Pokedex *pokedex = NULL;
     pokedex = gfc_allocate_array(sizeof(Pokedex), 1);
-    SJson *json, *pokedex_j, *typechart;
+    // SJson *json, *pokedex_j, *typechart;
+    SJson *json, *pokedex_j;
     int totalPokemon;
     json = sj_load(filename);
     if (!json)

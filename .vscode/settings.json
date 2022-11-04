@@ -25,6 +25,8 @@
     "gf3d_texture.h": "c",
     "gf3d_mesh.h": "c",
     "gfc_primitives.h": "c",
-    "entity.h": "c"
+    "entity.h": "c",
+    "gf2d_mouse.h": "c",
+    "gf2d_windows_common.h": "c"
   }
 }

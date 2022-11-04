@@ -234,10 +234,11 @@ void gf3d_vgraphics_setup(
             flags |= SDL_WINDOW_FULLSCREEN;
         }
     }
+    flags |= SDL_WINDOW_BORDERLESS;
     slog_sync();
     gf3d_vgraphics.main_window = SDL_CreateWindow(windowName,
-                                                  SDL_WINDOWPOS_UNDEFINED,
-                                                  SDL_WINDOWPOS_UNDEFINED,
+                                                  0,
+                                                  0,
                                                   renderWidth, renderHeight,
                                                   flags);
     slog_sync();

@@ -20,8 +20,9 @@ Entity *interactable_new(Vector3D position, Vector3D rotation, char *filename, f
 
     ent->model = gf3d_model_load_full(modelfilename, texturefilename);
     ent->isBox = 1;
-    ent->boundingBox = gfc_box(0, 0, 300, 300, 300, 300);
-    ent->name = strdup(filename);
+    ent->boundingBox = gfc_box(0, 0, 350, 350, 350, 350);
+    ent->name = filename;
+    ent->type = ET_INTERACTABLE;
     vector3d_copy(ent->scale, vector3d(scale, scale, scale));
     vector3d_copy(ent->rotation, rotation);
     vector3d_copy(ent->position, position);

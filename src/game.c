@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < pokedex->total; i++)
     {
-        pokemon_new(vector3d(800 * (i - pokedex->total / 2) , 2000, 0.0), vector3d(0.0, 0.0, 0.0), pokedex->pokemon[i], pokedex->pokemon[i].scale);
+        pokemon_new(vector3d(900 * (i - pokedex->total / 2) , 2000, 0.0), vector3d(0.0, 0.0, 0.0), pokedex->pokemon[i], pokedex->pokemon[i].scale);
     }
     trainer_new(vector3d(0, 0, 0), vector3d(0, 0, M_PI), "calem", 200.0);
     interactable_new(vector3d(-2000, -2000, 0), vector3d(0, 0, 0), "sign", 15);
@@ -121,6 +121,7 @@ int main(int argc, char *argv[])
         gf2d_windows_update_all();
         entity_think_all();
         entity_update_all();
+        entity_collide_check_all();
         gf3d_camera_update_view();
         gf3d_camera_get_view_mat4(gf3d_vgraphics_get_view_matrix());
         // gf3d_camera_look_at(vector3d(100, 100, 100), vector3d(0, 0, 0), vector3d(0, 0, 1));

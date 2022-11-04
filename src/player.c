@@ -21,6 +21,7 @@ Entity *player_new(Vector3D position)
         slog("UGH OHHHH, no player for you!");
         return NULL;
     }
+    ent->name = "camera";
     ent->think = player_think;
     ent->update = player_update;
     vector3d_copy(ent->position, position);

@@ -2,8 +2,9 @@
 #define __ENTITY_H__
 
 #include "gfc_types.h"
-
 #include "gf3d_model.h"
+
+enum entityTypes{ET_NONE,ET_TRAINER,ET_POKEMON,ET_INTERACTABLE};
 
 typedef struct Entity_S
 {
@@ -16,6 +17,7 @@ typedef struct Entity_S
     void (*damage)(struct Entity_S *self, float damage, struct Entity_S *inflictor); /**<pointer to the think function*/
     void (*onDeath)(struct Entity_S *self);                                          /**<pointer to an funciton to call when the entity dies*/
 
+    Vector3D previousPosition;                                                       /**<position of the entity last frame*/
     Vector3D position;
     Vector3D velocity;
     Vector3D acceleration;
@@ -30,7 +32,11 @@ typedef struct Entity_S
     void *customData; /**<IF an entity needs to keep track of extra data, we can do it here*/
     int isBox;
     Box boundingBox; /**<bounding box for the entity*/
-    char* name;
+    char *name;
+    enum entityTypes type;
+
+    void (*collide)(struct Entity_S *self, struct Entity_S *other); /**<pointer to the collide function*/
+
 } Entity;
 
 /**
@@ -77,5 +83,16 @@ void entity_think_all();
  * @brief run the update functions for ALL active entities
  */
 void entity_update_all();
+
+/**
+ * @brief Check if entity is colliding
+ * @param ent the entity in question
+ */
+void entity_collide_check(Entity *ent);
+
+/**
+ * @brief run the collide functions for ALL active entities
+ */
+void entity_collide_check_all();
 
 #endif
