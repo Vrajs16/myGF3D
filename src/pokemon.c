@@ -25,6 +25,7 @@ Entity *pokemon_new(Vector3D position, Vector3D rotation, Pokemon pokemon, float
     ent->boundingBox = pokemon.boundingBox;
     ent->name = pokemon.name;
     ent->type = ET_POKEMON;
+    ent->pokemon = pokemon;
     vector3d_copy(ent->scale, vector3d(scale, scale, scale));
     vector3d_copy(ent->position, position);
     vector3d_copy(ent->rotation, rotation);

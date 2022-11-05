@@ -29,24 +29,7 @@ typedef struct
     TypeEffectiveness physic;
     TypeEffectiveness dark;
 } TypeChart;
-typedef struct
-{
-    char *name;
-    char *type;
-    int power;
-    int accuracy;
-    int pp;
-} Move;
-typedef struct
-{
-    char *name;
-    int level;
-    float scale;
-    int evolution;
-    char *type;
-    Box boundingBox;
-    Move moves[4];
-} Pokemon;
+
 typedef struct
 {
     int total;        // total number of pokemon

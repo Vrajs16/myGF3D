@@ -31,6 +31,12 @@
 #include "world.h"
 
 extern int __DEBUG;
+extern int ROCK_COLLISION;
+extern int TREE_COLLISION;
+extern int SIGN_COLLISION;
+extern int PC_COLLISION;
+extern int STRENGTH_COLLISION;
+
 int __BB = 0;
 
 static int _done = 0;
@@ -98,7 +104,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < pokedex->total; i++)
     {
-        pokemon_new(vector3d(900 * (i - pokedex->total / 2) , 2000, 0.0), vector3d(0.0, 0.0, 0.0), pokedex->pokemon[i], pokedex->pokemon[i].scale);
+        pokemon_new(vector3d(950 * (i - pokedex->total / 2), 2000, 0.0), vector3d(0.0, 0.0, 0.0), pokedex->pokemon[i], pokedex->pokemon[i].scale);
     }
     trainer_new(vector3d(0, 0, 0), vector3d(0, 0, M_PI), "calem", 200.0);
     interactable_new(vector3d(-2000, -2000, 0), vector3d(0, 0, 0), "sign", 15);
@@ -137,12 +143,27 @@ int main(int argc, char *argv[])
         gf2d_windows_draw_all();
         gf2d_mouse_draw();
 
+        if (SIGN_COLLISION)
+        {
+            gf2d_draw_rect_filled(gfc_rect(10, 10, 410, 50), gfc_color8(128, 128, 128, 255));
+            gf2d_font_draw_line_tag("Welcome to my pokemon world!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
+            gf2d_draw_rect(gfc_rect(10, 10, 410, 50), gfc_color8(255, 255, 255, 255));
+        }
+
+        // Box box1 = gfc_box(0, 0, 250, 500, 500, 500); //red
+        // Box box2 = gfc_box(501, 0, 250, 500, 500, 500); //blue
+        // gf3d_draw_cube_solid(box1, vector3d(0, 0, 0), vector3d(0, 0, 0), vector3d(.5, .5, .5), gfc_color8(255, 0, 0, 255));
+        // gf3d_draw_cube_solid(box2, vector3d(0, 0, 0), vector3d(0, 0, 0), vector3d(.5, .5, .5), gfc_color8(0, 0, 255, 255));
+        // if (gfc_box_overlap(box1, box2))
+        // {
+        //     slog("YES");
+        // }
         gf3d_vgraphics_render_end();
 
         if ((gfc_input_command_down("exit")) && (_quit == NULL))
         {
             _done = 1;
-            // exitCheck();
+            exitCheck();
         }
     }
 

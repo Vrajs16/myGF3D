@@ -27,6 +27,11 @@
     "gfc_primitives.h": "c",
     "entity.h": "c",
     "gf2d_mouse.h": "c",
-    "gf2d_windows_common.h": "c"
+    "gf2d_windows_common.h": "c",
+    "gf2d_element_label.h": "c",
+    "gf2d_element_entry.h": "c",
+    "gf2d_draw.h": "c",
+    "gf2d_sprite.h": "c",
+    "ratio": "c"
   }
 }

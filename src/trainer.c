@@ -7,6 +7,12 @@ float TRAINER_X = 0;
 float TRAINER_Y = 0;
 float TRAINER_ROT_Z = 0;
 
+int SIGN_COLLISION = 0;
+int TREE_COLLISION = 0;
+int PC_COLLISION = 0;
+int ROCK_COLLISION = 0;
+int STRENTH_COLLISION = 0;
+
 void trainer_think(Entity *self);
 void trainer_collide(Entity *self, Entity *other);
 
@@ -25,7 +31,7 @@ Entity *trainer_new(Vector3D position, Vector3D rotation, char *trainer, float s
     snprintf(texturefilename, GFCLINELEN, "assets/trainer/%s/%s-bake.png", trainer, trainer);
 
     ent->isBox = 1;
-    ent->boundingBox = gfc_box(0, 0, 350, 100, 100, 350);
+    ent->boundingBox = gfc_box(0, 0, 350, 200, 200, 350);
 
     ent->model = gf3d_model_load_full(modelfilename, texturefilename);
     ent->think = trainer_think;
@@ -69,28 +75,62 @@ void trainer_think(Entity *self)
         vector3d_add(moveDir, moveDir, forward);
     vector3d_copy(self->previousPosition, self->position);
     vector3d_add(self->position, self->position, moveDir);
+    if (SIGN_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition))
+    {
+        SIGN_COLLISION = 1;
+    }
+    else
+    {
+        SIGN_COLLISION = 0;
+    }
     TRAINER_X = self->position.x;
     TRAINER_Y = self->position.y;
 }
 
 void trainer_collide(struct Entity_S *self, struct Entity_S *other)
 {
-    slog("trainer collided with %s", other->name);
-    if(other->type == ET_POKEMON)
+    if (other->type == ET_POKEMON)
     {
-        slog("trainer collided with pokemon");
+        slog("trainer collided with %s", other->pokemon.name);
+        self->position = self->previousPosition;
+        // Start battle - Combat Scene + battling logic
+    }
+    if (other->type == ET_INTERACTABLE)
+    {
         self->position = self->previousPosition;
 
-        //Start battle
+        // Depending on the interactable, do something
+        if (strcmp(other->name, "sign") == 0 && SIGN_COLLISION == 0)
+        {
+            slog("sign");
+            SIGN_COLLISION = 1;
+            return;
+        }
+        else if (strcmp(other->name, "tree") == 0 && TREE_COLLISION == 0)
+        {
+            slog("tree");
+            TREE_COLLISION = 1;
+            return;
+        }
+        else if (strcmp(other->name, "rock") == 0 && ROCK_COLLISION == 0)
+        {
+            slog("rock");
+            ROCK_COLLISION = 1;
+            return;
+        }
+        else if (strcmp(other->name, "pc") == 0 && PC_COLLISION == 0)
+        {
+            slog("pc");
+            PC_COLLISION = 1;
+            return;
+        }
+        else if (strcmp(other->name, "strength") == 0 && STRENTH_COLLISION == 0)
+        {
+            slog("strength");
+            STRENTH_COLLISION = 1;
+            return;
+        }
     }
-    if(other->type == ET_INTERACTABLE)
-    {
-        slog("trainer collided with interactable");
-        self->position = self->previousPosition;
-
-        //Depending on the interactable, do something
-    }
-
 }
 
 /*eol@eof*/

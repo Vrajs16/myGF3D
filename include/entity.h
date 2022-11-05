@@ -4,7 +4,31 @@
 #include "gfc_types.h"
 #include "gf3d_model.h"
 
-enum entityTypes{ET_NONE,ET_TRAINER,ET_POKEMON,ET_INTERACTABLE};
+typedef struct
+{
+    char *name;
+    char *type;
+    int power;
+    int accuracy;
+    int pp;
+} Move;
+typedef struct
+{
+    char *name;
+    int level;
+    float scale;
+    int evolution;
+    char *type;
+    Box boundingBox;
+    Move moves[4];
+} Pokemon;
+enum entityTypes
+{
+    ET_NONE,
+    ET_TRAINER,
+    ET_POKEMON,
+    ET_INTERACTABLE
+};
 
 typedef struct Entity_S
 {
@@ -17,7 +41,7 @@ typedef struct Entity_S
     void (*damage)(struct Entity_S *self, float damage, struct Entity_S *inflictor); /**<pointer to the think function*/
     void (*onDeath)(struct Entity_S *self);                                          /**<pointer to an funciton to call when the entity dies*/
 
-    Vector3D previousPosition;                                                       /**<position of the entity last frame*/
+    Vector3D previousPosition; /**<position of the entity last frame*/
     Vector3D position;
     Vector3D velocity;
     Vector3D acceleration;
@@ -34,6 +58,9 @@ typedef struct Entity_S
     Box boundingBox; /**<bounding box for the entity*/
     char *name;
     enum entityTypes type;
+    int collided;
+
+    Pokemon pokemon;
 
     void (*collide)(struct Entity_S *self, struct Entity_S *other); /**<pointer to the collide function*/
 

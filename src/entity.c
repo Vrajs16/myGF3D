@@ -8,6 +8,11 @@
 #include "gfc_primitives.h"
 
 extern int __BB;
+extern int SIGN_COLLISION;
+extern int TREE_COLLISION;
+extern int PC_COLLISION;
+extern int ROCK_COLLISION;
+extern int STRENTH_COLLISION;
 typedef struct
 {
     Entity *entity_list;
@@ -79,7 +84,7 @@ void entity_draw(Entity *self)
     // draw bounding box if it exists
     if (__BB && self->isBox)
     {
-        gf3d_draw_cube_wireframe(self->boundingBox, vector3d(self->position.x, self->position.y, 0), vector3d(0, 0, self->rotation.z), vector3d(1, 1, 1), gfc_color(0, 1, 0, 1));
+        gf3d_draw_cube_wireframe(self->boundingBox, vector3d(self->position.x, self->position.y, self->position.z), vector3d(0, 0, self->rotation.z), vector3d(1,1,1), gfc_color(0, 0, 1, 1));
     }
 }
 
