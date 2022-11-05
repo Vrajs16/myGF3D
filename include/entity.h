@@ -78,6 +78,8 @@ void entity_system_init(Uint32 maxEntities);
  */
 Entity *entity_new();
 
+Entity *entity_get(char *name);
+
 /**
  * @brief free a previously created entity from memory
  * @param self the entity in question

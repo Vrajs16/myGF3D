@@ -107,11 +107,11 @@ int main(int argc, char *argv[])
         pokemon_new(vector3d(950 * (i - pokedex->total / 2), 2000, 0.0), vector3d(0.0, 0.0, 0.0), pokedex->pokemon[i], pokedex->pokemon[i].scale);
     }
     trainer_new(vector3d(0, 0, 0), vector3d(0, 0, M_PI), "calem", 200.0);
-    interactable_new(vector3d(-2000, -2000, 0), vector3d(0, 0, 0), "sign", 15);
-    interactable_new(vector3d(-1000, -2000, 0), vector3d(0, 0, 0), "strength", 400);
+    interactable_new(vector3d(-4000, -2000, 0), vector3d(0, 0, 0), "sign", 15);
+    interactable_new(vector3d(-2000, -2000, 0), vector3d(0, 0, 0), "strength", 400);
     interactable_new(vector3d(0, -2000, 0), vector3d(0, 0, 0), "rock", 15);
-    interactable_new(vector3d(1000, -2000, 0), vector3d(0, 0, 0), "pc", 250);
-    interactable_new(vector3d(2000, -2000, 0), vector3d(0, 0, 0), "tree", 250);
+    interactable_new(vector3d(2000, -2000, 0), vector3d(0, 0, 0), "pc", 250);
+    interactable_new(vector3d(4000, -2000, 0), vector3d(0, 0, 0), "tree", 250);
 
     slog_sync();
     gf3d_camera_set_scale(vector3d(1, 1, 1));
@@ -145,9 +145,33 @@ int main(int argc, char *argv[])
 
         if (SIGN_COLLISION)
         {
-            gf2d_draw_rect_filled(gfc_rect(10, 10, 410, 50), gfc_color8(128, 128, 128, 255));
-            gf2d_font_draw_line_tag("Welcome to my pokemon world!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
-            gf2d_draw_rect(gfc_rect(10, 10, 410, 50), gfc_color8(255, 255, 255, 255));
+            gf2d_draw_rect_filled(gfc_rect(10, 10, 300, 50), gfc_color8(128, 128, 128, 255));
+            gf2d_font_draw_line_tag("Vraj's Pokémon World!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
+            gf2d_draw_rect(gfc_rect(10, 10, 300, 50), gfc_color8(255, 255, 255, 255));
+        }
+        if (PC_COLLISION)
+        {
+            gf2d_draw_rect_filled(gfc_rect(10, 10, 430, 50), gfc_color8(128, 128, 128, 255));
+            gf2d_font_draw_line_tag("Press 'E' to heal your Pokémon!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
+            gf2d_draw_rect(gfc_rect(10, 10, 430, 50), gfc_color8(255, 255, 255, 255));
+        }
+        if (STRENGTH_COLLISION)
+        {
+            gf2d_draw_rect_filled(gfc_rect(10, 10, 360, 50), gfc_color8(128, 128, 128, 255));
+            gf2d_font_draw_line_tag("Press 'E' to use Strength!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
+            gf2d_draw_rect(gfc_rect(10, 10, 360, 50), gfc_color8(255, 255, 255, 255));
+        }
+        if (ROCK_COLLISION)
+        {
+            gf2d_draw_rect_filled(gfc_rect(10, 10, 390, 50), gfc_color8(128, 128, 128, 255));
+            gf2d_font_draw_line_tag("Press 'E' to use Rock Smash!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
+            gf2d_draw_rect(gfc_rect(10, 10, 390, 50), gfc_color8(255, 255, 255, 255));
+        }
+        if (TREE_COLLISION)
+        {
+            gf2d_draw_rect_filled(gfc_rect(10, 10, 290, 50), gfc_color8(128, 128, 128, 255));
+            gf2d_font_draw_line_tag("Press 'E' to use Cut!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
+            gf2d_draw_rect(gfc_rect(10, 10, 290, 50), gfc_color8(255, 255, 255, 255));
         }
 
         // Box box1 = gfc_box(0, 0, 250, 500, 500, 500); //red

@@ -11,7 +11,7 @@ int SIGN_COLLISION = 0;
 int TREE_COLLISION = 0;
 int PC_COLLISION = 0;
 int ROCK_COLLISION = 0;
-int STRENTH_COLLISION = 0;
+int STRENGTH_COLLISION = 0;
 
 void trainer_think(Entity *self);
 void trainer_collide(Entity *self, Entity *other);
@@ -76,13 +76,73 @@ void trainer_think(Entity *self)
     vector3d_copy(self->previousPosition, self->position);
     vector3d_add(self->position, self->position, moveDir);
     if (SIGN_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition))
-    {
         SIGN_COLLISION = 1;
+    else
+        SIGN_COLLISION = 0;
+
+    if (TREE_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition))
+    {
+        TREE_COLLISION = 1;
+        if (keys[SDL_SCANCODE_E])
+        {
+            // Delete tree
+            slog("You used Cut!");
+            entity_free(entity_get("tree"));
+            TREE_COLLISION = 0;
+        }
     }
     else
+        TREE_COLLISION = 0;
+
+    if (PC_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition))
     {
-        SIGN_COLLISION = 0;
+        PC_COLLISION = 1;
+        if (keys[SDL_SCANCODE_E])
+        {
+            // Delete PC
+            slog("You healed your Pokemon!");
+            PC_COLLISION = 0;
+        }
     }
+    else
+        PC_COLLISION = 0;
+
+    if (ROCK_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition))
+    {
+        ROCK_COLLISION = 1;
+        if (keys[SDL_SCANCODE_E])
+        {
+            // Delete Rock
+            slog("You used Rock Smash!");
+            entity_free(entity_get("rock"));
+            ROCK_COLLISION = 0;
+        }
+    }
+    else
+        ROCK_COLLISION = 0;
+
+    if (STRENGTH_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition))
+    {
+        STRENGTH_COLLISION = 1;
+        if (keys[SDL_SCANCODE_E])
+        {
+            // Move Rock
+            slog("You used Strength!");
+            Entity *strength = entity_get("strength");
+            slog("Strength Position: %f, %f", strength->position.x, strength->position.y);
+            slog("sin: %f, cos: %f", 1500 * sin(TRAINER_ROT_Z), 1000 * cos(TRAINER_ROT_Z));
+            slog("degrees: %f", TRAINER_ROT_Z * 180 / M_PI);
+
+            // Move bolder 100 units in the direction the trainer is facing
+            strength->position.x += 1500 * sin(TRAINER_ROT_Z);
+            strength->position.y += 1500 * cos(TRAINER_ROT_Z + M_PI);
+
+            STRENGTH_COLLISION = 0;
+        }
+    }
+    else
+        STRENGTH_COLLISION = 0;
+
     TRAINER_X = self->position.x;
     TRAINER_Y = self->position.y;
 }
@@ -102,32 +162,27 @@ void trainer_collide(struct Entity_S *self, struct Entity_S *other)
         // Depending on the interactable, do something
         if (strcmp(other->name, "sign") == 0 && SIGN_COLLISION == 0)
         {
-            slog("sign");
             SIGN_COLLISION = 1;
             return;
         }
         else if (strcmp(other->name, "tree") == 0 && TREE_COLLISION == 0)
         {
-            slog("tree");
             TREE_COLLISION = 1;
             return;
         }
         else if (strcmp(other->name, "rock") == 0 && ROCK_COLLISION == 0)
         {
-            slog("rock");
             ROCK_COLLISION = 1;
             return;
         }
         else if (strcmp(other->name, "pc") == 0 && PC_COLLISION == 0)
         {
-            slog("pc");
             PC_COLLISION = 1;
             return;
         }
-        else if (strcmp(other->name, "strength") == 0 && STRENTH_COLLISION == 0)
+        else if (strcmp(other->name, "strength") == 0 && STRENGTH_COLLISION == 0)
         {
-            slog("strength");
-            STRENTH_COLLISION = 1;
+            STRENGTH_COLLISION = 1;
             return;
         }
     }
