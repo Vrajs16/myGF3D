@@ -5,6 +5,7 @@
 
 float TRAINER_X = 0;
 float TRAINER_Y = 0;
+float TRAINER_Z = 1000;
 float TRAINER_ROT_Z = 0;
 
 int SIGN_COLLISION = 0;
@@ -12,6 +13,8 @@ int TREE_COLLISION = 0;
 int PC_COLLISION = 0;
 int ROCK_COLLISION = 0;
 int STRENGTH_COLLISION = 0;
+
+int BATTLE = 0;
 
 void trainer_think(Entity *self);
 void trainer_collide(Entity *self, Entity *other);
@@ -49,6 +52,11 @@ void trainer_think(Entity *self)
 {
     if (!self)
         return;
+
+    if(BATTLE){
+        return;
+    }
+
     Vector3D rotate = {0};
     Vector3D forward = {0};
     Vector3D moveDir = {0};
@@ -149,8 +157,22 @@ void trainer_collide(struct Entity_S *self, struct Entity_S *other)
     if (other->type == ET_POKEMON)
     {
         slog("trainer collided with %s", other->pokemon.name);
-        self->position = self->previousPosition;
         // Start battle - Combat Scene + battling logic
+        BATTLE = 1;
+
+        //Move trainer and pokemon to battle box
+        self->position.x = 0;
+        self->position.y = -2000;
+        self->position.z = 5000;
+        self->rotation.z = M_PI;
+        other->position.x = 0;
+        other->position.y = 2000;
+        other->position.z = 5000;
+
+        TRAINER_X = self->position.x + 1000;
+        TRAINER_Y = self->position.y + 200;
+        TRAINER_Z = self->position.z + 1000;
+        TRAINER_ROT_Z = M_PI + .2 ;
     }
     if (other->type == ET_INTERACTABLE)
     {

@@ -6,6 +6,7 @@
 
 extern float TRAINER_X;
 extern float TRAINER_Y;
+extern float TRAINER_Z;
 extern float TRAINER_ROT_Z;
 
 void player_think(Entity *self);
@@ -36,7 +37,7 @@ void player_think(Entity *self)
     vector3d_set(self->rotation, M_PI + .2,0,TRAINER_ROT_Z-M_PI);
     float x = 1800 * cos(self->rotation.z - M_PI_2) + TRAINER_X;
     float y = 1800 * sin(self->rotation.z - M_PI_2) + TRAINER_Y;
-    vector3d_set(self->position, x, y, 1000);
+    vector3d_set(self->position, x, y, TRAINER_Z);
 }
 
 void player_update(Entity *self)

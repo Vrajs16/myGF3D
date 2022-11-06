@@ -304,7 +304,7 @@ World *world_load(char *filename)
             w[i].worldModel = gf3d_model_load_full(modelfilename, texturefilename);
             w[i].color = gfc_color(1, 1, 1, 1);
             gfc_matrix_identity(w[i].modelMat);
-            gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
+            gfc_matrix_scale(w[i].modelMat, vector3d(scaleB, scaleB, scaleB));
             gfc_matrix_translate(w[i].modelMat, loc);
         }
 
@@ -349,27 +349,27 @@ World *world_load(char *filename)
             w[i].worldModel = gf3d_model_load_full(modelfilename, texturefilename);
             w[i].color = gfc_color(1, 1, 1, 1);
             gfc_matrix_identity(w[i].modelMat);
-            gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
+            gfc_matrix_scale(w[i].modelMat, vector3d(scaleB, scaleB, scaleB));
 
             if (angle == 1)
             {
                 gfc_matrix_rotate(w[i].modelMat, w[i].modelMat, M_PI / 2, axisVector);
-                gfc_matrix_translate(w[i].modelMat, vector3d(loc.x, loc.y + (scale * 100 / 2), loc.z + (scale * 100 / 2)));
+                gfc_matrix_translate(w[i].modelMat, vector3d(loc.x, loc.y + (scaleB * 100 / 2), loc.z + (scaleB * 100 / 2)));
             }
             else if (angle == 2)
             {
                 gfc_matrix_rotate(w[i].modelMat, w[i].modelMat, -M_PI / 2, axisVector);
-                gfc_matrix_translate(w[i].modelMat, vector3d(loc.x + (scale * 100 / 2), loc.y, loc.z + (scale * 100 / 2)));
+                gfc_matrix_translate(w[i].modelMat, vector3d(loc.x + (scaleB * 100 / 2), loc.y, loc.z + (scaleB * 100 / 2)));
             }
             else if (angle == 3)
             {
                 gfc_matrix_rotate(w[i].modelMat, w[i].modelMat, 3 * M_PI / 2, axisVector);
-                gfc_matrix_translate(w[i].modelMat, vector3d(loc.x, loc.y - (scale * 100 / 2), loc.z + (scale * 100 / 2)));
+                gfc_matrix_translate(w[i].modelMat, vector3d(loc.x, loc.y - (scaleB * 100 / 2), loc.z + (scaleB * 100 / 2)));
             }
             else if (angle == 4)
             {
                 gfc_matrix_rotate(w[i].modelMat, w[i].modelMat, -3 * M_PI / 2, axisVector);
-                gfc_matrix_translate(w[i].modelMat, vector3d(loc.x - (scale * 100 / 2), loc.y, loc.z + (scale * 100 / 2)));
+                gfc_matrix_translate(w[i].modelMat, vector3d(loc.x - (scaleB * 100 / 2), loc.y, loc.z + (scaleB * 100 / 2)));
             }
             else
             {
@@ -404,7 +404,7 @@ World *world_load(char *filename)
             w[i].worldModel = gf3d_model_load_full(modelfilename, texturefilename);
             w[i].color = gfc_color(1, 1, 1, 1);
             gfc_matrix_identity(w[i].modelMat);
-            gfc_matrix_scale(w[i].modelMat, vector3d(scale, scale, scale));
+            gfc_matrix_scale(w[i].modelMat, vector3d(scaleB, scaleB, scaleB));
             gfc_matrix_rotate(w[i].modelMat, w[i].modelMat, M_PI, vector3d(1, 0, 0));
             gfc_matrix_translate(w[i].modelMat, loc);
         }
