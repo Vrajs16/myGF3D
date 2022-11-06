@@ -16,6 +16,7 @@ int ROCK_COLLISION = 0;
 int STRENGTH_COLLISION = 0;
 
 int BATTLE = 0;
+Entity *OP_POKEMON = NULL;
 
 void trainer_think(Entity *self);
 void trainer_collide(Entity *self, Entity *other);
@@ -175,7 +176,7 @@ void trainer_collide(struct Entity_S *self, struct Entity_S *other)
         TRAINER_Y = -2000;
         TRAINER_Z = 6000;
         TRAINER_ROT_Z = M_PI + .2;
-
+        OP_POKEMON = other;
         start_battle();
     }
     if (other->type == ET_INTERACTABLE)

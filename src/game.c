@@ -37,6 +37,7 @@ extern int SIGN_COLLISION;
 extern int PC_COLLISION;
 extern int STRENGTH_COLLISION;
 extern int BATTLE;
+extern Entity *OP_POKEMON;
 int __BB = 0;
 
 static int _done = 0;
@@ -120,6 +121,9 @@ int main(int argc, char *argv[])
 
     // main game loop
     slog("gf3d main loop begin");
+    char health[5];
+    float health_value = 100;
+    float health_decrease = 0.5;
     while (!_done)
     {
         gfc_input_update();
@@ -141,27 +145,63 @@ int main(int argc, char *argv[])
         world_draw(w);
         entity_draw_all();
         // 2D draws
-        gf2d_windows_draw_all();
-        gf2d_mouse_draw();
 
         if (BATTLE)
         {
+            if (health_value > 0)
+            {
+                health_value -= health_decrease;
+            }
+            sprintf(health, "%d%%", (int)health_value);
             // Do some draw calls maybe to draw health and stuff
 
             // Draw the pokemon infobox opponent
-            // gf2d_draw_rect_filled(gfc_rect(200, 150, 300, 125), gfc_color8(255, 255, 255, 100));
-            // // gf2d_font_draw_line_tag(current-pokemon->name, FT_Normal, gfc_color(0,0,0,1), vector2d(200,150));
-            // gf2d_draw_rect(gfc_rect(200, 150, 300, 125), gfc_color8(255, 255, 255, 255));
+            gf2d_draw_rect_filled(gfc_rect(200, 150, 300, 100), gfc_color8(255, 255, 255, 150));
+            gf2d_draw_rect(gfc_rect(200, 150, 300, 100), gfc_color8(0, 0, 0, 255));
+            // healthbar
+            gf2d_draw_rect_filled(gfc_rect(210, 200, 200, 30), gfc_color8(100, 100, 100, 150));
+            if (health_value != 0)
+            {
+                if (health_value > 50)
+                {
+                    gf2d_draw_rect_filled(gfc_rect(210, 200, health_value * 2, 30), gfc_color8(0, 255, 0, 200));
+                }
+                else if (health_value > 25)
+                {
+                    gf2d_draw_rect_filled(gfc_rect(210, 200, health_value * 2, 30), gfc_color8(255, 255, 0, 200));
+                }
+                else
+                {
+                    gf2d_draw_rect_filled(gfc_rect(210, 200, health_value * 2, 30), gfc_color8(255, 0, 0, 200));
+                }
+            }
+            gf2d_draw_rect(gfc_rect(210, 200, 200, 30), gfc_color8(255, 255, 255, 255));
+            gf2d_font_draw_line_tag(OP_POKEMON->name, FT_Normal, gfc_color(0, 0, 0, 1), vector2d(210, 160));
+            gf2d_font_draw_line_tag(health, FT_Small, gfc_color8(0, 0, 0, 255), vector2d(425, 197.5));
 
             // Draw the pokemon infobox player
             gf2d_draw_rect_filled(gfc_rect(350, 425, 300, 100), gfc_color8(255, 255, 255, 150));
             gf2d_draw_rect(gfc_rect(350, 425, 300, 100), gfc_color8(0, 0, 0, 255));
             // Health bar
             gf2d_draw_rect_filled(gfc_rect(360, 475, 200, 30), gfc_color8(100, 100, 100, 150));
-            gf2d_draw_rect_filled(gfc_rect(360, 475, 200, 30), gfc_color8(144, 238, 144, 255));
+            if (health_value != 0)
+            {
+                if (health_value > 50)
+                {
+                    gf2d_draw_rect_filled(gfc_rect(360, 475, health_value * 2, 30), gfc_color8(0, 255, 0, 200));
+                }
+                else if (health_value > 25)
+                {
+                    gf2d_draw_rect_filled(gfc_rect(360, 475, health_value * 2, 30), gfc_color8(255, 255, 0, 200));
+                }
+                else
+                {
+                    gf2d_draw_rect_filled(gfc_rect(360, 475, health_value * 2, 30), gfc_color8(255, 0, 0, 200));
+                }
+            }
             gf2d_draw_rect(gfc_rect(360, 475, 200, 30), gfc_color8(255, 255, 255, 255));
             gf2d_font_draw_line_tag(battle_pok->name, FT_Normal, gfc_color8(0, 0, 0, 255), vector2d(360, 435));
-            gf2d_font_draw_line_tag("100%", FT_Small, gfc_color8(0, 0, 0, 255), vector2d(575, 472.5));
+            gf2d_font_draw_line_tag(health, FT_Small, gfc_color8(0, 0, 0, 255), vector2d(575, 472.5));
         }
 
         if (SIGN_COLLISION)
@@ -194,6 +234,8 @@ int main(int argc, char *argv[])
             gf2d_font_draw_line_tag("Press 'E' to use Cut!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
             gf2d_draw_rect(gfc_rect(10, 10, 290, 50), gfc_color8(255, 255, 255, 255));
         }
+        gf2d_windows_draw_all();
+        gf2d_mouse_draw();
 
         // Box box1 = gfc_box(0, 0, 250, 500, 500, 500); //red
         // Box box2 = gfc_box(501, 0, 250, 500, 500, 500); //blue
