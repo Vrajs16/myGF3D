@@ -281,7 +281,6 @@ World *world_load(char *filename)
             Vector3D loc;
             TextLine modelfilename;
             TextLine texturefilename;
-            slog("i = %i", i);
             SJson *floorTileInfo = sj_array_get_nth(floorB, i - floorCount - wallCount - skyCount);
             if (!floorTileInfo)
             {

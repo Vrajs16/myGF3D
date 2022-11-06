@@ -2,6 +2,7 @@
 #include "gfc_primitives.h"
 #include "gf3d_draw.h"
 #include "trainer.h"
+#include "gf2d_windows_common.h"
 
 float TRAINER_X = 0;
 float TRAINER_Y = 0;
@@ -18,6 +19,7 @@ int BATTLE = 0;
 
 void trainer_think(Entity *self);
 void trainer_collide(Entity *self, Entity *other);
+void start_battle();
 
 Entity *trainer_new(Vector3D position, Vector3D rotation, char *trainer, float scale)
 {
@@ -53,7 +55,8 @@ void trainer_think(Entity *self)
     if (!self)
         return;
 
-    if(BATTLE){
+    if (BATTLE)
+    {
         return;
     }
 
@@ -156,23 +159,24 @@ void trainer_collide(struct Entity_S *self, struct Entity_S *other)
 {
     if (other->type == ET_POKEMON)
     {
+
         slog("trainer collided with %s", other->pokemon.name);
+        self->position = self->previousPosition;
+
         // Start battle - Combat Scene + battling logic
         BATTLE = 1;
 
-        //Move trainer and pokemon to battle box
-        self->position.x = 0;
-        self->position.y = -2000;
-        self->position.z = 5000;
-        self->rotation.z = M_PI;
+        // Move trainer and pokemon to battle box
         other->position.x = 0;
         other->position.y = 2000;
         other->position.z = 5000;
 
-        TRAINER_X = self->position.x + 1000;
-        TRAINER_Y = self->position.y + 200;
-        TRAINER_Z = self->position.z + 1000;
-        TRAINER_ROT_Z = M_PI + .2 ;
+        TRAINER_X = 1000;
+        TRAINER_Y = -2000;
+        TRAINER_Z = 6000;
+        TRAINER_ROT_Z = M_PI + .2;
+
+        start_battle();
     }
     if (other->type == ET_INTERACTABLE)
     {
@@ -208,3 +212,9 @@ void trainer_collide(struct Entity_S *self, struct Entity_S *other)
 }
 
 /*eol@eof*/
+
+void start_battle()
+{
+    slog("Starting battle");
+
+}

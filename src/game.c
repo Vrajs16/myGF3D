@@ -36,7 +36,7 @@ extern int TREE_COLLISION;
 extern int SIGN_COLLISION;
 extern int PC_COLLISION;
 extern int STRENGTH_COLLISION;
-
+extern int BATTLE;
 int __BB = 0;
 
 static int _done = 0;
@@ -106,6 +106,7 @@ int main(int argc, char *argv[])
     {
         pokemon_new(vector3d(950 * (i - pokedex->total / 2), 2000, 0.0), vector3d(0.0, 0.0, 0.0), pokedex->pokemon[i], pokedex->pokemon[i].scale);
     }
+    pokemon_new(vector3d(0, -2000, 5000), vector3d(0, 0, M_PI), pokedex->pokemon[1], pokedex->pokemon[1].scale);
     trainer_new(vector3d(0, 0, 0), vector3d(0, 0, M_PI), "calem", 200.0);
     interactable_new(vector3d(-4000, -2000, 0), vector3d(0, 0, 0), "sign", 15);
     interactable_new(vector3d(-2000, -2000, 0), vector3d(0, 0, 0), "strength", 400);
@@ -142,6 +143,10 @@ int main(int argc, char *argv[])
         // 2D draws
         gf2d_windows_draw_all();
         gf2d_mouse_draw();
+
+        if (BATTLE)
+        {
+        }
 
         if (SIGN_COLLISION)
         {
