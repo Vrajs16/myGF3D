@@ -116,8 +116,11 @@ Pokedex *load_pokedex_json(char *filename)
             return NULL;
         }
         pokedex->pokemon[i].type = strdup(type);
-        sj_get_bool_value(sj_object_get_value(pokemon, "evolution"), &pokedex->pokemon[i].evolution);
+        sj_get_bool_value(sj_object_get_value(pokemon, "evolution"), pokedex->pokemon[i].evolution);
     }
+
+    
+    //GOTTA LOAD MY TYPE SYSTEM IN HERE
 
     // typechart = sj_object_get_value(json, "typechart");
     // if (!typechart)

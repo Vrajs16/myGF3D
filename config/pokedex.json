@@ -3,7 +3,7 @@
     "total": 10,
     "pokemons": [
       {
-        "name": "growlithe",
+        "name": "Growlithe",
         "scale": 6,
         "boundingBox": {
           "x": 0.0,
@@ -48,7 +48,7 @@
         ]
       },
       {
-        "name": "arcanine",
+        "name": "Arcanine",
         "scale": 2.4,
         "boundingBox": {
           "x": 0.0,
@@ -93,7 +93,7 @@
         ]
       },
       {
-        "name": "kirlia",
+        "name": "Kirlia",
         "scale": 180,
         "boundingBox": {
           "x": 0.0,
@@ -109,7 +109,7 @@
         "moves": []
       },
       {
-        "name": "gallade",
+        "name": "Gallade",
         "scale": 120,
         "boundingBox": {
           "x": 0.0,
@@ -125,7 +125,7 @@
         "moves": []
       },
       {
-        "name": "krabby",
+        "name": "Krabby",
         "scale": 6,
         "boundingBox": {
           "x": 0.0,
@@ -141,7 +141,7 @@
         "moves": []
       },
       {
-        "name": "kingler",
+        "name": "Kingler",
         "scale": 3,
         "boundingBox": {
           "x": 0.0,
@@ -157,7 +157,7 @@
         "moves": []
       },
       {
-        "name": "skiddo",
+        "name": "Skiddo",
         "scale": 180,
         "boundingBox": {
           "x": 0.0,
@@ -173,7 +173,7 @@
         "moves": []
       },
       {
-        "name": "gogoat",
+        "name": "Gogoat",
         "scale": 120,
         "boundingBox": {
           "x": 0.0,
@@ -189,7 +189,7 @@
         "moves": []
       },
       {
-        "name": "zorua",
+        "name": "Zorua",
         "scale": 180,
         "boundingBox": {
           "x": 0.0,
@@ -205,7 +205,7 @@
         "moves": []
       },
       {
-        "name": "zoroark",
+        "name": "Zoroark",
         "scale": 120,
         "boundingBox": {
           "x": 0.0,

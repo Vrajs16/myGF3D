@@ -41,6 +41,7 @@ int __BB = 0;
 
 static int _done = 0;
 static Window *_quit = NULL;
+Pokedex *pokedex = NULL;
 
 void onCancel(void *data)
 {
@@ -70,7 +71,6 @@ int main(int argc, char *argv[])
     int a;
 
     World *w;
-    Pokedex *pokedex;
 
     for (a = 1; a < argc; a++)
     {
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
     {
         pokemon_new(vector3d(950 * (i - pokedex->total / 2), 2000, 0.0), vector3d(0.0, 0.0, 0.0), pokedex->pokemon[i], pokedex->pokemon[i].scale);
     }
-    pokemon_new(vector3d(0, -2000, 5000), vector3d(0, 0, M_PI), pokedex->pokemon[1], pokedex->pokemon[1].scale);
+    Entity *battle_pok = pokemon_new(vector3d(0, -2000, 5000), vector3d(0, 0, M_PI), pokedex->pokemon[1], pokedex->pokemon[1].scale);
     trainer_new(vector3d(0, 0, 0), vector3d(0, 0, M_PI), "calem", 200.0);
     interactable_new(vector3d(-4000, -2000, 0), vector3d(0, 0, 0), "sign", 15);
     interactable_new(vector3d(-2000, -2000, 0), vector3d(0, 0, 0), "strength", 400);
@@ -146,6 +146,22 @@ int main(int argc, char *argv[])
 
         if (BATTLE)
         {
+            // Do some draw calls maybe to draw health and stuff
+
+            // Draw the pokemon infobox opponent
+            // gf2d_draw_rect_filled(gfc_rect(200, 150, 300, 125), gfc_color8(255, 255, 255, 100));
+            // // gf2d_font_draw_line_tag(current-pokemon->name, FT_Normal, gfc_color(0,0,0,1), vector2d(200,150));
+            // gf2d_draw_rect(gfc_rect(200, 150, 300, 125), gfc_color8(255, 255, 255, 255));
+
+            // Draw the pokemon infobox player
+            gf2d_draw_rect_filled(gfc_rect(350, 425, 300, 100), gfc_color8(255, 255, 255, 150));
+            gf2d_draw_rect(gfc_rect(350, 425, 300, 100), gfc_color8(0, 0, 0, 255));
+            // Health bar
+            gf2d_draw_rect_filled(gfc_rect(360, 475, 200, 30), gfc_color8(100, 100, 100, 150));
+            gf2d_draw_rect_filled(gfc_rect(360, 475, 200, 30), gfc_color8(144, 238, 144, 255));
+            gf2d_draw_rect(gfc_rect(360, 475, 200, 30), gfc_color8(255, 255, 255, 255));
+            gf2d_font_draw_line_tag(battle_pok->name, FT_Normal, gfc_color8(0, 0, 0, 255), vector2d(360, 435));
+            gf2d_font_draw_line_tag("100%", FT_Small, gfc_color8(0, 0, 0, 255), vector2d(575, 472.5));
         }
 
         if (SIGN_COLLISION)
