@@ -129,11 +129,8 @@ void trainer_think(Entity *self)
             // Move Rock
             slog("You used Strength!");
             Entity *strength = entity_get("strength");
-            slog("Strength Position: %f, %f", strength->position.x, strength->position.y);
-            slog("sin: %f, cos: %f", 1500 * sin(TRAINER_ROT_Z), 1000 * cos(TRAINER_ROT_Z));
-            slog("degrees: %f", TRAINER_ROT_Z * 180 / M_PI);
 
-            // Move bolder 100 units in the direction the trainer is facing
+            // Move bolder 1500 units in the direction the trainer is facing
             strength->position.x += 1500 * sin(TRAINER_ROT_Z);
             strength->position.y += 1500 * cos(TRAINER_ROT_Z + M_PI);
 
