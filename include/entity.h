@@ -6,7 +6,7 @@
 
 typedef struct
 {
-    char *name;
+    char *move;
     char *type;
     int power;
     int accuracy;
@@ -17,7 +17,8 @@ typedef struct
     char *name;
     int level;
     float scale;
-    int evolution;
+    short evolution;
+    int health;
     char *type;
     Box boundingBox;
     Move moves[4];

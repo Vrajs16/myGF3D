@@ -42,6 +42,7 @@ int __BB = 0;
 
 static int _done = 0;
 static Window *_quit = NULL;
+static Window *selectMoves = NULL;
 Pokedex *pokedex = NULL;
 
 void onCancel(void *data)
@@ -202,6 +203,10 @@ int main(int argc, char *argv[])
             gf2d_draw_rect(gfc_rect(360, 475, 200, 30), gfc_color8(255, 255, 255, 255));
             gf2d_font_draw_line_tag(battle_pok->name, FT_Normal, gfc_color8(0, 0, 0, 255), vector2d(360, 435));
             gf2d_font_draw_line_tag(health, FT_Small, gfc_color8(0, 0, 0, 255), vector2d(575, 472.5));
+
+            // Draw the attack buttons
+            if (selectMoves == NULL)
+                selectMoves = battle_box(battle_pok->pokemon.moves, NULL, NULL, NULL);
         }
 
         if (SIGN_COLLISION)

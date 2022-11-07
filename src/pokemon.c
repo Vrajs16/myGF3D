@@ -115,12 +115,49 @@ Pokedex *load_pokedex_json(char *filename)
             sj_free(json);
             return NULL;
         }
-        pokedex->pokemon[i].type = strdup(type);
-        sj_get_bool_value(sj_object_get_value(pokemon, "evolution"), pokedex->pokemon[i].evolution);
+        pokedex->pokemon[i].type = type;
+        sj_get_bool_value(sj_object_get_value(pokemon, "evolution"), &pokedex->pokemon[i].evolution);
+        sj_get_integer_value(sj_object_get_value(pokemon, "health"), &pokedex->pokemon[i].health);
+
+        SJson *moves = sj_object_get_value(pokemon, "moves");
+        if (!moves)
+        {
+            slog("failed to find moves in %s", filename);
+            sj_free(json);
+            return NULL;
+        
+        }
+        for (int j = 0; j < sj_array_get_count(moves); j++)
+        {
+            SJson *move = sj_array_get_nth(moves, j);
+            if (!move)
+            {
+                slog("failed to find move %i in %s", i, filename);
+                sj_free(json);
+                return NULL;
+            }
+            char *move_name = (char *) sj_object_get_value_as_string(move, "move");
+            slog("move name: %s", move_name);
+            if (!move_name)
+            {
+                slog("failed to find name in %s", filename);
+                sj_free(json);
+                return NULL;
+            }
+            pokedex->pokemon[i].moves[j].move = move_name;
+            sj_get_integer_value(sj_object_get_value(move, "power"), &pokedex->pokemon[i].moves[j].power);
+            const char *type = sj_object_get_value_as_string(move, "type");
+            if (!type)
+            {
+                slog("failed to find type in %s", filename);
+                sj_free(json);
+                return NULL;
+            }
+            pokedex->pokemon[i].moves[j].type = type;
+        }
     }
 
-    
-    //GOTTA LOAD MY TYPE SYSTEM IN HERE
+    // GOTTA LOAD MY TYPE SYSTEM IN HERE
 
     // typechart = sj_object_get_value(json, "typechart");
     // if (!typechart)

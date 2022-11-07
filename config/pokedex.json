@@ -16,6 +16,7 @@
         "type": "fire",
         "level": "",
         "evolution": true,
+        "health": 500,
         "moves": [
           {
             "move": "ember",
@@ -61,6 +62,7 @@
         "type": "fire",
         "level": "",
         "evolution": false,
+        "health": 500,
         "moves": [
           {
             "move": "extremespeed",
@@ -106,7 +108,37 @@
         "type": "physic",
         "level": "",
         "evolution": true,
-        "moves": []
+        "health": 500,
+        "moves": [
+          {
+            "move": "dazzling gleam",
+            "type": "physic",
+            "power": 80,
+            "accuracy": 100,
+            "pp": 10
+          },
+          {
+            "move": "psychic",
+            "type": "psychic",
+            "power": 90,
+            "accuracy": 100,
+            "pp": 10
+          },
+          {
+            "move": "calm mind",
+            "type": "psychic",
+            "power": 0,
+            "accuracy": 0,
+            "pp": 20
+          },
+          {
+            "move": "heal pulse",
+            "type": "psychic",
+            "power": 0,
+            "accuracy": 100,
+            "pp": 10
+          }
+        ]
       },
       {
         "name": "Gallade",
@@ -122,7 +154,37 @@
         "type": "physic",
         "level": "",
         "evolution": false,
-        "moves": []
+        "health": 500,
+        "moves": [
+          {
+            "move": "dazzling gleam",
+            "type": "physic",
+            "power": 80,
+            "accuracy": 100,
+            "pp": 10
+          },
+          {
+            "move": "psychic",
+            "type": "psychic",
+            "power": 90,
+            "accuracy": 100,
+            "pp": 10
+          },
+          {
+            "move": "calm mind",
+            "type": "psychic",
+            "power": 0,
+            "accuracy": 0,
+            "pp": 20
+          },
+          {
+            "move": "heal pulse",
+            "type": "psychic",
+            "power": 0,
+            "accuracy": 100,
+            "pp": 10
+          }
+        ]
       },
       {
         "name": "Krabby",
@@ -138,7 +200,37 @@
         "type": "water",
         "level": "",
         "evolution": true,
-        "moves": []
+        "health": 500,
+        "moves": [
+          {
+            "move": "bubble",
+            "type": "water",
+            "power": 40,
+            "accuracy": 100,
+            "pp": 30
+          },
+          {
+            "move": "water gun",
+            "type": "water",
+            "power": 55,
+            "accuracy": 100,
+            "pp": 30
+          },
+          {
+            "move": "bubblebeam",
+            "type": "water",
+            "power": 65,
+            "accuracy": 100,
+            "pp": 20
+          },
+          {
+            "move": "crabhammer",
+            "type": "water",
+            "power": 100,
+            "accuracy": 90,
+            "pp": 10
+          }
+        ]
       },
       {
         "name": "Kingler",
@@ -154,7 +246,37 @@
         "type": "water",
         "level": "",
         "evolution": false,
-        "moves": []
+        "health": 500,
+        "moves": [
+          {
+            "move": "bubble",
+            "type": "water",
+            "power": 40,
+            "accuracy": 100,
+            "pp": 30
+          },
+          {
+            "move": "water gun",
+            "type": "water",
+            "power": 55,
+            "accuracy": 100,
+            "pp": 30
+          },
+          {
+            "move": "bubblebeam",
+            "type": "water",
+            "power": 65,
+            "accuracy": 100,
+            "pp": 20
+          },
+          {
+            "move": "crabhammer",
+            "type": "water",
+            "power": 100,
+            "accuracy": 90,
+            "pp": 10
+          }
+        ]
       },
       {
         "name": "Skiddo",
@@ -170,7 +292,37 @@
         "type": "grass",
         "level": "",
         "evolution": true,
-        "moves": []
+        "health": 500,
+        "moves": [
+          {
+            "move": "grass knot",
+            "type": "grass",
+            "power": 65,
+            "accuracy": 100,
+            "pp": 25
+          },
+          {
+            "move": "leaf blade",
+            "type": "grass",
+            "power": 65,
+            "accuracy": 100,
+            "pp": 20
+          },
+          {
+            "move": "absorb",
+            "type": "grass",
+            "power": 50,
+            "accuracy": 100,
+            "pp": 35
+          },
+          {
+            "move": "Vine Whip",
+            "type": "grass",
+            "power": 70,
+            "accuracy": 100,
+            "pp": 15
+          }
+        ]
       },
       {
         "name": "Gogoat",
@@ -186,7 +338,37 @@
         "type": "grass",
         "level": "",
         "evolution": false,
-        "moves": []
+        "health": 500,
+        "moves": [
+          {
+            "move": "grass knot",
+            "type": "grass",
+            "power": 65,
+            "accuracy": 100,
+            "pp": 25
+          },
+          {
+            "move": "leaf blade",
+            "type": "grass",
+            "power": 65,
+            "accuracy": 100,
+            "pp": 20
+          },
+          {
+            "move": "absorb",
+            "type": "grass",
+            "power": 50,
+            "accuracy": 100,
+            "pp": 35
+          },
+          {
+            "move": "Vine Whip",
+            "type": "grass",
+            "power": 70,
+            "accuracy": 100,
+            "pp": 15
+          }
+        ]
       },
       {
         "name": "Zorua",
@@ -202,7 +384,37 @@
         "type": "dark",
         "level": "",
         "evolution": true,
-        "moves": []
+        "health": 500,
+        "moves": [
+          {
+            "move": "foul play",
+            "type": "dark",
+            "power": 95,
+            "accuracy": 100,
+            "pp": 15
+          },
+          {
+            "move": "dark pulse",
+            "type": "dark",
+            "power": 80,
+            "accuracy": 100,
+            "pp": 15
+          },
+          {
+            "move": "nasty plot",
+            "type": "dark",
+            "power": 0,
+            "accuracy": 0,
+            "pp": 20
+          },
+          {
+            "move": "night daze",
+            "type": "dark",
+            "power": 85,
+            "accuracy": 95,
+            "pp": 10
+          }
+        ]
       },
       {
         "name": "Zoroark",
@@ -219,7 +431,37 @@
         "level": "",
         "ability": "",
         "evolution": false,
-        "moves": []
+        "health": 500,
+        "moves": [
+          {
+            "move": "foul play",
+            "type": "dark",
+            "power": 95,
+            "accuracy": 100,
+            "pp": 15
+          },
+          {
+            "move": "dark pulse",
+            "type": "dark",
+            "power": 80,
+            "accuracy": 100,
+            "pp": 15
+          },
+          {
+            "move": "nasty plot",
+            "type": "dark",
+            "power": 0,
+            "accuracy": 0,
+            "pp": 20
+          },
+          {
+            "move": "night daze",
+            "type": "dark",
+            "power": 85,
+            "accuracy": 95,
+            "pp": 10
+          }
+        ]
       }
     ]
   },

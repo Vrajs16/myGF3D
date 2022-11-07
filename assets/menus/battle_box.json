@@ -9,16 +9,16 @@
         "dimensions": [
             0,
             0,
-            600,
-            182
+            300,
+            400
         ],
-        "justify": "center",
+        "justify": "right",
         "align": "middle",
         "elements": [
             {
                 "type": "list",
                 "name": "list",
-                "id": 0,
+                "id": 1,
                 "bounds": [
                     0.01,
                     0.01,
@@ -137,7 +137,7 @@
                     {
                         "type": "list",
                         "name": "entries",
-                        "id": 50,
+                        "id": 4,
                         "bounds": [
                             260,
                             20,
