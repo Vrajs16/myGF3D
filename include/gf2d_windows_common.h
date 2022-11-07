@@ -18,6 +18,6 @@ Window *window_text_entry(char *question, char *defaultText, void *callbackData,
 
 Window *window_key_value(char *question, char *defaultKey,char *defaultValue,void *callbackData, size_t keyLength,size_t valueLength, void(*onOk)(void *),void(*onCancel)(void *));
 
-Window *battle_box(Move moves[4], void (*onOk)(void *));
+Window *battle_box(Move moves[4], void (*onMoveSelected)(void *),void (*onRunSelected)(void *));
 
 #endif

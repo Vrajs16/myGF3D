@@ -115,7 +115,7 @@ Pokedex *load_pokedex_json(char *filename)
             sj_free(json);
             return NULL;
         }
-        pokedex->pokemon[i].type = type;
+        pokedex->pokemon[i].type = (char * )type;
         sj_get_bool_value(sj_object_get_value(pokemon, "evolution"), &pokedex->pokemon[i].evolution);
         sj_get_integer_value(sj_object_get_value(pokemon, "health"), &pokedex->pokemon[i].health);
 
@@ -152,7 +152,7 @@ Pokedex *load_pokedex_json(char *filename)
                 sj_free(json);
                 return NULL;
             }
-            pokedex->pokemon[i].moves[j].type = type;
+            pokedex->pokemon[i].moves[j].type = (char * ) type;
         }
     }
 

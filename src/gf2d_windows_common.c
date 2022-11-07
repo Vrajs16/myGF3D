@@ -340,7 +340,7 @@ Window *window_key_value(char *question, char *defaultKey, char *defaultValue, v
     return win;
 }
 
-Window *battle_box(Move moves[4], void (*onOk)(void *))
+Window *battle_box(Move moves[4], void (*onMoveSelected)(void *), void(*onRunSelected)(void *))
 {
     Window *win;
     List *callbacks;
@@ -358,25 +358,25 @@ Window *battle_box(Move moves[4], void (*onOk)(void *))
     win->update = yes_no_update;
     win->free_data = yes_no_free;
     callbacks = gfc_list_new();
-    if (onOk)
+    if (onMoveSelected)
     {
-        callbacks = gfc_list_append(callbacks, gfc_callback_new(onOk, &moves[0]));
+        callbacks = gfc_list_append(callbacks, gfc_callback_new(onMoveSelected, &moves[0]));
     }
-    if (onOk)
+    if (onMoveSelected)
     {
-        callbacks = gfc_list_append(callbacks, gfc_callback_new(onOk, &moves[1]));
+        callbacks = gfc_list_append(callbacks, gfc_callback_new(onMoveSelected, &moves[1]));
     }
-    if (onOk)
+    if (onMoveSelected)
     {
-        callbacks = gfc_list_append(callbacks, gfc_callback_new(onOk, &moves[2]));
+        callbacks = gfc_list_append(callbacks, gfc_callback_new(onMoveSelected, &moves[2]));
     }
-    if (onOk)
+    if (onMoveSelected)
     {
-        callbacks = gfc_list_append(callbacks, gfc_callback_new(onOk, &moves[3]));
+        callbacks = gfc_list_append(callbacks, gfc_callback_new(onMoveSelected, &moves[3]));
     }
-    if (onOk)
+    if (onRunSelected)
     {
-        callbacks = gfc_list_append(callbacks, gfc_callback_new(onOk, "run"));
+        callbacks = gfc_list_append(callbacks, gfc_callback_new(onRunSelected, "run"));
     }
     win->data = callbacks;
     return win;

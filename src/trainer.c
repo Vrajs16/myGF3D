@@ -17,10 +17,20 @@ int STRENGTH_COLLISION = 0;
 
 int BATTLE = 0;
 Entity *OP_POKEMON = NULL;
+float OP_HEALTH;
+float NEW_OP_HEALTH;
+float OP_HEALTH_MAX;
+char OP_HEALTH_TEXT[5];
+
+extern Entity *BATTLE_POKEMON;
+extern float BATTLER_HEALTH;
+extern float BATTLER_HEALTH_MAX;
+extern float NEW_BATTLER_HEALTH;
+extern char BATTLER_HEALTH_TEXT[5];
+extern int BATTLER_POKEMON_DEAD;
 
 void trainer_think(Entity *self);
 void trainer_collide(Entity *self, Entity *other);
-void start_battle();
 
 Entity *trainer_new(Vector3D position, Vector3D rotation, char *trainer, float scale)
 {
@@ -111,9 +121,13 @@ void trainer_think(Entity *self)
         PC_COLLISION = 1;
         if (keys[SDL_SCANCODE_E])
         {
-            // Delete PC
             slog("You healed your Pokemon!");
+            BATTLER_HEALTH_MAX = (float)BATTLE_POKEMON->pokemon.health;
+            NEW_BATTLER_HEALTH = BATTLER_HEALTH_MAX;
+            BATTLER_HEALTH = BATTLER_HEALTH_MAX;
+            sprintf(BATTLER_HEALTH_TEXT, "%d%%", (int)(BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100));
             PC_COLLISION = 0;
+            BATTLER_POKEMON_DEAD = 0;
         }
     }
     else
@@ -154,17 +168,21 @@ void trainer_think(Entity *self)
 
     TRAINER_X = self->position.x;
     TRAINER_Y = self->position.y;
+    TRAINER_Z = 1000;
 }
 
 void trainer_collide(struct Entity_S *self, struct Entity_S *other)
 {
     if (other->type == ET_POKEMON)
     {
-
         slog("trainer collided with %s", other->pokemon.name);
         self->position = self->previousPosition;
 
         // Start battle - Combat Scene + battling logic
+        if (BATTLER_HEALTH <= 0)
+        {
+            return;
+        }
         BATTLE = 1;
 
         // Move trainer and pokemon to battle box
@@ -177,7 +195,10 @@ void trainer_collide(struct Entity_S *self, struct Entity_S *other)
         TRAINER_Z = 6000;
         TRAINER_ROT_Z = M_PI + .2;
         OP_POKEMON = other;
-        start_battle();
+        OP_HEALTH_MAX = (float)other->pokemon.health;
+        OP_HEALTH = OP_HEALTH_MAX;
+        NEW_OP_HEALTH = OP_HEALTH_MAX;
+        sprintf(OP_HEALTH_TEXT, "%d%%", (int)(OP_HEALTH / OP_HEALTH_MAX * 100));
     }
     if (other->type == ET_INTERACTABLE)
     {
@@ -213,9 +234,3 @@ void trainer_collide(struct Entity_S *self, struct Entity_S *other)
 }
 
 /*eol@eof*/
-
-void start_battle()
-{
-    slog("Starting battle");
-
-}
