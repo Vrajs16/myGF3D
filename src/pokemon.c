@@ -137,7 +137,6 @@ Pokedex *load_pokedex_json(char *filename)
                 return NULL;
             }
             char *move_name = (char *) sj_object_get_value_as_string(move, "move");
-            slog("move name: %s", move_name);
             if (!move_name)
             {
                 slog("failed to find name in %s", filename);

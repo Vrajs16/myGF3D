@@ -9,7 +9,7 @@
         "dimensions": [
             0,
             0,
-            250,
+            170,
             400
         ],
         "justify": "right",
@@ -34,15 +34,13 @@
                 "style": "vertical",
                 "item_size": [
                     0.5,
-                    50
+                    42
                 ],
-                "align": "middle",
-                "justify": "center",
                 "elements": [
                     {
                         "type": "label",
-                        "name": "moves",
-                        "id": 0,
+                        "name": "Moves",
+                        "id": 1,
                         "bounds": [
                             0,
                             0,
@@ -61,201 +59,9 @@
                         "style": "Normal"
                     },
                     {
-                        "type": "entry",
-                        "name": "key",
-                        "id": 1,
-                        "bounds": [
-                            0,
-                            0,
-                            0.99,
-                            40
-                        ],
-                        "color": [
-                            255,
-                            255,
-                            255,
-                            255
-                        ],
-                        "label": {
-                            "type": "label",
-                            "name": "entry_l",
-                            "id": 21,
-                            "bounds": [
-                                0.01,
-                                0,
-                                0.98,
-                                1
-                            ],
-                            "color": [
-                                255,
-                                255,
-                                255,
-                                255
-                            ],
-                            "text": "?",
-                            "justify": "left",
-                            "align": "middle",
-                            "style": "small"
-                        }
-                    },
-                    {
-                        "type": "entry",
-                        "name": "value",
-                        "id": 2,
-                        "bounds": [
-                            0,
-                            0,
-                            0.99,
-                            40
-                        ],
-                        "color": [
-                            255,
-                            255,
-                            255,
-                            255
-                        ],
-                        "label": {
-                            "type": "label",
-                            "name": "entry_l",
-                            "id": 31,
-                            "bounds": [
-                                0.01,
-                                0,
-                                0.98,
-                                1
-                            ],
-                            "color": [
-                                255,
-                                255,
-                                255,
-                                255
-                            ],
-                            "text": "?",
-                            "justify": "left",
-                            "align": "middle",
-                            "style": "small"
-                        }
-                    },
-                    {
-                        "type": "entry",
-                        "name": "value",
-                        "id": 3,
-                        "bounds": [
-                            0,
-                            0,
-                            0.99,
-                            40
-                        ],
-                        "color": [
-                            255,
-                            255,
-                            255,
-                            255
-                        ],
-                        "label": {
-                            "type": "label",
-                            "name": "entry_l",
-                            "id": 31,
-                            "bounds": [
-                                0.01,
-                                0,
-                                0.98,
-                                1
-                            ],
-                            "color": [
-                                255,
-                                255,
-                                255,
-                                255
-                            ],
-                            "text": "?",
-                            "justify": "left",
-                            "align": "middle",
-                            "style": "small"
-                        }
-                    },
-                    {
-                        "type": "entry",
-                        "name": "value",
-                        "id": 4,
-                        "bounds": [
-                            0,
-                            0,
-                            0.99,
-                            40
-                        ],
-                        "color": [
-                            255,
-                            255,
-                            255,
-                            255
-                        ],
-                        "label": {
-                            "type": "label",
-                            "name": "entry_l",
-                            "id": 31,
-                            "bounds": [
-                                0.01,
-                                0,
-                                0.98,
-                                1
-                            ],
-                            "color": [
-                                255,
-                                255,
-                                255,
-                                255
-                            ],
-                            "text": "?",
-                            "justify": "left",
-                            "align": "middle",
-                            "style": "small"
-                        }
-                    },
-                    {
-                        "type": "entry",
-                        "name": "value",
-                        "id": 5,
-                        "bounds": [
-                            0,
-                            0,
-                            0.99,
-                            40
-                        ],
-                        "color": [
-                            255,
-                            255,
-                            255,
-                            255
-                        ],
-                        "label": {
-                            "type": "label",
-                            "name": "entry_l",
-                            "id": 31,
-                            "bounds": [
-                                0.01,
-                                0,
-                                0.98,
-                                1
-                            ],
-                            "color": [
-                                255,
-                                255,
-                                255,
-                                255
-                            ],
-                            "text": "run",
-                            "justify": "left",
-                            "align": "middle",
-                            "style": "small"
-                        }
-                    },
-                    {
                         "type": "list",
                         "name": "entries",
-                        "justify": "center",
-                        "align": "middle",
-                        "id": 50,
+                        "id": 2,
                         "bounds": [
                             0,
                             0,
@@ -268,14 +74,13 @@
                             255,
                             255
                         ],
+                        "style": "vertical",
                         "item_size": [
                             168,
                             64
                         ],
                         "elements": [
                             {
-                                "justify": "center",
-                                "align": "middle",
                                 "type": "button",
                                 "name": "OK",
                                 "id": 51,
@@ -307,7 +112,7 @@
                                 "label": {
                                     "type": "label",
                                     "name": "yes_l",
-                                    "id": 511,
+                                    "id": 211,
                                     "bounds": [
                                         0,
                                         0,
@@ -320,15 +125,291 @@
                                         255,
                                         255
                                     ],
-                                    "text": "OK",
+                                    "text": "?",
                                     "justify": "center",
                                     "align": "middle",
-                                    "style": "H5"
+                                    "style": "H6"
                                 },
                                 "actor": {
                                     "type": "actor",
                                     "name": "image",
-                                    "id": 512,
+                                    "id": 212,
+                                    "bounds": [
+                                        0,
+                                        0,
+                                        168,
+                                        64
+                                    ],
+                                    "color": [
+                                        255,
+                                        255,
+                                        255,
+                                        255
+                                    ],
+                                    "actor": "assets/actors/button.actor"
+                                }
+                            },
+                            {
+                                "type": "button",
+                                "name": "OK",
+                                "id": 52,
+                                "bounds": [
+                                    0,
+                                    0,
+                                    168,
+                                    64
+                                ],
+                                "hotkey": "ok",
+                                "color": [
+                                    255,
+                                    255,
+                                    255,
+                                    255
+                                ],
+                                "highColor": [
+                                    255,
+                                    255,
+                                    255,
+                                    255
+                                ],
+                                "pressColor": [
+                                    255,
+                                    255,
+                                    255,
+                                    255
+                                ],
+                                "label": {
+                                    "type": "label",
+                                    "name": "yes_l",
+                                    "id": 221,
+                                    "bounds": [
+                                        0,
+                                        0,
+                                        168,
+                                        64
+                                    ],
+                                    "color": [
+                                        255,
+                                        255,
+                                        255,
+                                        255
+                                    ],
+                                    "text": "?",
+                                    "justify": "center",
+                                    "align": "middle",
+                                    "style": "H6"
+                                },
+                                "actor": {
+                                    "type": "actor",
+                                    "name": "image",
+                                    "id": 222,
+                                    "bounds": [
+                                        0,
+                                        0,
+                                        168,
+                                        64
+                                    ],
+                                    "color": [
+                                        255,
+                                        255,
+                                        255,
+                                        255
+                                    ],
+                                    "actor": "assets/actors/button.actor"
+                                }
+                            },
+                            {
+                                "type": "button",
+                                "name": "OK",
+                                "id": 53,
+                                "bounds": [
+                                    0,
+                                    0,
+                                    168,
+                                    64
+                                ],
+                                "hotkey": "ok",
+                                "color": [
+                                    255,
+                                    255,
+                                    255,
+                                    255
+                                ],
+                                "highColor": [
+                                    255,
+                                    255,
+                                    255,
+                                    255
+                                ],
+                                "pressColor": [
+                                    255,
+                                    255,
+                                    255,
+                                    255
+                                ],
+                                "label": {
+                                    "type": "label",
+                                    "name": "yes_l",
+                                    "id": 231,
+                                    "bounds": [
+                                        0,
+                                        0,
+                                        168,
+                                        64
+                                    ],
+                                    "color": [
+                                        255,
+                                        255,
+                                        255,
+                                        255
+                                    ],
+                                    "text": "?",
+                                    "justify": "center",
+                                    "align": "middle",
+                                    "style": "H6"
+                                },
+                                "actor": {
+                                    "type": "actor",
+                                    "name": "image",
+                                    "id": 232,
+                                    "bounds": [
+                                        0,
+                                        0,
+                                        168,
+                                        64
+                                    ],
+                                    "color": [
+                                        255,
+                                        255,
+                                        255,
+                                        255
+                                    ],
+                                    "actor": "assets/actors/button.actor"
+                                }
+                            },
+                            {
+                                "type": "button",
+                                "name": "OK",
+                                "id": 54,
+                                "bounds": [
+                                    0,
+                                    0,
+                                    168,
+                                    64
+                                ],
+                                "hotkey": "ok",
+                                "color": [
+                                    255,
+                                    255,
+                                    255,
+                                    255
+                                ],
+                                "highColor": [
+                                    255,
+                                    255,
+                                    255,
+                                    255
+                                ],
+                                "pressColor": [
+                                    255,
+                                    255,
+                                    255,
+                                    255
+                                ],
+                                "label": {
+                                    "type": "label",
+                                    "name": "yes_l",
+                                    "id": 241,
+                                    "bounds": [
+                                        0,
+                                        0,
+                                        168,
+                                        64
+                                    ],
+                                    "color": [
+                                        255,
+                                        255,
+                                        255,
+                                        255
+                                    ],
+                                    "text": "?",
+                                    "justify": "center",
+                                    "align": "middle",
+                                    "style": "H6"
+                                },
+                                "actor": {
+                                    "type": "actor",
+                                    "name": "image",
+                                    "id": 242,
+                                    "bounds": [
+                                        0,
+                                        0,
+                                        168,
+                                        64
+                                    ],
+                                    "color": [
+                                        255,
+                                        255,
+                                        255,
+                                        255
+                                    ],
+                                    "actor": "assets/actors/button.actor"
+                                }
+                            },
+                            {
+                                "type": "button",
+                                "name": "OK",
+                                "id": 55,
+                                "bounds": [
+                                    0,
+                                    0,
+                                    168,
+                                    64
+                                ],
+                                "hotkey": "ok",
+                                "color": [
+                                    255,
+                                    255,
+                                    255,
+                                    255
+                                ],
+                                "highColor": [
+                                    255,
+                                    255,
+                                    255,
+                                    255
+                                ],
+                                "pressColor": [
+                                    255,
+                                    255,
+                                    255,
+                                    255
+                                ],
+                                "label": {
+                                    "type": "label",
+                                    "name": "yes_l",
+                                    "id": 251,
+                                    "bounds": [
+                                        0,
+                                        0,
+                                        168,
+                                        64
+                                    ],
+                                    "color": [
+                                        255,
+                                        255,
+                                        255,
+                                        255
+                                    ],
+                                    "text": "Run",
+                                    "justify": "center",
+                                    "align": "middle",
+                                    "style": "H6"
+                                },
+                                "actor": {
+                                    "type": "actor",
+                                    "name": "image",
+                                    "id": 252,
                                     "bounds": [
                                         0,
                                         0,

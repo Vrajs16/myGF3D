@@ -99,7 +99,36 @@ int yes_no_update(Window *win, List *updateList)
             }
             gf2d_window_free(win);
             return 1;
+            break;
+        case 53:
+            callback = (Callback *)gfc_list_get_nth(callbacks, 2);
+            if (callback)
+            {
+                gfc_callback_call(callback);
+            }
+            gf2d_window_free(win);
+            return 1;
+            break;
+        case 54:
+            callback = (Callback *)gfc_list_get_nth(callbacks, 3);
+            if (callback)
+            {
+                gfc_callback_call(callback);
+            }
+            gf2d_window_free(win);
+            return 1;
+            break;
+        case 55:
+            callback = (Callback *)gfc_list_get_nth(callbacks, 4);
+            if (callback)
+            {
+                gfc_callback_call(callback);
+            }
+            gf2d_window_free(win);
+            return 1;
+            break;
         }
+    
     }
     return 1;
 }
@@ -311,7 +340,7 @@ Window *window_key_value(char *question, char *defaultKey, char *defaultValue, v
     return win;
 }
 
-Window *battle_box(Move moves[4], void *callbackData, void (*onOk)(void *), void (*onCancel)(void *))
+Window *battle_box(Move moves[4], void (*onOk)(void *))
 {
     Window *win;
     List *callbacks;
@@ -321,20 +350,33 @@ Window *battle_box(Move moves[4], void *callbackData, void (*onOk)(void *), void
         slog("failed to load battle_box window");
         return NULL;
     }
-    gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 1), moves[0].move);
-    gf2d_element_entry_set_text_pointer(gf2d_window_get_element_by_id(win, 2), moves[1].move, 20);
-    gf2d_window_set_focus_to(gf2d_window_get_element_by_id(win, 3), moves[2].move);
-    gf2d_element_entry_set_text_pointer(gf2d_window_get_element_by_id(win, 4), moves[3].move, 20);
+
+    gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 211), moves[0].move);
+    gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 221), moves[1].move);
+    gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 231), moves[2].move);
+    gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 241), moves[3].move);
     win->update = yes_no_update;
     win->free_data = yes_no_free;
     callbacks = gfc_list_new();
     if (onOk)
     {
-        callbacks = gfc_list_append(callbacks, gfc_callback_new(onOk, callbackData));
+        callbacks = gfc_list_append(callbacks, gfc_callback_new(onOk, &moves[0]));
     }
-    if (onCancel)
+    if (onOk)
     {
-        callbacks = gfc_list_append(callbacks, gfc_callback_new(onCancel, callbackData));
+        callbacks = gfc_list_append(callbacks, gfc_callback_new(onOk, &moves[1]));
+    }
+    if (onOk)
+    {
+        callbacks = gfc_list_append(callbacks, gfc_callback_new(onOk, &moves[2]));
+    }
+    if (onOk)
+    {
+        callbacks = gfc_list_append(callbacks, gfc_callback_new(onOk, &moves[3]));
+    }
+    if (onOk)
+    {
+        callbacks = gfc_list_append(callbacks, gfc_callback_new(onOk, "run"));
     }
     win->data = callbacks;
     return win;

@@ -44,6 +44,7 @@ static int _done = 0;
 static Window *_quit = NULL;
 static Window *selectMoves = NULL;
 Pokedex *pokedex = NULL;
+void *callbackData = "hello";
 
 void onCancel(void *data)
 {
@@ -66,6 +67,12 @@ void exitCheck()
     if (_quit)
         return;
     _quit = window_yes_no("Exit?", onExit, onCancel, NULL);
+}
+
+void onMoveSelected(void *data)
+{
+    //print void callbackdata
+    slog("callback data: %s", ((Move *) data)->move);
 }
 
 int main(int argc, char *argv[])
@@ -108,9 +115,9 @@ int main(int argc, char *argv[])
     {
         pokemon_new(vector3d(950 * (i - pokedex->total / 2), 2000, 0.0), vector3d(0.0, 0.0, 0.0), pokedex->pokemon[i], pokedex->pokemon[i].scale);
     }
-    // srand(time(0));
-    // int r = rand() % pokedex->total;
+    srand(time(0));
     int r = 1;
+    r = rand() % pokedex->total;
     Entity *battle_pok = pokemon_new(vector3d(0, -2000, 5000), vector3d(0, 0, M_PI), pokedex->pokemon[r], pokedex->pokemon[r].scale);
     trainer_new(vector3d(0, 0, 0), vector3d(0, 0, M_PI), "calem", 200.0);
     interactable_new(vector3d(-4000, -2000, 0), vector3d(0, 0, 0), "sign", 15);
@@ -209,7 +216,7 @@ int main(int argc, char *argv[])
 
             // Draw the attack buttons
             if (selectMoves == NULL)
-                selectMoves = battle_box(battle_pok->pokemon.moves, NULL, NULL, NULL);
+                selectMoves = battle_box(battle_pok->pokemon.moves, onMoveSelected);
         }
 
         if (SIGN_COLLISION)
