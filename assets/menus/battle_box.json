@@ -9,7 +9,7 @@
         "dimensions": [
             0,
             0,
-            300,
+            250,
             400
         ],
         "justify": "right",
@@ -18,7 +18,7 @@
             {
                 "type": "list",
                 "name": "list",
-                "id": 1,
+                "id": 0,
                 "bounds": [
                     0.01,
                     0.01,
@@ -34,13 +34,15 @@
                 "style": "vertical",
                 "item_size": [
                     0.5,
-                    42
+                    50
                 ],
+                "align": "middle",
+                "justify": "center",
                 "elements": [
                     {
                         "type": "label",
-                        "name": "question",
-                        "id": 1,
+                        "name": "moves",
+                        "id": 0,
                         "bounds": [
                             0,
                             0,
@@ -53,7 +55,7 @@
                             255,
                             255
                         ],
-                        "text": "?",
+                        "text": "Moves",
                         "justify": "center",
                         "align": "middle",
                         "style": "Normal"
@@ -61,7 +63,7 @@
                     {
                         "type": "entry",
                         "name": "key",
-                        "id": 2,
+                        "id": 1,
                         "bounds": [
                             0,
                             0,
@@ -78,6 +80,44 @@
                             "type": "label",
                             "name": "entry_l",
                             "id": 21,
+                            "bounds": [
+                                0.01,
+                                0,
+                                0.98,
+                                1
+                            ],
+                            "color": [
+                                255,
+                                255,
+                                255,
+                                255
+                            ],
+                            "text": "?",
+                            "justify": "left",
+                            "align": "middle",
+                            "style": "small"
+                        }
+                    },
+                    {
+                        "type": "entry",
+                        "name": "value",
+                        "id": 2,
+                        "bounds": [
+                            0,
+                            0,
+                            0.99,
+                            40
+                        ],
+                        "color": [
+                            255,
+                            255,
+                            255,
+                            255
+                        ],
+                        "label": {
+                            "type": "label",
+                            "name": "entry_l",
+                            "id": 31,
                             "bounds": [
                                 0.01,
                                 0,
@@ -135,12 +175,90 @@
                         }
                     },
                     {
-                        "type": "list",
-                        "name": "entries",
+                        "type": "entry",
+                        "name": "value",
                         "id": 4,
                         "bounds": [
-                            260,
-                            20,
+                            0,
+                            0,
+                            0.99,
+                            40
+                        ],
+                        "color": [
+                            255,
+                            255,
+                            255,
+                            255
+                        ],
+                        "label": {
+                            "type": "label",
+                            "name": "entry_l",
+                            "id": 31,
+                            "bounds": [
+                                0.01,
+                                0,
+                                0.98,
+                                1
+                            ],
+                            "color": [
+                                255,
+                                255,
+                                255,
+                                255
+                            ],
+                            "text": "?",
+                            "justify": "left",
+                            "align": "middle",
+                            "style": "small"
+                        }
+                    },
+                    {
+                        "type": "entry",
+                        "name": "value",
+                        "id": 5,
+                        "bounds": [
+                            0,
+                            0,
+                            0.99,
+                            40
+                        ],
+                        "color": [
+                            255,
+                            255,
+                            255,
+                            255
+                        ],
+                        "label": {
+                            "type": "label",
+                            "name": "entry_l",
+                            "id": 31,
+                            "bounds": [
+                                0.01,
+                                0,
+                                0.98,
+                                1
+                            ],
+                            "color": [
+                                255,
+                                255,
+                                255,
+                                255
+                            ],
+                            "text": "run",
+                            "justify": "left",
+                            "align": "middle",
+                            "style": "small"
+                        }
+                    },
+                    {
+                        "type": "list",
+                        "name": "entries",
+                        "justify": "center",
+                        "align": "middle",
+                        "id": 50,
+                        "bounds": [
+                            0,
+                            0,
                             0.5,
                             64
                         ],
@@ -150,13 +268,14 @@
                             255,
                             255
                         ],
-                        "style": "horizontal",
                         "item_size": [
                             168,
                             64
                         ],
                         "elements": [
                             {
+                                "justify": "center",
+                                "align": "middle",
                                 "type": "button",
                                 "name": "OK",
                                 "id": 51,
@@ -210,75 +329,6 @@
                                     "type": "actor",
                                     "name": "image",
                                     "id": 512,
-                                    "bounds": [
-                                        0,
-                                        0,
-                                        168,
-                                        64
-                                    ],
-                                    "color": [
-                                        255,
-                                        255,
-                                        255,
-                                        255
-                                    ],
-                                    "actor": "assets/actors/button.actor"
-                                }
-                            },
-                            {
-                                "type": "button",
-                                "name": "cancel",
-                                "id": 52,
-                                "bounds": [
-                                    0,
-                                    0,
-                                    164,
-                                    68
-                                ],
-                                "color": [
-                                    255,
-                                    255,
-                                    255,
-                                    255
-                                ],
-                                "hotkey": "cancel",
-                                "highColor": [
-                                    255,
-                                    255,
-                                    255,
-                                    255
-                                ],
-                                "pressColor": [
-                                    255,
-                                    255,
-                                    255,
-                                    255
-                                ],
-                                "label": {
-                                    "type": "label",
-                                    "name": "No_l",
-                                    "id": 521,
-                                    "bounds": [
-                                        0,
-                                        0,
-                                        168,
-                                        64
-                                    ],
-                                    "color": [
-                                        255,
-                                        255,
-                                        255,
-                                        255
-                                    ],
-                                    "text": "Cancel",
-                                    "align": "middle",
-                                    "justify": "center",
-                                    "style": "H5"
-                                },
-                                "actor": {
-                                    "type": "actor",
-                                    "name": "image",
-                                    "id": 522,
                                     "bounds": [
                                         0,
                                         0,

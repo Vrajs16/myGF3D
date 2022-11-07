@@ -108,7 +108,10 @@ int main(int argc, char *argv[])
     {
         pokemon_new(vector3d(950 * (i - pokedex->total / 2), 2000, 0.0), vector3d(0.0, 0.0, 0.0), pokedex->pokemon[i], pokedex->pokemon[i].scale);
     }
-    Entity *battle_pok = pokemon_new(vector3d(0, -2000, 5000), vector3d(0, 0, M_PI), pokedex->pokemon[1], pokedex->pokemon[1].scale);
+    // srand(time(0));
+    // int r = rand() % pokedex->total;
+    int r = 1;
+    Entity *battle_pok = pokemon_new(vector3d(0, -2000, 5000), vector3d(0, 0, M_PI), pokedex->pokemon[r], pokedex->pokemon[r].scale);
     trainer_new(vector3d(0, 0, 0), vector3d(0, 0, M_PI), "calem", 200.0);
     interactable_new(vector3d(-4000, -2000, 0), vector3d(0, 0, 0), "sign", 15);
     interactable_new(vector3d(-2000, -2000, 0), vector3d(0, 0, 0), "strength", 400);

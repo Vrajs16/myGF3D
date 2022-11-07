@@ -322,9 +322,9 @@ Window *battle_box(Move moves[4], void *callbackData, void (*onOk)(void *), void
         return NULL;
     }
     gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 1), moves[0].move);
-    gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 2), moves[1].move);
-    gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 3), moves[2].move);
-    gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 4), moves[3].move);
+    gf2d_element_entry_set_text_pointer(gf2d_window_get_element_by_id(win, 2), moves[1].move, 20);
+    gf2d_window_set_focus_to(gf2d_window_get_element_by_id(win, 3), moves[2].move);
+    gf2d_element_entry_set_text_pointer(gf2d_window_get_element_by_id(win, 4), moves[3].move, 20);
     win->update = yes_no_update;
     win->free_data = yes_no_free;
     callbacks = gfc_list_new();
