@@ -465,10 +465,10 @@
       }
     ]
   },
-  "typeChart": {
+  "typechart": {
     "fire": {
       "fire": 0.5,
-      "water": 0.5,
+      "water": 0.25,
       "grass": 2,
       "physic": 1,
       "dark": 1
@@ -476,12 +476,12 @@
     "water": {
       "fire": 2,
       "water": 0.5,
-      "grass": 0.5,
+      "grass": 0.25,
       "physic": 1,
       "dark": 1
     },
     "grass": {
-      "fire": 0.5,
+      "fire": 0.25,
       "water": 2,
       "grass": 0.5,
       "physic": 1,

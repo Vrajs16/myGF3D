@@ -82,25 +82,127 @@ void exitCheck()
         return;
     _quit = window_yes_no("Exit?", onExit, onCancel, NULL);
 }
+float getMultiplier(char *attackMoveType, char *defendType)
+{
+    float multiplier = 1;
+    if (strcmp(attackMoveType, "fire") == 0)
+    {
+        if (strcmp(defendType, "fire") == 0)
+            multiplier = pokedex->typeChart.fire.fire;
+        else if (strcmp(defendType, "water") == 0)
+            multiplier = pokedex->typeChart.fire.water;
+        else if (strcmp(defendType, "grass") == 0)
+            multiplier = pokedex->typeChart.fire.grass;
+        else if (strcmp(defendType, "physic") == 0)
+            multiplier = pokedex->typeChart.fire.physic;
+        else if (strcmp(defendType, "dark") == 0)
+            multiplier = pokedex->typeChart.fire.dark;
+    }
+    else if (strcmp(attackMoveType, "water") == 0)
+    {
+        if (strcmp(defendType, "fire") == 0)
+            multiplier = pokedex->typeChart.water.fire;
+        else if (strcmp(defendType, "water") == 0)
+            multiplier = pokedex->typeChart.water.water;
+        else if (strcmp(defendType, "grass") == 0)
+            multiplier = pokedex->typeChart.water.grass;
+        else if (strcmp(defendType, "physic") == 0)
+            multiplier = pokedex->typeChart.water.physic;
+        else if (strcmp(defendType, "dark") == 0)
+            multiplier = pokedex->typeChart.water.dark;
+    }
+    else if (strcmp(attackMoveType, "grass") == 0)
+    {
+        if (strcmp(defendType, "fire") == 0)
+            multiplier = pokedex->typeChart.grass.fire;
+        else if (strcmp(defendType, "water") == 0)
+            multiplier = pokedex->typeChart.grass.water;
+        else if (strcmp(defendType, "grass") == 0)
+            multiplier = pokedex->typeChart.grass.grass;
+        else if (strcmp(defendType, "physic") == 0)
+            multiplier = pokedex->typeChart.grass.physic;
+        else if (strcmp(defendType, "dark") == 0)
+            multiplier = pokedex->typeChart.grass.dark;
+    }
+    else if (strcmp(attackMoveType, "physic") == 0)
+    {
+        if (strcmp(defendType, "fire") == 0)
+            multiplier = pokedex->typeChart.physic.fire;
+        else if (strcmp(defendType, "water") == 0)
+            multiplier = pokedex->typeChart.physic.water;
+        else if (strcmp(defendType, "grass") == 0)
+            multiplier = pokedex->typeChart.physic.grass;
+        else if (strcmp(defendType, "physic") == 0)
+            multiplier = pokedex->typeChart.physic.physic;
+        else if (strcmp(defendType, "dark") == 0)
+            multiplier = pokedex->typeChart.physic.dark;
+    }
+    else if (strcmp(attackMoveType, "dark") == 0)
+    {
+        if (strcmp(defendType, "fire") == 0)
+            multiplier = pokedex->typeChart.dark.fire;
+        else if (strcmp(defendType, "water") == 0)
+            multiplier = pokedex->typeChart.dark.water;
+        else if (strcmp(defendType, "grass") == 0)
+            multiplier = pokedex->typeChart.dark.grass;
+        else if (strcmp(defendType, "physic") == 0)
+            multiplier = pokedex->typeChart.dark.physic;
+        else if (strcmp(defendType, "dark") == 0)
+            multiplier = pokedex->typeChart.dark.dark;
+    }
+    return multiplier;
+}
 
 void onMoveSelected(void *move)
 {
     // print void callbackdata
-    slog("%s used %s and it was (Not Effective, Effective, Super Effective)?", BATTLE_POKEMON->name, ((Move *)move)->move);
+    slog("%s used %s", BATTLE_POKEMON->name, ((Move *)move)->move);
     selectMoves = NULL;
     ANIMATION_PLAYING = 1;
+    float multiplier = getMultiplier(((Move *)move)->type, OP_POKEMON->pokemon.type);
+
     // do damage to opponent
-    NEW_OP_HEALTH -= ((Move *)move)->power;
+    NEW_OP_HEALTH -= ((Move *)move)->power * multiplier;
+    if (((Move *)move)->power > 0)
+    {
+        if (multiplier > 1)
+        {
+            slog("It's super effective!\n");
+        }
+        else if (multiplier == 1)
+        {
+            slog("It's effective!\n");
+        }
+        else if (multiplier < 1)
+        {
+            slog("It's not very effective!\n");
+        }
+    }
     if (NEW_OP_HEALTH < 0)
         return;
+
     // do damage to player
     Move moveSelected = OP_POKEMON->pokemon.moves[rand() % 4];
-    slog("%s used %s and it was (Not Effective, Effective, Super Effective)?", OP_POKEMON->name, moveSelected.move);
-    NEW_BATTLER_HEALTH -= moveSelected.power;
-
-    // opponent do damage by selecting move and doing healht animation if it hits
-    // check if dead if so v
-    // entity_free(entity_get(OP_POKEMON->name));
+    slog("%s used %s", OP_POKEMON->name, moveSelected.move);
+    multiplier = getMultiplier(moveSelected.type, BATTLE_POKEMON->pokemon.type);
+    NEW_BATTLER_HEALTH -= moveSelected.power * multiplier;
+    if (moveSelected.power > 0)
+    {
+        if (multiplier > 1)
+        {
+            slog("It's super effective!\n");
+        }
+        else if (multiplier == 1)
+        {
+            slog("It's effective!\n");
+        }
+        else if (multiplier < 1)
+        {
+            slog("It's not very effective!\n");
+        }
+    }
+    if (NEW_BATTLER_HEALTH < 0)
+        return;
 }
 
 void onRunSelected(void *data)
@@ -196,12 +298,12 @@ int main(int argc, char *argv[])
 
         if (BATTLE)
         {
-            if (OP_HEALTH != NEW_OP_HEALTH)
+            if (OP_HEALTH > NEW_OP_HEALTH)
             {
                 OP_HEALTH -= HEALTH_RATE;
                 sprintf(OP_HEALTH_TEXT, "%d%%", (int)(OP_HEALTH / OP_HEALTH_MAX * 100));
             }
-            else if (BATTLER_HEALTH != NEW_BATTLER_HEALTH)
+            else if (BATTLER_HEALTH > NEW_BATTLER_HEALTH)
             {
                 BATTLER_HEALTH -= HEALTH_RATE;
                 sprintf(BATTLER_HEALTH_TEXT, "%d%%", (int)(BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100));
@@ -209,13 +311,13 @@ int main(int argc, char *argv[])
             else
                 ANIMATION_PLAYING = 0;
 
-            if (OP_HEALTH <= 0)
+            if ((int)OP_HEALTH <= 0)
             {
                 slog("You won");
                 BATTLE = 0;
                 entity_free(entity_get(OP_POKEMON->name));
             }
-            else if (BATTLER_HEALTH <= 0)
+            else if ((int)BATTLER_HEALTH <= 0)
             {
                 slog("You lost");
                 BATTLE = 0;

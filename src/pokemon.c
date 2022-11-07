@@ -48,8 +48,7 @@ Pokedex *load_pokedex_json(char *filename)
 {
     Pokedex *pokedex = NULL;
     pokedex = gfc_allocate_array(sizeof(Pokedex), 1);
-    // SJson *json, *pokedex_j, *typechart;
-    SJson *json, *pokedex_j;
+    SJson *json, *pokedex_j, *typechart;
     int totalPokemon;
     json = sj_load(filename);
     if (!json)
@@ -158,13 +157,56 @@ Pokedex *load_pokedex_json(char *filename)
 
     // GOTTA LOAD MY TYPE SYSTEM IN HERE
 
-    // typechart = sj_object_get_value(json, "typechart");
-    // if (!typechart)
-    // {
-    //     slog("failed to find typechart in %s", filename);
-    //     sj_free(json);
-    //     return NULL;
-    // }
+    typechart = sj_object_get_value(json, "typechart");
+    if (!typechart)
+    {
+        slog("failed to find typechart in %s", filename);
+        sj_free(json);
+        return NULL;
+    }
+
+    SJson *fire = sj_object_get_value(typechart, "fire");
+    SJson *water = sj_object_get_value(typechart, "water");
+    SJson *grass = sj_object_get_value(typechart, "grass");
+    SJson *physic = sj_object_get_value(typechart, "physic");
+    SJson *dark = sj_object_get_value(typechart, "dark");
+    if(!fire || !water || !grass || !physic || !dark)
+    {
+        slog("failed to find typechart in %s", filename);
+        sj_free(json);
+        return NULL;
+    }
+
+    sj_get_float_value(sj_object_get_value(fire, "fire"), &pokedex->typeChart.fire.fire);
+    sj_get_float_value(sj_object_get_value(fire, "water"), &pokedex->typeChart.fire.water);
+    sj_get_float_value(sj_object_get_value(fire, "grass"), &pokedex->typeChart.fire.grass);
+    sj_get_float_value(sj_object_get_value(fire, "physic"), &pokedex->typeChart.fire.physic);
+    sj_get_float_value(sj_object_get_value(fire, "dark"), &pokedex->typeChart.fire.dark);
+
+    sj_get_float_value(sj_object_get_value(water, "fire"), &pokedex->typeChart.water.fire);
+    sj_get_float_value(sj_object_get_value(water, "water"), &pokedex->typeChart.water.water);
+    sj_get_float_value(sj_object_get_value(water, "grass"), &pokedex->typeChart.water.grass);
+    sj_get_float_value(sj_object_get_value(water, "physic"), &pokedex->typeChart.water.physic);
+    sj_get_float_value(sj_object_get_value(water, "dark"), &pokedex->typeChart.water.dark);
+
+    sj_get_float_value(sj_object_get_value(grass, "fire"), &pokedex->typeChart.grass.fire);
+    sj_get_float_value(sj_object_get_value(grass, "water"), &pokedex->typeChart.grass.water);
+    sj_get_float_value(sj_object_get_value(grass, "grass"), &pokedex->typeChart.grass.grass);
+    sj_get_float_value(sj_object_get_value(grass, "physic"), &pokedex->typeChart.grass.physic);
+    sj_get_float_value(sj_object_get_value(grass, "dark"), &pokedex->typeChart.grass.dark);
+
+    sj_get_float_value(sj_object_get_value(physic, "fire"), &pokedex->typeChart.physic.fire);
+    sj_get_float_value(sj_object_get_value(physic, "water"), &pokedex->typeChart.physic.water);
+    sj_get_float_value(sj_object_get_value(physic, "grass"), &pokedex->typeChart.physic.grass);
+    sj_get_float_value(sj_object_get_value(physic, "physic"), &pokedex->typeChart.physic.physic);
+    sj_get_float_value(sj_object_get_value(physic, "dark"), &pokedex->typeChart.physic.dark);
+
+    sj_get_float_value(sj_object_get_value(dark, "fire"), &pokedex->typeChart.dark.fire);
+    sj_get_float_value(sj_object_get_value(dark, "water"), &pokedex->typeChart.dark.water);
+    sj_get_float_value(sj_object_get_value(dark, "grass"), &pokedex->typeChart.dark.grass);
+    sj_get_float_value(sj_object_get_value(dark, "physic"), &pokedex->typeChart.dark.physic);
+    sj_get_float_value(sj_object_get_value(dark, "dark"), &pokedex->typeChart.dark.dark);
+    
     return pokedex;
 }
 

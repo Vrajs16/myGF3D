@@ -175,7 +175,7 @@ void trainer_collide(struct Entity_S *self, struct Entity_S *other)
 {
     if (other->type == ET_POKEMON)
     {
-        slog("trainer collided with %s", other->pokemon.name);
+        // slog("trainer collided with %s", other->pokemon.name);
         self->position = self->previousPosition;
 
         // Start battle - Combat Scene + battling logic
