@@ -196,7 +196,7 @@ void gf3d_vgraphics_init(const char *config)
 
     gf3d_model_manager_init(1024);
     gf2d_sprite_manager_init(1024);
-    //gf3d_particle_manager_init(4096);
+    // gf3d_particle_manager_init(4096);
 
     gf3d_swapchain_create_depth_image();
     gf3d_swapchain_setup_frame_buffers(gf3d_mesh_get_pipeline());
@@ -639,4 +639,8 @@ VkImageView gf3d_vgraphics_create_image_view(VkImage image, VkFormat format)
     return imageView;
 }
 
+void get_window_screen_size(int *w, int *h)
+{
+    SDL_GetWindowSize(gf3d_vgraphics.main_window, w, h);
+}
 /*eol@eof*/
