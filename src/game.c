@@ -55,6 +55,9 @@ char BATTLER_HEALTH_TEXT[5];
 int BATTLER_POKEMON_DEAD = 0;
 int __BB = 0;
 
+int SCREEN_WIDTH;
+int SCREEN_HEIGHT;
+
 static int _done = 0;
 static Window *_quit = NULL;
 static Window *selectMoves = NULL;
@@ -235,6 +238,8 @@ int main(int argc, char *argv[])
     gfc_input_init("config/input.cfg");
     slog("gf3d begin");
     gf3d_vgraphics_init("config/setup.cfg");
+    get_window_screen_size(&SCREEN_WIDTH, &SCREEN_HEIGHT);
+    slog("screen size: %i %i", SCREEN_WIDTH, SCREEN_HEIGHT);
     gfc_audio_init(256, 16, 4, 1, 1, 1);
     gf2d_font_init("config/font.cfg");
     gf3d_draw_init();             // 3D
@@ -330,52 +335,52 @@ int main(int argc, char *argv[])
                 // Do some draw calls maybe to draw health and stuff
 
                 // Draw the pokemon infobox opponent
-                gf2d_draw_rect_filled(gfc_rect(200, 150, 300, 100), gfc_color8(255, 255, 255, 150));
-                gf2d_draw_rect(gfc_rect(200, 150, 300, 100), gfc_color8(0, 0, 0, 255));
+                gf2d_draw_rect_filled(gfc_rect(20, 20, 300, 100), gfc_color8(255, 255, 255, 150));
+                gf2d_draw_rect(gfc_rect(20, 20, 300, 100), gfc_color8(0, 0, 0, 255));
                 // healthbar
-                gf2d_draw_rect_filled(gfc_rect(210, 200, 200, 30), gfc_color8(100, 100, 100, 150));
+                gf2d_draw_rect_filled(gfc_rect(30, 70, 200, 30), gfc_color8(100, 100, 100, 150));
                 if ((int)(OP_HEALTH / OP_HEALTH_MAX * 100) > 0)
                 {
                     if (OP_HEALTH / OP_HEALTH_MAX * 100 > 50)
                     {
-                        gf2d_draw_rect_filled(gfc_rect(210, 200, OP_HEALTH / OP_HEALTH_MAX * 200, 30), gfc_color8(0, 255, 0, 200));
+                        gf2d_draw_rect_filled(gfc_rect(30, 70, OP_HEALTH / OP_HEALTH_MAX * 200, 30), gfc_color8(0, 255, 0, 200));
                     }
                     else if (OP_HEALTH / OP_HEALTH_MAX * 100 > 25)
                     {
-                        gf2d_draw_rect_filled(gfc_rect(210, 200, OP_HEALTH / OP_HEALTH_MAX * 200, 30), gfc_color8(255, 255, 0, 200));
+                        gf2d_draw_rect_filled(gfc_rect(30, 70, OP_HEALTH / OP_HEALTH_MAX * 200, 30), gfc_color8(255, 255, 0, 200));
                     }
                     else
                     {
-                        gf2d_draw_rect_filled(gfc_rect(210, 200, OP_HEALTH / OP_HEALTH_MAX * 200, 30), gfc_color8(255, 0, 0, 200));
+                        gf2d_draw_rect_filled(gfc_rect(30, 70, OP_HEALTH / OP_HEALTH_MAX * 200, 30), gfc_color8(255, 0, 0, 200));
                     }
                 }
-                gf2d_draw_rect(gfc_rect(210, 200, 200, 30), gfc_color8(255, 255, 255, 255));
-                gf2d_font_draw_line_tag(OP_POKEMON->name, FT_Normal, gfc_color(0, 0, 0, 1), vector2d(210, 160));
-                gf2d_font_draw_line_tag(OP_HEALTH_TEXT, FT_Small, gfc_color8(0, 0, 0, 255), vector2d(425, 197.5));
+                gf2d_draw_rect(gfc_rect(30, 70, 200, 30), gfc_color8(255, 255, 255, 255));
+                gf2d_font_draw_line_tag(OP_POKEMON->name, FT_Normal, gfc_color(0, 0, 0, 1), vector2d(30, 30));
+                gf2d_font_draw_line_tag(OP_HEALTH_TEXT, FT_Small, gfc_color8(0, 0, 0, 255), vector2d(242.5, 67.5));
 
                 // Draw the pokemon infobox player
-                gf2d_draw_rect_filled(gfc_rect(350, 425, 300, 100), gfc_color8(255, 255, 255, 150));
-                gf2d_draw_rect(gfc_rect(350, 425, 300, 100), gfc_color8(0, 0, 0, 255));
+                gf2d_draw_rect_filled(gfc_rect(20, SCREEN_HEIGHT - 120, 300, 100), gfc_color8(255, 255, 255, 150));
+                gf2d_draw_rect(gfc_rect(20, SCREEN_HEIGHT - 120, 300, 100), gfc_color8(0, 0, 0, 255));
                 // Health bar
-                gf2d_draw_rect_filled(gfc_rect(360, 475, 200, 30), gfc_color8(100, 100, 100, 150));
+                gf2d_draw_rect_filled(gfc_rect(30, SCREEN_HEIGHT - 70, 200, 30), gfc_color8(100, 100, 100, 150));
                 if ((int)(BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100) > 0)
                 {
                     if (BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100 > 50)
                     {
-                        gf2d_draw_rect_filled(gfc_rect(360, 475, BATTLER_HEALTH / BATTLER_HEALTH_MAX * 200, 30), gfc_color8(0, 255, 0, 200));
+                        gf2d_draw_rect_filled(gfc_rect(30, SCREEN_HEIGHT - 70, BATTLER_HEALTH / BATTLER_HEALTH_MAX * 200, 30), gfc_color8(0, 255, 0, 200));
                     }
                     else if (BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100 > 25)
                     {
-                        gf2d_draw_rect_filled(gfc_rect(360, 475, BATTLER_HEALTH / BATTLER_HEALTH_MAX * 200, 30), gfc_color8(255, 255, 0, 200));
+                        gf2d_draw_rect_filled(gfc_rect(30, SCREEN_HEIGHT - 70, BATTLER_HEALTH / BATTLER_HEALTH_MAX * 200, 30), gfc_color8(255, 255, 0, 200));
                     }
                     else
                     {
-                        gf2d_draw_rect_filled(gfc_rect(360, 475, BATTLER_HEALTH / BATTLER_HEALTH_MAX * 200, 30), gfc_color8(255, 0, 0, 200));
+                        gf2d_draw_rect_filled(gfc_rect(30, SCREEN_HEIGHT - 70, BATTLER_HEALTH / BATTLER_HEALTH_MAX * 200, 30), gfc_color8(255, 0, 0, 200));
                     }
                 }
-                gf2d_draw_rect(gfc_rect(360, 475, 200, 30), gfc_color8(255, 255, 255, 255));
-                gf2d_font_draw_line_tag(BATTLE_POKEMON->name, FT_Normal, gfc_color8(0, 0, 0, 255), vector2d(360, 435));
-                gf2d_font_draw_line_tag(BATTLER_HEALTH_TEXT, FT_Small, gfc_color8(0, 0, 0, 255), vector2d(575, 472.5));
+                gf2d_draw_rect(gfc_rect(30, SCREEN_HEIGHT - 70, 200, 30), gfc_color8(255, 255, 255, 255));
+                gf2d_font_draw_line_tag(BATTLE_POKEMON->name, FT_Normal, gfc_color8(0, 0, 0, 255), vector2d(30, SCREEN_HEIGHT - 110));
+                gf2d_font_draw_line_tag(BATTLER_HEALTH_TEXT, FT_Small, gfc_color8(0, 0, 0, 255), vector2d(242.5, SCREEN_HEIGHT - 72.5));
 
                 // Draw the attack buttons
                 if (selectMoves == NULL && ANIMATION_PLAYING == 0)

@@ -32,6 +32,7 @@
     "gf2d_element_entry.h": "c",
     "gf2d_draw.h": "c",
     "gf2d_sprite.h": "c",
-    "ratio": "c"
+    "ratio": "c",
+    "gf3d_vgraphics.h": "c"
   }
 }
