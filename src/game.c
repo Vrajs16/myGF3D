@@ -11,7 +11,16 @@ static int _done = 0;
 static Uint32 next_time = 0;
 
 // 60 fps i think
-Uint32 time_left(void);
+Uint32 time_left(void)
+{
+    Uint32 now;
+    now = SDL_GetTicks();
+
+    if (next_time <= now)
+        return 0;
+    else
+        return next_time - now;
+}
 
 int main(int argc, char *argv[])
 {
@@ -42,17 +51,6 @@ int main(int argc, char *argv[])
     gameloop_close();
 
     return 0;
-}
-
-Uint32 time_left(void)
-{
-    Uint32 now;
-    now = SDL_GetTicks();
-
-    if (next_time <= now)
-        return 0;
-    else
-        return next_time - now;
 }
 
 // static Window *_quit = NULL;

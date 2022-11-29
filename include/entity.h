@@ -63,6 +63,10 @@ typedef struct Entity_S
 
     Pokemon pokemon;
 
+    // animation models
+    Model **runAniModels;
+    Model **idleAniModels;
+
     void (*collide)(struct Entity_S *self, struct Entity_S *other); /**<pointer to the collide function*/
 
 } Entity;

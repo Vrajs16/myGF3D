@@ -29,6 +29,12 @@ extern float NEW_BATTLER_HEALTH;
 extern char BATTLER_HEALTH_TEXT[5];
 extern int BATTLER_POKEMON_DEAD;
 
+int ANIMATION_FRAME_RUNNING = 0;
+int ANIMATION_INTERVAL_RUNNING = 0;
+
+int ANIMATION_FRAME_IDLE = 0;
+int ANIMATION_INTERVAL_IDLE = 0;
+
 void trainer_think(Entity *self);
 void trainer_collide(Entity *self, Entity *other);
 
@@ -43,13 +49,28 @@ Entity *trainer_new(Vector3D position, Vector3D rotation, char *trainer, float s
         slog("UGH OHHHH, no trainer for you!");
         return NULL;
     }
-    snprintf(modelfilename, GFCLINELEN, "assets/trainer/%s/%s.obj", trainer, trainer);
     snprintf(texturefilename, GFCLINELEN, "assets/trainer/%s/%s-bake.png", trainer, trainer);
+
+    ent->runAniModels = gfc_allocate_array(sizeof(Model), 17);
+    ent->idleAniModels = gfc_allocate_array(sizeof(Model), 45);
+
+    for (int i = 0; i < 17; i++)
+    {
+        snprintf(modelfilename, GFCLINELEN, "assets/trainer/%s/running/%s%d.obj", trainer, trainer, i + 1);
+        ent->runAniModels[i] = gf3d_model_load_full(modelfilename, texturefilename);
+    }
+
+    for (int i = 0; i < 45; i++)
+    {
+        snprintf(modelfilename, GFCLINELEN, "assets/trainer/%s/idle/%s%d.obj", trainer, trainer, i + 1);
+        ent->idleAniModels[i] = gf3d_model_load_full(modelfilename, texturefilename);
+    }
+
+    ent->model = ent->idleAniModels[0];
 
     ent->isBox = 1;
     ent->boundingBox = gfc_box(0, 0, 350, 200, 200, 350);
 
-    ent->model = gf3d_model_load_full(modelfilename, texturefilename);
     ent->think = trainer_think;
     ent->collide = trainer_collide;
     ent->name = trainer;
@@ -92,9 +113,35 @@ void trainer_think(Entity *self)
     vector3d_set(moveDir, 0, 0, 0);
 
     if (keys[SDL_SCANCODE_W])
+    {
         vector3d_add(moveDir, moveDir, -forward);
+        // need to iterate through the array of models and set the current model to the next one
+        self->model = self->runAniModels[ANIMATION_FRAME_RUNNING];
+
+        if (ANIMATION_INTERVAL_RUNNING == 2)
+        {
+            ANIMATION_FRAME_RUNNING++;
+            ANIMATION_INTERVAL_RUNNING = 0;
+        }
+        if (ANIMATION_FRAME_RUNNING > 16)
+            ANIMATION_FRAME_RUNNING = 1;
+        ANIMATION_INTERVAL_RUNNING++;
+    }
     else if (keys[SDL_SCANCODE_S])
         vector3d_add(moveDir, moveDir, forward);
+    else
+    {
+        self->model = self->idleAniModels[ANIMATION_FRAME_IDLE];
+
+        if (ANIMATION_INTERVAL_IDLE == 3)
+        {
+            ANIMATION_FRAME_IDLE++;
+            ANIMATION_INTERVAL_IDLE = 0;
+        }
+        if (ANIMATION_FRAME_IDLE > 44)
+            ANIMATION_FRAME_IDLE = 1;
+        ANIMATION_INTERVAL_IDLE++;
+    }
     vector3d_copy(self->previousPosition, self->position);
     vector3d_add(self->position, self->position, moveDir);
     if (SIGN_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition))

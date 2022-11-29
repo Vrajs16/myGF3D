@@ -263,6 +263,8 @@ void gameloop_close(void)
     slog_sync();
 }
 
+
+
 void onMoveSelected(void *move)
 {
     // print void callbackdata
