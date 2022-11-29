@@ -114,6 +114,10 @@ void trainer_think(Entity *self)
 
     if (keys[SDL_SCANCODE_W])
     {
+
+        ANIMATION_FRAME_IDLE = 0;
+        ANIMATION_INTERVAL_IDLE = 0;
+
         vector3d_add(moveDir, moveDir, -forward);
         // need to iterate through the array of models and set the current model to the next one
         self->model = self->runAniModels[ANIMATION_FRAME_RUNNING];
@@ -131,6 +135,9 @@ void trainer_think(Entity *self)
         vector3d_add(moveDir, moveDir, forward);
     else
     {
+        ANIMATION_FRAME_RUNNING = 0;
+        ANIMATION_INTERVAL_RUNNING = 0;
+
         self->model = self->idleAniModels[ANIMATION_FRAME_IDLE];
 
         if (ANIMATION_INTERVAL_IDLE == 3)
