@@ -74,6 +74,10 @@ typedef struct
     Uint32 gmask;
     Uint32 bmask;
     Uint32 amask;
+
+    int windowWidth;
+    int windowHeight;
+
 } vGraphics;
 
 static vGraphics gf3d_vgraphics = {0};
@@ -250,6 +254,7 @@ void gf3d_vgraphics_setup(
         return;
     }
     slog_sync();
+    SDL_GetWindowSize(gf3d_vgraphics.main_window, &gf3d_vgraphics.windowWidth, &gf3d_vgraphics.windowHeight);
     // instance extension configuration
 
     gf3d_extensions_instance_init(config);
@@ -639,8 +644,13 @@ VkImageView gf3d_vgraphics_create_image_view(VkImage image, VkFormat format)
     return imageView;
 }
 
-void get_window_screen_size(int *w, int *h)
+int gf3d_vgraphics_get_height()
 {
-    SDL_GetWindowSize(gf3d_vgraphics.main_window, w, h);
+    return gf3d_vgraphics.windowHeight;
+}
+
+int gf3d_vgraphics_get_width()
+{
+    return gf3d_vgraphics.windowWidth;
 }
 /*eol@eof*/

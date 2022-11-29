@@ -19,11 +19,11 @@ typedef struct
     Color color;
 } World;
 
-World *world_load(char *filename);
+void world_load(char *filename);
 
-void world_draw(World *world);
+void world_draw();
 
-void world_delete(World *world);
+void world_delete();
 
 void world_run_updates(World *world);
 

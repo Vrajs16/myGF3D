@@ -39,6 +39,10 @@ typedef struct
 
 Entity *pokemon_new(Vector3D position, Vector3D rotation, Pokemon pokemon, float scale);
 
-Pokedex *load_pokedex_json(char *filename);
+void load_pokedex_json(char *filename);
+
+float pokemon_move_multiplier(char *attackMoveType, char *defendType);
+
+Pokedex get_pokedex(void);
 
 #endif

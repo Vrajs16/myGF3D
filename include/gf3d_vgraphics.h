@@ -116,5 +116,15 @@ SDL_Surface *gf3d_vgraphics_create_surface(Uint32 w, Uint32 h);
 SDL_Surface *gf3d_vgraphics_screen_convert(SDL_Surface **surface);
 
 
-void get_window_screen_size(int *w, int *h);
+/**  
+ * @brief returns the height of the window
+*/
+int gf3d_vgraphics_get_height();
+
+/**  
+ * @brief returns the width of the window
+*/
+int gf3d_vgraphics_get_width();
+
+
 #endif

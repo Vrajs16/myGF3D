@@ -33,6 +33,9 @@
     "gf2d_draw.h": "c",
     "gf2d_sprite.h": "c",
     "ratio": "c",
-    "gf3d_vgraphics.h": "c"
+    "gf3d_vgraphics.h": "c",
+    "gfc_audio.h": "c",
+    "gf2d_actor.h": "c",
+    "gameloop.h": "c"
   }
 }
