@@ -52,7 +52,7 @@ Entity *trainer_new(Vector3D position, Vector3D rotation, char *trainer, float s
     snprintf(texturefilename, GFCLINELEN, "assets/trainer/%s/%s-bake.png", trainer, trainer);
 
     ent->runAniModels = gfc_allocate_array(sizeof(Model), 17);
-    ent->idleAniModels = gfc_allocate_array(sizeof(Model), 180);
+    ent->idleAniModels = gfc_allocate_array(sizeof(Model), 45);
 
     for (int i = 0; i < 17; i++)
     {
@@ -60,7 +60,7 @@ Entity *trainer_new(Vector3D position, Vector3D rotation, char *trainer, float s
         ent->runAniModels[i] = gf3d_model_load_full(modelfilename, texturefilename);
     }
 
-    for (int i = 0; i < 180; i++)
+    for (int i = 0; i < 45; i++)
     {
         snprintf(modelfilename, GFCLINELEN, "assets/trainer/%s/idle/%s%d.obj", trainer, trainer, i + 1);
         ent->idleAniModels[i] = gf3d_model_load_full(modelfilename, texturefilename);
@@ -145,7 +145,7 @@ void trainer_think(Entity *self)
             ANIMATION_FRAME_IDLE++;
             ANIMATION_INTERVAL_IDLE = 0;
         }
-        if (ANIMATION_FRAME_IDLE > 179)
+        if (ANIMATION_FRAME_IDLE > 44)
             ANIMATION_FRAME_IDLE = 1;
         ANIMATION_INTERVAL_IDLE++;
     }
