@@ -34,7 +34,10 @@ int ANIMATION_INTERVAL_RUNNING = 0;
 
 int ANIMATION_FRAME_IDLE = 0;
 int ANIMATION_INTERVAL_IDLE = 0;
-
+Vector3D STRENGTH_FINAL_POSITION = {0, 0, 0};
+float STRENGTH_FINAL_ROTATION = 0;
+int ANIMATION_STRENGTH_PLAYING = 0;
+int ANIMATION_STRENGTH_MAX = 50;
 void trainer_think(Entity *self);
 void trainer_collide(Entity *self, Entity *other);
 
@@ -201,20 +204,31 @@ void trainer_think(Entity *self)
     else
         ROCK_COLLISION = 0;
 
-    if (STRENGTH_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition))
+    if (STRENGTH_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition) || ANIMATION_STRENGTH_PLAYING)
     {
-        STRENGTH_COLLISION = 1;
-        if (keys[SDL_SCANCODE_E])
+        Entity *strength = entity_get("strength");
+        if (keys[SDL_SCANCODE_E] && !ANIMATION_STRENGTH_PLAYING)
         {
             // Move Rock
             slog("You used Strength!");
-            Entity *strength = entity_get("strength");
-
             // Move bolder 1500 units in the direction the trainer is facing
-            strength->position.x += 1500 * sin(TRAINER_ROT_Z);
-            strength->position.y += 1500 * cos(TRAINER_ROT_Z + M_PI);
-
+            STRENGTH_FINAL_ROTATION = TRAINER_ROT_Z;
+            vector3d_set(STRENGTH_FINAL_POSITION, round(30 * sin(TRAINER_ROT_Z)), round(30 * cos(TRAINER_ROT_Z + M_PI)), 0);
             STRENGTH_COLLISION = 0;
+            ANIMATION_STRENGTH_PLAYING = 1;
+        }
+        else if (ANIMATION_STRENGTH_PLAYING)
+        {
+            if (ANIMATION_STRENGTH_MAX > 0)
+            {
+                vector3d_add(strength->position, strength->position, STRENGTH_FINAL_POSITION);
+                ANIMATION_STRENGTH_MAX--;
+            }
+            else
+            {
+                ANIMATION_STRENGTH_PLAYING = 0;
+                ANIMATION_STRENGTH_MAX = 50;
+            }
         }
     }
     else
