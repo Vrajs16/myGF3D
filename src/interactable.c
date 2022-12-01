@@ -28,6 +28,16 @@ Entity *interactable_new(Vector3D position, Vector3D rotation, char *filename, f
         }
     }
 
+    if(strcmp("tree", filename) == 0){
+        ent->runAniModels = gfc_allocate_array(sizeof(Model), 100);
+        for (int i = 0; i < 100; i++)
+        {
+            snprintf(modelfilename, GFCLINELEN, "assets/interactables/%s/breaking/%s%d.obj", filename, filename, i + 1);
+            ent->runAniModels[i] = gf3d_model_load_full(modelfilename, texturefilename);
+        }
+    }
+
+
     ent->isBox = 1;
     ent->boundingBox = gfc_box(0, 0, 350, 350, 350, 350);
     ent->name = filename;

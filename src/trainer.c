@@ -35,6 +35,10 @@ int ANIMATION_INTERVAL_RUNNING = 0;
 int ANIMATION_ROCK_PLAYING = 0;
 int ANIMATION_FRAME_ROCK = 0;
 
+int ANIMATION_TREE_PLAYING = 0;
+int ANIMATION_FRAME_TREE = 0;
+int ANIMAITON_INTERVAL_TREE = 0;
+
 int ANIMATION_FRAME_IDLE = 0;
 int ANIMATION_INTERVAL_IDLE = 0;
 Vector3D STRENGTH_FINAL_POSITION = {0, 0, 0};
@@ -162,15 +166,33 @@ void trainer_think(Entity *self)
     else
         SIGN_COLLISION = 0;
 
-    if (TREE_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition))
+    if ((TREE_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition)) || ANIMATION_TREE_PLAYING)
     {
-        TREE_COLLISION = 1;
+        Entity *tree = entity_get("tree");
+
         if (keys[SDL_SCANCODE_E])
         {
             // Delete tree
+            ANIMATION_TREE_PLAYING = 1;
             slog("You used Cut!");
-            entity_free(entity_get("tree"));
             TREE_COLLISION = 0;
+        }
+        else if (ANIMATION_TREE_PLAYING)
+        {
+            if (ANIMATION_FRAME_TREE > 99)
+            {
+                ANIMATION_ROCK_PLAYING = 0;
+                entity_free(tree);
+            }
+            else
+            {
+                tree->model = tree->runAniModels[ANIMATION_FRAME_TREE];
+                if(ANIMAITON_INTERVAL_TREE == 2){
+                    ANIMATION_FRAME_TREE++;
+                    ANIMAITON_INTERVAL_TREE = 0;
+                }
+                ANIMAITON_INTERVAL_TREE++;
+            }
         }
     }
     else
