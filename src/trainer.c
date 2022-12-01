@@ -32,6 +32,9 @@ extern int BATTLER_POKEMON_DEAD;
 int ANIMATION_FRAME_RUNNING = 0;
 int ANIMATION_INTERVAL_RUNNING = 0;
 
+int ANIMATION_ROCK_PLAYING = 0;
+int ANIMATION_FRAME_ROCK = 0;
+
 int ANIMATION_FRAME_IDLE = 0;
 int ANIMATION_INTERVAL_IDLE = 0;
 Vector3D STRENGTH_FINAL_POSITION = {0, 0, 0};
@@ -190,21 +193,34 @@ void trainer_think(Entity *self)
     else
         PC_COLLISION = 0;
 
-    if (ROCK_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition))
+    if ((ROCK_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition)) || ANIMATION_ROCK_PLAYING)
     {
-        ROCK_COLLISION = 1;
-        if (keys[SDL_SCANCODE_E])
+        Entity *rock = entity_get("rock");
+        if (keys[SDL_SCANCODE_E] && !ANIMATION_ROCK_PLAYING)
         {
+            ANIMATION_ROCK_PLAYING = 1;
             // Delete Rock
             slog("You used Rock Smash!");
-            entity_free(entity_get("rock"));
             ROCK_COLLISION = 0;
+        }
+        else if (ANIMATION_ROCK_PLAYING)
+        {
+            if (ANIMATION_FRAME_ROCK > 249)
+            {
+                ANIMATION_ROCK_PLAYING = 0;
+                entity_free(rock);
+            }
+            else
+            {
+                rock->model = rock->runAniModels[ANIMATION_FRAME_ROCK];
+                ANIMATION_FRAME_ROCK++;
+            }
         }
     }
     else
         ROCK_COLLISION = 0;
 
-    if (STRENGTH_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition) || ANIMATION_STRENGTH_PLAYING)
+    if ((STRENGTH_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition)) || ANIMATION_STRENGTH_PLAYING)
     {
         Entity *strength = entity_get("strength");
         if (keys[SDL_SCANCODE_E] && !ANIMATION_STRENGTH_PLAYING)
