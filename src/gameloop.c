@@ -18,6 +18,7 @@
 #include "player.h"
 #include "gf3d_camera.h"
 #include "gf2d_windows_common.h"
+#include "soundmanager.h"
 
 extern int ROCK_COLLISION;
 extern int TREE_COLLISION;
@@ -55,7 +56,9 @@ void gameloop_setup(void)
     init_logger("gf3d.log", 0);
     gfc_input_init("config/input.cfg");
     gf3d_vgraphics_init("config/setup.cfg");
-    gfc_audio_init(256, 16, 4, 1, 1, 1);
+    gfc_audio_init(256, 16, 4, 4, 1, 1);
+    setSoundPack("config/sounds.cfg");
+
     gf2d_font_init("config/font.cfg");
     gf3d_draw_init();             // 3D
     gf2d_draw_manager_init(1000); // 2D
@@ -98,6 +101,8 @@ void gameloop_setup(void)
 
     // main game loop
     slog("gf3d main loop begin");
+    playSound("lobby-music", -1, .3, 1, 1);
+    // playSound("normal-music", -1, .3, 1, 1);
 }
 
 void gameloop_update(void)
@@ -143,12 +148,14 @@ void gameloop_draw(void)
         if ((int)OP_HEALTH <= 0)
         {
             slog("You won");
+            playSound("normal-music", -1, .3, 1, 1);
             BATTLE = 0;
             entity_free(entity_get(OP_POKEMON->name));
         }
         else if ((int)BATTLER_HEALTH <= 0)
         {
             slog("You lost");
+            playSound("normal-music", -1, .3, 1, 1);
             BATTLE = 0;
             entity_free(entity_get(OP_POKEMON->name));
             BATTLER_POKEMON_DEAD = 1;
@@ -263,8 +270,6 @@ void gameloop_close(void)
     slog_sync();
 }
 
-
-
 void onMoveSelected(void *move)
 {
     // print void callbackdata
@@ -321,6 +326,7 @@ void onRunSelected(void *data)
 {
     slog("%s ran away", BATTLE_POKEMON->name);
     selectMoves = NULL;
+    playSound("normal-music", -1, .3, 1, 1);
     BATTLE = 0;
     entity_free(entity_get(OP_POKEMON->name));
 }

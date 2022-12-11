@@ -3,6 +3,7 @@
 #include "gf3d_draw.h"
 #include "trainer.h"
 #include "gf2d_windows_common.h"
+#include "soundmanager.h"
 
 float TRAINER_X = 0;
 float TRAINER_Y = 0;
@@ -137,6 +138,10 @@ void trainer_think(Entity *self)
             ANIMATION_FRAME_RUNNING++;
             ANIMATION_INTERVAL_RUNNING = 0;
         }
+        if (ANIMATION_FRAME_RUNNING == 4 || ANIMATION_FRAME_RUNNING == 12)
+        {
+            playSound("walking", 0, .2, 3, 1);
+        }
         if (ANIMATION_FRAME_RUNNING > 16)
             ANIMATION_FRAME_RUNNING = 1;
         ANIMATION_INTERVAL_RUNNING++;
@@ -170,12 +175,13 @@ void trainer_think(Entity *self)
     {
         Entity *tree = entity_get("tree");
 
-        if (keys[SDL_SCANCODE_E])
+        if (keys[SDL_SCANCODE_E] && !ANIMATION_TREE_PLAYING)
         {
             // Delete tree
             ANIMATION_TREE_PLAYING = 1;
             slog("You used Cut!");
             TREE_COLLISION = 0;
+            playSound("tree-falling", 0, 5, 7, 1);
         }
         else if (ANIMATION_TREE_PLAYING)
         {
@@ -183,11 +189,13 @@ void trainer_think(Entity *self)
             {
                 ANIMATION_ROCK_PLAYING = 0;
                 entity_free(tree);
+                TREE_COLLISION = 0;
             }
             else
             {
                 tree->model = tree->runAniModels[ANIMATION_FRAME_TREE];
-                if(ANIMAITON_INTERVAL_TREE == 2){
+                if (ANIMAITON_INTERVAL_TREE == 2)
+                {
                     ANIMATION_FRAME_TREE++;
                     ANIMAITON_INTERVAL_TREE = 0;
                 }
@@ -200,7 +208,6 @@ void trainer_think(Entity *self)
 
     if (PC_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition))
     {
-        PC_COLLISION = 1;
         if (keys[SDL_SCANCODE_E])
         {
             slog("You healed your Pokemon!");
@@ -210,6 +217,7 @@ void trainer_think(Entity *self)
             sprintf(BATTLER_HEALTH_TEXT, "%d%%", (int)(BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100));
             PC_COLLISION = 0;
             BATTLER_POKEMON_DEAD = 0;
+            playSound("healing", 0, 5, 5, 1);
         }
     }
     else
@@ -224,6 +232,7 @@ void trainer_think(Entity *self)
             // Delete Rock
             slog("You used Rock Smash!");
             ROCK_COLLISION = 0;
+            playSound("rocks-falling", 0, 5, 6, 1);
         }
         else if (ANIMATION_ROCK_PLAYING)
         {
@@ -231,6 +240,7 @@ void trainer_think(Entity *self)
             {
                 ANIMATION_ROCK_PLAYING = 0;
                 entity_free(rock);
+                ROCK_COLLISION = 0;
             }
             else
             {
@@ -305,6 +315,7 @@ void trainer_collide(struct Entity_S *self, struct Entity_S *other)
         OP_HEALTH = OP_HEALTH_MAX;
         NEW_OP_HEALTH = OP_HEALTH_MAX;
         sprintf(OP_HEALTH_TEXT, "%d%%", (int)(OP_HEALTH / OP_HEALTH_MAX * 100));
+        playSound("battle-music", -1, .3, 1, 1);
     }
     if (other->type == ET_INTERACTABLE)
     {
