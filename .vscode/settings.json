@@ -36,6 +36,8 @@
     "gf3d_vgraphics.h": "c",
     "gfc_audio.h": "c",
     "gf2d_actor.h": "c",
-    "gameloop.h": "c"
+    "gameloop.h": "c",
+    "in.h": "c",
+    "czmq.h": "c"
   }
 }

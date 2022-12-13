@@ -19,6 +19,7 @@
 #include "gf3d_camera.h"
 #include "gf2d_windows_common.h"
 #include "soundmanager.h"
+#include "multiplayer.h"
 
 extern int ROCK_COLLISION;
 extern int TREE_COLLISION;
@@ -66,6 +67,7 @@ void gameloop_setup(void)
     gf2d_windows_init(128, "config/windows.cfg");
     gf2d_mouse_load("assets/actors/mouse.actor");
     entity_system_init(1024);
+    setup_connection();
 
     slog_sync();
 
@@ -79,7 +81,6 @@ void gameloop_setup(void)
         slog("Pokemon %i: %s", i, get_pokedex().pokemon[i].name);
         pokemon_new(vector3d(950 * (i - get_pokedex().total / 2), 2000, 0.0), vector3d(0.0, 0.0, 0.0), get_pokedex().pokemon[i], get_pokedex().pokemon[i].scale);
     }
-    slog("something");
     srand(time(0));
     int r = 1;
     r = rand() % get_pokedex().total;
@@ -101,8 +102,8 @@ void gameloop_setup(void)
 
     // main game loop
     slog("gf3d main loop begin");
-    playSound("lobby-music", -1, .3, 1, 1);
-    // playSound("normal-music", -1, .3, 1, 1);
+    // playSound("lobby-music", -1, .3, 1, 1);
+    playSound("normal-music", -1, .3, 1, 1);
 }
 
 void gameloop_update(void)

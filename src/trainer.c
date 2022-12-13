@@ -4,6 +4,7 @@
 #include "trainer.h"
 #include "gf2d_windows_common.h"
 #include "soundmanager.h"
+#include "multiplayer.h"
 
 float TRAINER_X = 0;
 float TRAINER_Y = 0;
@@ -95,6 +96,10 @@ Entity *trainer_new(Vector3D position, Vector3D rotation, char *trainer, float s
 
 void trainer_think(Entity *self)
 {
+
+    sending(self->position.x, self->position.y, self->position.z);
+    receiving();
+
     if (!self)
         return;
 
