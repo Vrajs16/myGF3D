@@ -6,7 +6,11 @@ typedef struct
     int x;
     int y;
     int z;
+    float rotz;
     int id;
+    int moving;
+    int runningAnimationFrame;
+    int idleAnimationFrame;
 } Position;
 
 int main(void)
@@ -18,11 +22,13 @@ int main(void)
     positions[0].x = 0;
     positions[0].y = 0;
     positions[0].z = 0;
+    positions[0].rotz = M_PI;
     positions[0].id = -1;
 
     positions[1].x = 0;
     positions[1].y = 0;
     positions[1].z = 0;
+    positions[1].rotz = M_PI;
     positions[1].id = -1;
 
     zsock_t *responder = zsock_new(ZMQ_REP);
@@ -46,6 +52,7 @@ int main(void)
             positions[currentPlayers].x = p.x;
             positions[currentPlayers].y = p.y;
             positions[currentPlayers].z = p.z;
+            positions[currentPlayers].rotz = p.rotz;
             positions[currentPlayers].id = currentPlayers;
             zstr_sendf(responder, "%d", currentPlayers);
         }
@@ -54,6 +61,10 @@ int main(void)
             positions[p.id].x = p.x;
             positions[p.id].y = p.y;
             positions[p.id].z = p.z;
+            positions[p.id].rotz = p.rotz;
+            positions[p.id].moving = p.moving;
+            positions[p.id].runningAnimationFrame = p.runningAnimationFrame;
+            positions[p.id].idleAnimationFrame = p.idleAnimationFrame;
 
             if (p.id)
             {

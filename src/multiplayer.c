@@ -17,6 +17,7 @@ void setup_connection()
     CurrentPos.x = 0;
     CurrentPos.y = 0;
     CurrentPos.z = 0;
+    CurrentPos.rotz = 0;
     CurrentPos.id = -1;
 
     // Get the id of the player
@@ -34,11 +35,15 @@ void setup_connection()
     zstr_free(&str);
 }
 
-int sending(int x, int y, int z)
+int sending(int x, int y, int z, float rotz, int moving, int runningAnimationFrame, int idleAnimationFrame)
 {
     CurrentPos.x = x;
     CurrentPos.y = y;
     CurrentPos.z = z;
+    CurrentPos.rotz = rotz;
+    CurrentPos.moving = moving;
+    CurrentPos.runningAnimationFrame = runningAnimationFrame;
+    CurrentPos.idleAnimationFrame = idleAnimationFrame;
 
     zframe_t *frame = zframe_new(&CurrentPos, sizeof(CurrentPos));
     int rc = zframe_send(&frame, CLIENT, 0);
@@ -62,6 +67,12 @@ void receiving()
     OtherTrainer->position.x = OtherPos.x;
     OtherTrainer->position.y = OtherPos.y;
     OtherTrainer->position.z = OtherPos.z;
-    
+    OtherTrainer->rotation.z = OtherPos.rotz;
+
+    if (OtherPos.moving == 1)
+        OtherTrainer->model = OtherTrainer->runAniModels[OtherPos.runningAnimationFrame];
+    else
+        OtherTrainer->model = OtherTrainer->idleAniModels[OtherPos.idleAnimationFrame];
+
     zframe_destroy(&frame);
 }
