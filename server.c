@@ -48,7 +48,6 @@ int main(void)
             positions[currentPlayers].z = p.z;
             positions[currentPlayers].id = currentPlayers;
             zstr_sendf(responder, "%d", currentPlayers);
-            zframe_destroy(&frame);
         }
         else
         {
@@ -57,12 +56,17 @@ int main(void)
             positions[p.id].z = p.z;
 
             if (p.id)
-                zstr_sendf(responder, "Player %d: %d %d %d", positions[0].id, positions[0].x, positions[0].y, positions[0].z);
+            {
+                zframe_t *sendingFrame = zframe_new(&positions[0], sizeof(Position));
+                zframe_send(&sendingFrame, responder, 0);
+            }
             else
-                zstr_sendf(responder, "Player %d: %d %d %d", positions[1].id, positions[1].x, positions[1].y, positions[1].z);
-
-            zframe_destroy(&frame);
+            {
+                zframe_t *sendingFrame = zframe_new(&positions[1], sizeof(Position));
+                zframe_send(&sendingFrame, responder, 0);
+            }
         }
+        zframe_destroy(&frame);
     }
     printf("\nClosing server!\n");
     zsock_destroy(&responder);

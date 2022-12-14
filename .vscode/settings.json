@@ -38,6 +38,7 @@
     "gf2d_actor.h": "c",
     "gameloop.h": "c",
     "in.h": "c",
-    "czmq.h": "c"
+    "czmq.h": "c",
+    "multiplayer.h": "c"
   }
 }

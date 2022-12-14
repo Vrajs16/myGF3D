@@ -4,15 +4,9 @@
 
 zsock_t *CLIENT = NULL;
 
-typedef struct
-{
-    int x;
-    int y;
-    int z;
-    int id;
-} Position;
-
 Position CurrentPos;
+
+Position OtherPos;
 
 void setup_connection()
 {
@@ -25,7 +19,7 @@ void setup_connection()
     CurrentPos.z = 0;
     CurrentPos.id = -1;
 
-    //Get the id of the player
+    // Get the id of the player
     zframe_t *frame = zframe_new(&CurrentPos, sizeof(CurrentPos));
     rc = zframe_send(&frame, CLIENT, 0);
     if (rc == -1)
@@ -34,7 +28,7 @@ void setup_connection()
         return;
     }
     char *str = zstr_recv(CLIENT);
-    //convert string to int
+    // convert string to int
     CurrentPos.id = atoi(str);
     slog("Player id: %d", CurrentPos.id);
     zstr_free(&str);
@@ -57,7 +51,12 @@ int sending(int x, int y, int z)
 }
 void receiving()
 {
-    char *str = zstr_recv(CLIENT);
-    slog("%s", str);
-    zstr_free(&str);
+    zframe_t *frame = zframe_recv(CLIENT);
+    if (frame == NULL)
+    {
+        slog("Error receiving frame\n");
+        return;
+    }
+    OtherPos = *(Position *)zframe_data(frame);
+    zframe_destroy(&frame);
 }

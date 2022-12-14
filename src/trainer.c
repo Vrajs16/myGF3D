@@ -47,6 +47,9 @@ Vector3D STRENGTH_FINAL_POSITION = {0, 0, 0};
 float STRENGTH_FINAL_ROTATION = 0;
 int ANIMATION_STRENGTH_PLAYING = 0;
 int ANIMATION_STRENGTH_MAX = 50;
+
+extern Position OtherPos;
+
 void trainer_think(Entity *self);
 void trainer_collide(Entity *self, Entity *other);
 
@@ -98,7 +101,10 @@ void trainer_think(Entity *self)
 {
 
     if (sending(self->position.x, self->position.y, self->position.z))
+    {
         receiving();
+        slog("x: %d, y: %d, z: %d", OtherPos.x, OtherPos.y, OtherPos.z);
+    }
 
     if (!self)
         return;
