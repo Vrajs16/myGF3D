@@ -97,8 +97,8 @@ Entity *trainer_new(Vector3D position, Vector3D rotation, char *trainer, float s
 void trainer_think(Entity *self)
 {
 
-    sending(self->position.x, self->position.y, self->position.z);
-    receiving();
+    if (sending(self->position.x, self->position.y, self->position.z))
+        receiving();
 
     if (!self)
         return;

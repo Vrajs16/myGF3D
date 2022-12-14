@@ -4,7 +4,7 @@
 void setup_connection(void);
 
 /* sending */
-void sending(int x, int y, int z);
+int sending(int x, int y, int z);
 
 /* receiving */
 void receiving(void);
