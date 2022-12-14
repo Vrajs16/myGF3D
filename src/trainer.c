@@ -48,7 +48,7 @@ float STRENGTH_FINAL_ROTATION = 0;
 int ANIMATION_STRENGTH_PLAYING = 0;
 int ANIMATION_STRENGTH_MAX = 50;
 
-extern Position OtherPos;
+Entity *OtherTrainer;
 
 void trainer_think(Entity *self);
 void trainer_collide(Entity *self, Entity *other);
@@ -94,6 +94,23 @@ Entity *trainer_new(Vector3D position, Vector3D rotation, char *trainer, float s
     vector3d_copy(ent->rotation, rotation);
     vector3d_copy(ent->previousPosition, position);
     vector3d_copy(ent->position, position);
+
+    // Make other trainer
+    OtherTrainer = entity_new();
+    if (!OtherTrainer)
+    {
+        slog("UGH OHHHH, no trainer for you!");
+        return NULL;
+    }
+    // copy over the model
+    OtherTrainer->model = ent->model;
+    OtherTrainer->isBox = 1;
+    OtherTrainer->boundingBox = gfc_box(0, 0, 350, 200, 200, 350);
+    vector3d_copy(OtherTrainer->scale, vector3d(scale, scale, scale));
+    vector3d_copy(OtherTrainer->rotation, rotation);
+    vector3d_copy(OtherTrainer->previousPosition, position);
+    vector3d_copy(OtherTrainer->position, position);
+
     return ent;
 }
 
@@ -101,10 +118,7 @@ void trainer_think(Entity *self)
 {
 
     if (sending(self->position.x, self->position.y, self->position.z))
-    {
         receiving();
-        slog("x: %d, y: %d, z: %d", OtherPos.x, OtherPos.y, OtherPos.z);
-    }
 
     if (!self)
         return;

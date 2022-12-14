@@ -1,12 +1,12 @@
 #include <czmq.h>
+#include <entity.h>
 #include <multiplayer.h>
 #include <simple_logger.h>
 
 zsock_t *CLIENT = NULL;
 
 Position CurrentPos;
-
-Position OtherPos;
+extern Entity *OtherTrainer;
 
 void setup_connection()
 {
@@ -57,6 +57,11 @@ void receiving()
         slog("Error receiving frame\n");
         return;
     }
-    OtherPos = *(Position *)zframe_data(frame);
+    Position OtherPos = *(Position *)zframe_data(frame);
+
+    OtherTrainer->position.x = OtherPos.x;
+    OtherTrainer->position.y = OtherPos.y;
+    OtherTrainer->position.z = OtherPos.z;
+    
     zframe_destroy(&frame);
 }
