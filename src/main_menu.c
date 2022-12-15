@@ -45,7 +45,9 @@ int main_menu_draw(Window *win)
     if (!win->data)
         return 0;
     data = win->data;
-    gf2d_sprite_draw_image(data->background, vector2d(0, 0), NULL);
+    int imageWidth = 1920, imageHeight = 1080;
+    Vector2D scale = vector2d((float)gf3d_vgraphics_get_width() / imageWidth, (float)gf3d_vgraphics_get_height() / imageHeight);
+    gf2d_sprite_draw_image(data->background, vector2d(0, 0), &scale);
     return 0;
 }
 
