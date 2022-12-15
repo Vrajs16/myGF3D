@@ -1,6 +1,6 @@
 {
   "window": {
-    "dimensions": [-367, 0, 355, 260],
+    "dimensions": [-367, 0, 355, 320],
     "align": "middle",
     "justify": "left",
     "elements": [
@@ -67,6 +67,28 @@
                   "type": "label",
                   "bounds": [0, 0, 168, 64],
                   "text": "Multiplayer",
+                  "justify": "center",
+                  "align": "middle",
+                  "style": "H5"
+                },
+                "justify": "center",
+                "align": "middle",
+                "actor": {
+                  "type": "actor",
+                  "actor": "assets/actors/button.actor"
+                }
+              },
+              {
+                "type": "button",
+                "name": "contenteditor",
+                "id": 3,
+                "canHasFocus": true,
+                "bounds": [0, 0, 160, 42],
+                "hotkey": "newgame",
+                "label": {
+                  "type": "label",
+                  "bounds": [0, 0, 168, 64],
+                  "text": "Content Editor",
                   "justify": "center",
                   "align": "middle",
                   "style": "H5"

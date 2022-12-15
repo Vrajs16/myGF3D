@@ -6,7 +6,7 @@
 extern int __DEBUG;
 int __BB = 0;
 
-static int _done = 0;
+int _done = 0;
 
 static const double FRAMEDELAY = 1000.0 / 60.0;
 int MULTIPLAYER = 0;

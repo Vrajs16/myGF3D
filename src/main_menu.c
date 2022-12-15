@@ -20,6 +20,7 @@
 extern State CurrentState;
 
 int LOADING = 0;
+extern int _done;
 
 typedef struct
 {
@@ -94,9 +95,15 @@ int main_menu_update(Window *win, List *updateList)
             LOADING = 1;
             return 1;
         }
+        else if (strcmp(e->name, "contenteditor") == 0)
+        {
+            CurrentState = CONTENT_EDITOR_GAME;
+            LOADING = 1;
+            return 1;
+        }
         else if (strcmp(e->name, "quit") == 0)
         {
-            gf2d_window_free(win);
+            _done = 1;
             return 1;
         }
     }
