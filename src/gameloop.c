@@ -70,7 +70,7 @@ void gameloop_setup(void)
     gf2d_mouse_load("assets/actors/mouse.actor");
     entity_system_init(1024);
     
-    if(MULTIPLAYER)
+    if (MULTIPLAYER)
         setup_connection();
 
     slog_sync();
@@ -78,13 +78,10 @@ void gameloop_setup(void)
     world_load("config/world.json");
 
     load_pokedex_json("config/pokedex.json");
-    slog("pokemon 1: %s", get_pokedex().pokemon[0].name);
 
     for (int i = 0; i < get_pokedex().total; i++)
-    {
-        slog("Pokemon %i: %s", i, get_pokedex().pokemon[i].name);
         pokemon_new(vector3d(950 * (i - get_pokedex().total / 2), 2000, 0.0), vector3d(0.0, 0.0, 0.0), get_pokedex().pokemon[i], get_pokedex().pokemon[i].scale);
-    }
+
     srand(time(0));
     int r = 1;
     r = rand() % get_pokedex().total;
