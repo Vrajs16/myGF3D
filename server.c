@@ -21,13 +21,13 @@ int main(void)
 
     positions[0].x = 0;
     positions[0].y = 0;
-    positions[0].z = 0;
+    positions[0].z = -1000;
     positions[0].rotz = M_PI;
     positions[0].id = -1;
 
     positions[1].x = 0;
     positions[1].y = 0;
-    positions[1].z = 0;
+    positions[1].z = -1000;
     positions[1].rotz = M_PI;
     positions[1].id = -1;
 

@@ -133,7 +133,7 @@ Entity *trainer_new(Vector3D position, Vector3D rotation, char *trainer, float s
         vector3d_copy(OtherTrainer->scale, vector3d(scale, scale, scale));
         vector3d_copy(OtherTrainer->rotation, rotation);
         vector3d_copy(OtherTrainer->previousPosition, position);
-        vector3d_copy(OtherTrainer->position, position);
+        vector3d_copy(OtherTrainer->position, vector3d(0,0,-1000));
     }
     return ent;
 }

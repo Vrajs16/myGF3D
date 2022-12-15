@@ -64,6 +64,9 @@ void receiving()
     }
     Position OtherPos = *(Position *)zframe_data(frame);
 
+    if(OtherPos.id == -1)
+        return;
+
     OtherTrainer->position.x = OtherPos.x;
     OtherTrainer->position.y = OtherPos.y;
     OtherTrainer->position.z = OtherPos.z;
