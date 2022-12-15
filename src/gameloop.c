@@ -30,7 +30,11 @@ extern int PC_COLLISION;
 extern int STRENGTH_COLLISION;
 extern int BATTLE;
 
+extern int LOADING;
+
 extern int MULTIPLAYER;
+
+int DrawLoading = 0;
 
 float HEALTH_RATE = 1;
 int ANIMATION_PLAYING = 0;
@@ -49,6 +53,8 @@ char BATTLER_HEALTH_TEXT[5];
 int BATTLER_POKEMON_DEAD;
 
 static Window *selectMoves = NULL;
+
+State CurrentState = MAIN_MENU;
 
 // Battle
 void onRunSelected(void *data);
@@ -73,7 +79,12 @@ void gameloop_setup(void)
     entity_system_init(1024);
 
     main_menu();
+    playSound("lobby-music", -1, .6, 1, 1);
+}
 
+void gameloop_load(void)
+{
+    slog("LOADING GAME!");
     if (MULTIPLAYER)
         setup_connection();
 
@@ -107,12 +118,12 @@ void gameloop_setup(void)
 
     // main game loop
     slog("gf3d main loop begin");
-    // playSound("lobby-music", -1, .3, 1, 1);
     playSound("normal-music", -1, .3, 1, 1);
 }
 
 void gameloop_update(void)
 {
+
     gfc_input_update();
     gf2d_mouse_update();
     gf2d_font_update();
@@ -122,6 +133,25 @@ void gameloop_update(void)
     entity_collide_check_all();
     gf3d_camera_update_view();
     gf3d_camera_get_view_mat4(gf3d_vgraphics_get_view_matrix());
+    if (CurrentState == SINGLEPLAYER_GAME)
+    {
+        if (DrawLoading == 1)
+        {
+            CurrentState = LOADED_GAME;
+            gameloop_load();
+        }
+        DrawLoading++;
+    }
+    if (CurrentState == MULTIPLAYER_GAME)
+    {
+        if (DrawLoading == 1)
+        {
+            CurrentState = LOADED_GAME;
+            MULTIPLAYER = 1;
+            gameloop_load();
+        }
+        DrawLoading++;
+    }
 }
 
 void gameloop_draw(void)
@@ -262,6 +292,12 @@ void gameloop_draw(void)
         gf2d_draw_rect(gfc_rect(10, 10, 290, 50), gfc_color8(255, 255, 255, 255));
     }
     gf2d_windows_draw_all();
+    if (LOADING)
+    {
+        gf2d_draw_rect(gfc_rect(gf3d_vgraphics_get_width() / 2 - 100, gf3d_vgraphics_get_height() / 2 - 32.5, 400, 100), gfc_color8(0, 0, 0, 255));
+        gf2d_draw_rect_filled(gfc_rect(gf3d_vgraphics_get_width() / 2 - 100, gf3d_vgraphics_get_height() / 2 - 32.5, 400, 100), gfc_color8(255, 255, 255, 80));
+        gf2d_font_draw_line_tag("L O A D I N G...", FT_H1, gfc_color(1, 1, 1, 1), vector2d(gf3d_vgraphics_get_width() / 2, gf3d_vgraphics_get_height() / 2));
+    }
     gf2d_mouse_draw();
     gf3d_vgraphics_render_end();
 }

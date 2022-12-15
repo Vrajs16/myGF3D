@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 
 #include "simple_logger.h"
 
@@ -9,11 +10,16 @@
 #include "gf2d_elements.h"
 #include "gf2d_element_label.h"
 #include "gf2d_draw.h"
+#include "gf2d_font.h"
 #include "gf2d_mouse.h"
 #include "gf2d_windows_common.h"
 
 #include "main_menu.h"
 #include "gf3d_vgraphics.h"
+
+extern State CurrentState;
+
+int LOADING = 0;
 
 typedef struct
 {
@@ -78,12 +84,14 @@ int main_menu_update(Window *win, List *updateList)
             continue;
         if (strcmp(e->name, "newgame") == 0)
         {
-            gf2d_window_free(win);
+            CurrentState = SINGLEPLAYER_GAME;
+            LOADING = 1;
             return 1;
         }
         else if (strcmp(e->name, "multiplayer") == 0)
         {
-            gf2d_window_free(win);
+            CurrentState = MULTIPLAYER_GAME;
+            LOADING = 1;
             return 1;
         }
         else if (strcmp(e->name, "quit") == 0)
@@ -91,6 +99,11 @@ int main_menu_update(Window *win, List *updateList)
             gf2d_window_free(win);
             return 1;
         }
+    }
+    if (CurrentState == LOADED_GAME)
+    {
+        LOADING = 0;
+        gf2d_window_free(win);
     }
     return 0;
 }

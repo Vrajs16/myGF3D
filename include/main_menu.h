@@ -3,7 +3,15 @@
 
 #include "gf2d_windows.h"
 
-Window *main_menu();
+typedef enum
+{
+    MAIN_MENU,
+    SINGLEPLAYER_GAME,
+    MULTIPLAYER_GAME,
+    CONTENT_EDITOR_GAME,
+    LOADED_GAME,
+} State;
 
+Window *main_menu();
 
 #endif
