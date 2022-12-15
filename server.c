@@ -41,7 +41,9 @@ int main(void)
         zframe_t *frame = zframe_recv(responder);
         if (frame == NULL)
         {
-            printf("Error receiving frame\n");
+            printf("\nError receiving frame\n");
+            zframe_destroy(&frame);
+            zsock_destroy(&responder);
             return -1;
         }
         // Get frame data without it being a pointer
