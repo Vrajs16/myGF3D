@@ -32,16 +32,16 @@
 
 typedef struct
 {
-    Uint8                       _inuse;
-    TextLine                    filename;               /**<the name of the file used to create the sprite*/
-    Uint32                      frameCount;             /**<how many frames are loaded for this model*/
-    Texture                    *texture;                /**<texture memory pointer*/
-    Uint8                       framesPerLine;          /**<how many frames are per line in the sprite sheet*/
-    Uint32                      frameWidth,frameHeight; /*<the size, in pixels, of the individual sprite frames*/
-    VkBuffer                    buffer;
-    VkDeviceMemory              bufferMemory;
-    VkDescriptorSet            *descriptorSet;          /**<descriptor sets used for this sprite to render*/
-}Sprite;
+    Uint8 _inuse;
+    TextLine filename;              /**<the name of the file used to create the sprite*/
+    Uint32 frameCount;              /**<how many frames are loaded for this model*/
+    Texture *texture;               /**<texture memory pointer*/
+    Uint8 framesPerLine;            /**<how many frames are per line in the sprite sheet*/
+    Uint32 frameWidth, frameHeight; /*<the size, in pixels, of the individual sprite frames*/
+    VkBuffer buffer;
+    VkDeviceMemory bufferMemory;
+    VkDescriptorSet *descriptorSet; /**<descriptor sets used for this sprite to render*/
+} Sprite;
 
 /**
  * @brief initialize the internal management system for sprites, auto-cleaned up on program exit
@@ -57,14 +57,14 @@ void gf2d_sprite_manager_init(Uint32 max_sprites);
  * @param frames_per_line how many frames across are on the sprite sheet
  * @return NULL on error (check logs) or a pointer to a sprite that can be draw to the 2d overlay
  */
-Sprite * gf2d_sprite_load(const char * filename,int frame_width,int frame_height, Uint32 frames_per_line);
+Sprite *gf2d_sprite_load(const char *filename, int frame_width, int frame_height, Uint32 frames_per_line);
 
 /**
  * @brief loads a flat image into memory
  * @param filename the name of the file containing the image data
  * @return NULL on error (check logs) or a pointer to a sprite that can be draw to the 2d overlay
  */
-Sprite * gf2d_sprite_load_image(const char * filename);
+Sprite *gf2d_sprite_load_image(const char *filename);
 
 /**
  * @brief create a sprite from an SDL_Surface
@@ -74,7 +74,7 @@ Sprite * gf2d_sprite_load_image(const char * filename);
  * @param frames_per_line how many frames across are on the sprite sheet
  * @return NULL on error (check logs) or a pointer to a sprite that can be draw to the 2d overlay
  */
-Sprite * gf2d_sprite_from_surface(SDL_Surface *surface,int frame_width,int frame_height, Uint32 frames_per_line);
+Sprite *gf2d_sprite_from_surface(SDL_Surface *surface, int frame_width, int frame_height, Uint32 frames_per_line);
 
 /**
  * @brief free a previously loaded sprite
@@ -95,14 +95,14 @@ void gf2d_sprite_free(Sprite *sprite);
  * @param frame which frame to draw
  */
 void gf2d_sprite_draw(
-    Sprite * sprite,
+    Sprite *sprite,
     Vector2D position,
-    Vector2D * scale,
-    Vector2D * center,
-    float    * rotation,
-    Vector2D * flip,
-    Color    * colorShift,
-    Vector4D * clip,
+    Vector2D *scale,
+    Vector2D *center,
+    float *rotation,
+    Vector2D *flip,
+    Color *colorShift,
+    Vector4D *clip,
     Uint32 frame);
 
 /**
@@ -118,15 +118,15 @@ void gf2d_sprite_draw(
  * @param frame which frame to draw
  */
 void gf2d_sprite_draw_full(
-    Sprite   * sprite,
-    Vector2D   position,
-    Vector2D   scale,
-    Vector2D   center,
-    float      rotation,
-    Vector2D   flip,
-    Color      colorShift,
-    Vector4D   clip,
-    Uint32     frame);
+    Sprite *sprite,
+    Vector2D position,
+    Vector2D scale,
+    Vector2D center,
+    float rotation,
+    Vector2D flip,
+    Color colorShift,
+    Vector4D clip,
+    Uint32 frame);
 
 /**
  * @brief draw a sprite to the screen
@@ -135,9 +135,14 @@ void gf2d_sprite_draw_full(
  * @param frame which frame to draw
  */
 void gf2d_sprite_draw_simple(
-    Sprite   * sprite,
-    Vector2D   position,
-    Uint32     frame);
+    Sprite *sprite,
+    Vector2D position,
+    Uint32 frame);
+
+void gf2d_sprite_draw_image(
+    Sprite *sprite,
+    Vector2D position,
+    Vector2D *center);
 
 /**
  * @brief get the default pipeline for overlay rendering
@@ -148,9 +153,9 @@ Pipeline *gf2d_sprite_get_pipeline();
 /**
  * @brief get the binding description for a sprite
  */
-VkVertexInputBindingDescription * gf2d_sprite_get_bind_description();
+VkVertexInputBindingDescription *gf2d_sprite_get_bind_description();
 
-VkVertexInputAttributeDescription * gf2d_sprite_get_attribute_descriptions(Uint32 *count);
+VkVertexInputAttributeDescription *gf2d_sprite_get_attribute_descriptions(Uint32 *count);
 
 /**
  * @brief needs to be called once at the beginning of each render frame
@@ -161,6 +166,5 @@ void gf3d_sprite_reset_pipes();
  * @brief called to submit all draw commands to the sprite pipelines
  */
 void gf3d_sprite_submit_pipe_commands();
-
 
 #endif

@@ -1,0 +1,109 @@
+{
+  "window": {
+    "dimensions": [-367, 0, 355, 260],
+    "align": "middle",
+    "justify": "left",
+    "elements": [
+      {
+        "type": "button",
+        "name": "item_down",
+        "hotkey": "item_down"
+      },
+      {
+        "type": "button",
+        "name": "item_up",
+        "hotkey": "item_up"
+      },
+      {
+        "type": "list",
+        "bounds": [0, 10, 1, 1],
+        "style": "vertical",
+        "item_size": [100, 36],
+        "elements": [
+          {
+            "type": "label",
+            "bounds": [0, 0, 1, 40],
+            "text": "Vraj's Pokémon World",
+            "justify": "center",
+            "align": "middle",
+            "style": "H1"
+          },
+          {
+            "type": "list",
+            "name": "buttons",
+            "bounds": [90, 10, 160, 1],
+            "style": "vertical",
+            "item_size": [1, 64],
+            "elements": [
+              {
+                "type": "button",
+                "name": "newgame",
+                "id": 1,
+                "canHasFocus": true,
+                "bounds": [0, 0, 160, 42],
+                "hotkey": "newgame",
+                "label": {
+                  "type": "label",
+                  "bounds": [0, 0, 168, 64],
+                  "text": "New Game",
+                  "justify": "center",
+                  "align": "middle",
+                  "style": "H5"
+                },
+                "justify": "center",
+                "align": "middle",
+                "actor": {
+                  "type": "actor",
+                  "actor": "assets/actors/button.actor"
+                }
+              },
+              {
+                "type": "button",
+                "id": 2,
+                "name": "multiplayer",
+                "canHasFocus": true,
+                "bounds": [0, 0, 160, 42],
+                "label": {
+                  "type": "label",
+                  "bounds": [0, 0, 168, 64],
+                  "text": "Multiplayer",
+                  "justify": "center",
+                  "align": "middle",
+                  "style": "H5"
+                },
+                "justify": "center",
+                "align": "middle",
+                "actor": {
+                  "type": "actor",
+                  "actor": "assets/actors/button.actor"
+                }
+              },
+              {
+                "type": "button",
+                "name": "quit",
+                "id": 4,
+                "canHasFocus": true,
+                "bounds": [0, 0, 160, 42],
+                "hotkey": "quit",
+                "label": {
+                  "type": "label",
+                  "bounds": [0, 0, 168, 64],
+                  "text": "Quit",
+                  "justify": "center",
+                  "align": "middle",
+                  "style": "H5"
+                },
+                "justify": "center",
+                "align": "middle",
+                "actor": {
+                  "type": "actor",
+                  "actor": "assets/actors/button.actor"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

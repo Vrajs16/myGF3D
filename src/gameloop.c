@@ -21,6 +21,8 @@
 #include "soundmanager.h"
 #include "multiplayer.h"
 
+#include "main_menu.h"
+
 extern int ROCK_COLLISION;
 extern int TREE_COLLISION;
 extern int SIGN_COLLISION;
@@ -69,7 +71,9 @@ void gameloop_setup(void)
     gf2d_windows_init(128, "config/windows.cfg");
     gf2d_mouse_load("assets/actors/mouse.actor");
     entity_system_init(1024);
-    
+
+    main_menu();
+
     if (MULTIPLAYER)
         setup_connection();
 
