@@ -11,7 +11,8 @@ int _done = 0;
 static const double FRAMEDELAY = 1000.0 / 60.0;
 int MULTIPLAYER = 0;
 
-void handle_sigint(int sig){
+void handle_sigint(int sig)
+{
     _done = 1;
 }
 
@@ -34,7 +35,6 @@ int main(int argc, char *argv[])
 
     while (!_done)
     {
-
         frameStart = SDL_GetTicks();
 
         if (gfc_input_command_down("exit"))
