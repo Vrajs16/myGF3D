@@ -28,7 +28,7 @@ extern int PC_COLLISION;
 extern int STRENGTH_COLLISION;
 extern int BATTLE;
 
-int MULTIPLAYER = 1;
+extern int MULTIPLAYER;
 
 float HEALTH_RATE = 1;
 int ANIMATION_PLAYING = 0;
