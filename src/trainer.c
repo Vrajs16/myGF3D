@@ -31,6 +31,8 @@ extern float NEW_BATTLER_HEALTH;
 extern char BATTLER_HEALTH_TEXT[5];
 extern int BATTLER_POKEMON_DEAD;
 
+extern int MULTIPLAYER;
+
 int MOVING = 0;
 
 int ANIMATION_FRAME_RUNNING = 0;
@@ -97,44 +99,49 @@ Entity *trainer_new(Vector3D position, Vector3D rotation, char *trainer, float s
     vector3d_copy(ent->previousPosition, position);
     vector3d_copy(ent->position, position);
 
-    // Make other trainer
-    OtherTrainer = entity_new();
-    if (!OtherTrainer)
+    if (MULTIPLAYER)
     {
-        slog("UGH OHHHH, no trainer for you!");
-        return NULL;
+        // Make other trainer
+        OtherTrainer = entity_new();
+
+        if (!OtherTrainer)
+        {
+            slog("UGH OHHHH, no trainer for you!");
+            return NULL;
+        }
+        // memcopy over the model
+        OtherTrainer->runAniModels = gfc_allocate_array(sizeof(Model), 17);
+        OtherTrainer->idleAniModels = gfc_allocate_array(sizeof(Model), 45);
+
+        for (int i = 0; i < 17; i++)
+        {
+            snprintf(modelfilename, GFCLINELEN, "assets/trainer/%s/running/%s%d.obj", trainer, trainer, i + 1);
+            OtherTrainer->runAniModels[i] = gf3d_model_load_full(modelfilename, texturefilename);
+        }
+
+        for (int i = 0; i < 45; i++)
+        {
+            snprintf(modelfilename, GFCLINELEN, "assets/trainer/%s/idle/%s%d.obj", trainer, trainer, i + 1);
+            OtherTrainer->idleAniModels[i] = gf3d_model_load_full(modelfilename, texturefilename);
+        }
+
+        OtherTrainer->name = trainer;
+        OtherTrainer->type = ET_TRAINER;
+        OtherTrainer->model = OtherTrainer->idleAniModels[0];
+        OtherTrainer->isBox = 1;
+        OtherTrainer->boundingBox = gfc_box(0, 0, 350, 200, 200, 350);
+        vector3d_copy(OtherTrainer->scale, vector3d(scale, scale, scale));
+        vector3d_copy(OtherTrainer->rotation, rotation);
+        vector3d_copy(OtherTrainer->previousPosition, position);
+        vector3d_copy(OtherTrainer->position, position);
     }
-    // memcopy over the model
-    OtherTrainer->runAniModels = gfc_allocate_array(sizeof(Model), 17);
-    OtherTrainer->idleAniModels = gfc_allocate_array(sizeof(Model), 45);
-
-    for (int i = 0; i < 17; i++)
-    {
-        snprintf(modelfilename, GFCLINELEN, "assets/trainer/%s/running/%s%d.obj", trainer, trainer, i + 1);
-        OtherTrainer->runAniModels[i] = gf3d_model_load_full(modelfilename, texturefilename);
-    }
-
-    for (int i = 0; i < 45; i++)
-    {
-        snprintf(modelfilename, GFCLINELEN, "assets/trainer/%s/idle/%s%d.obj", trainer, trainer, i + 1);
-        OtherTrainer->idleAniModels[i] = gf3d_model_load_full(modelfilename, texturefilename);
-    }
-
-    OtherTrainer->model = OtherTrainer->idleAniModels[0];
-
-    OtherTrainer->isBox = 1;
-    OtherTrainer->boundingBox = gfc_box(0, 0, 350, 200, 200, 350);
-    vector3d_copy(OtherTrainer->scale, vector3d(scale, scale, scale));
-    vector3d_copy(OtherTrainer->rotation, rotation);
-    vector3d_copy(OtherTrainer->previousPosition, position);
-    vector3d_copy(OtherTrainer->position, position);
     return ent;
 }
 
 void trainer_think(Entity *self)
 {
 
-    if (sending(self->position.x, self->position.y, self->position.z, self->rotation.z, MOVING, ANIMATION_FRAME_RUNNING, ANIMATION_FRAME_IDLE))
+    if (MULTIPLAYER && sending(self->position.x, self->position.y, self->position.z, self->rotation.z, MOVING, ANIMATION_FRAME_RUNNING, ANIMATION_FRAME_IDLE))
         receiving();
 
     if (!self)
@@ -201,7 +208,6 @@ void trainer_think(Entity *self)
         ANIMATION_INTERVAL_RUNNING = 0;
 
         self->model = self->idleAniModels[ANIMATION_FRAME_IDLE];
-
         if (ANIMATION_INTERVAL_IDLE == 3)
         {
             ANIMATION_FRAME_IDLE++;

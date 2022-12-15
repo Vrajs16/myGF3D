@@ -28,6 +28,8 @@ extern int PC_COLLISION;
 extern int STRENGTH_COLLISION;
 extern int BATTLE;
 
+int MULTIPLAYER = 1;
+
 float HEALTH_RATE = 1;
 int ANIMATION_PLAYING = 0;
 
@@ -67,7 +69,9 @@ void gameloop_setup(void)
     gf2d_windows_init(128, "config/windows.cfg");
     gf2d_mouse_load("assets/actors/mouse.actor");
     entity_system_init(1024);
-    setup_connection();
+    
+    if(MULTIPLAYER)
+        setup_connection();
 
     slog_sync();
 
