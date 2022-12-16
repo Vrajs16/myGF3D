@@ -22,6 +22,7 @@
 #include "multiplayer.h"
 
 #include "main_menu.h"
+#include "content_editor.h"
 
 extern int ROCK_COLLISION;
 extern int TREE_COLLISION;
@@ -51,6 +52,8 @@ float NEW_BATTLER_HEALTH;
 float BATTLER_HEALTH_MAX;
 char BATTLER_HEALTH_TEXT[5];
 int BATTLER_POKEMON_DEAD;
+
+int CONTENT_EDITOR_GAME_DRAW = 0;
 
 static Window *selectMoves = NULL;
 
@@ -152,154 +155,168 @@ void gameloop_update(void)
         }
         DrawLoading++;
     }
+    if (CurrentState == CONTENT_EDITOR_GAME)
+    {
+        if (DrawLoading == 1)
+        {
+            CurrentState = LOADED_GAME;
+            content_editor_setup_renderer();
+            CONTENT_EDITOR_GAME_DRAW = 1;
+        }
+        DrawLoading++;
+    }
 }
 
 void gameloop_draw(void)
 {
-
-    // configure render command for graphics command pool
-    // for each mesh, get a command and configure it from the pool
-    gf3d_vgraphics_render_start();
-
-    // 3D draws
-    world_draw();
-    entity_draw_all();
-    // 2D draws
-
-    if (BATTLE)
+    if (CONTENT_EDITOR_GAME_DRAW)
+        content_editor_draw();
+    else
     {
-        if (OP_HEALTH > NEW_OP_HEALTH)
-        {
-            OP_HEALTH -= HEALTH_RATE;
-            sprintf(OP_HEALTH_TEXT, "%d%%", (int)(OP_HEALTH / OP_HEALTH_MAX * 100));
-        }
-        else if (BATTLER_HEALTH > NEW_BATTLER_HEALTH)
-        {
-            BATTLER_HEALTH -= HEALTH_RATE;
-            sprintf(BATTLER_HEALTH_TEXT, "%d%%", (int)(BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100));
-        }
-        else
-            ANIMATION_PLAYING = 0;
+        // configure render command for graphics command pool
+        // for each mesh, get a command and configure it from the pool
+        gf3d_vgraphics_render_start();
 
-        if ((int)OP_HEALTH <= 0)
-        {
-            slog("You won");
-            playSound("normal-music", -1, .3, 1, 1);
-            BATTLE = 0;
-            entity_free(entity_get(OP_POKEMON->name));
-        }
-        else if ((int)BATTLER_HEALTH <= 0)
-        {
-            slog("You lost");
-            playSound("normal-music", -1, .3, 1, 1);
-            BATTLE = 0;
-            entity_free(entity_get(OP_POKEMON->name));
-            BATTLER_POKEMON_DEAD = 1;
-        }
-        else
-        {
+        // 3D draws
+        world_draw();
+        entity_draw_all();
+        // 2D draws
 
-            // Do some draw calls maybe to draw health and stuff
-
-            // Draw the pokemon infobox opponent
-            gf2d_draw_rect_filled(gfc_rect(20, 20, 300, 100), gfc_color8(255, 255, 255, 150));
-            gf2d_draw_rect(gfc_rect(20, 20, 300, 100), gfc_color8(0, 0, 0, 255));
-            // healthbar
-            gf2d_draw_rect_filled(gfc_rect(30, 70, 200, 30), gfc_color8(100, 100, 100, 150));
-            if ((int)(OP_HEALTH / OP_HEALTH_MAX * 100) > 0)
+        if (BATTLE)
+        {
+            if (OP_HEALTH > NEW_OP_HEALTH)
             {
-                if (OP_HEALTH / OP_HEALTH_MAX * 100 > 50)
-                {
-                    gf2d_draw_rect_filled(gfc_rect(30, 70, OP_HEALTH / OP_HEALTH_MAX * 200, 30), gfc_color8(0, 255, 0, 200));
-                }
-                else if (OP_HEALTH / OP_HEALTH_MAX * 100 > 25)
-                {
-                    gf2d_draw_rect_filled(gfc_rect(30, 70, OP_HEALTH / OP_HEALTH_MAX * 200, 30), gfc_color8(255, 255, 0, 200));
-                }
-                else
-                {
-                    gf2d_draw_rect_filled(gfc_rect(30, 70, OP_HEALTH / OP_HEALTH_MAX * 200, 30), gfc_color8(255, 0, 0, 200));
-                }
+                OP_HEALTH -= HEALTH_RATE;
+                sprintf(OP_HEALTH_TEXT, "%d%%", (int)(OP_HEALTH / OP_HEALTH_MAX * 100));
             }
-            gf2d_draw_rect(gfc_rect(30, 70, 200, 30), gfc_color8(255, 255, 255, 255));
-            gf2d_font_draw_line_tag(OP_POKEMON->name, FT_Normal, gfc_color(0, 0, 0, 1), vector2d(30, 30));
-            gf2d_font_draw_line_tag(OP_HEALTH_TEXT, FT_Small, gfc_color8(0, 0, 0, 255), vector2d(242.5, 67.5));
-
-            // Draw the pokemon infobox player
-            gf2d_draw_rect_filled(gfc_rect(20, gf3d_vgraphics_get_height() - 120, 300, 100), gfc_color8(255, 255, 255, 150));
-            gf2d_draw_rect(gfc_rect(20, gf3d_vgraphics_get_height() - 120, 300, 100), gfc_color8(0, 0, 0, 255));
-            // Health bar
-            gf2d_draw_rect_filled(gfc_rect(30, gf3d_vgraphics_get_height() - 70, 200, 30), gfc_color8(100, 100, 100, 150));
-            if ((int)(BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100) > 0)
+            else if (BATTLER_HEALTH > NEW_BATTLER_HEALTH)
             {
-                if (BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100 > 50)
-                {
-                    gf2d_draw_rect_filled(gfc_rect(30, gf3d_vgraphics_get_height() - 70, BATTLER_HEALTH / BATTLER_HEALTH_MAX * 200, 30), gfc_color8(0, 255, 0, 200));
-                }
-                else if (BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100 > 25)
-                {
-                    gf2d_draw_rect_filled(gfc_rect(30, gf3d_vgraphics_get_height() - 70, BATTLER_HEALTH / BATTLER_HEALTH_MAX * 200, 30), gfc_color8(255, 255, 0, 200));
-                }
-                else
-                {
-                    gf2d_draw_rect_filled(gfc_rect(30, gf3d_vgraphics_get_height() - 70, BATTLER_HEALTH / BATTLER_HEALTH_MAX * 200, 30), gfc_color8(255, 0, 0, 200));
-                }
+                BATTLER_HEALTH -= HEALTH_RATE;
+                sprintf(BATTLER_HEALTH_TEXT, "%d%%", (int)(BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100));
             }
-            gf2d_draw_rect(gfc_rect(30, gf3d_vgraphics_get_height() - 70, 200, 30), gfc_color8(255, 255, 255, 255));
-            gf2d_font_draw_line_tag(BATTLE_POKEMON->name, FT_Normal, gfc_color8(0, 0, 0, 255), vector2d(30, gf3d_vgraphics_get_height() - 110));
-            gf2d_font_draw_line_tag(BATTLER_HEALTH_TEXT, FT_Small, gfc_color8(0, 0, 0, 255), vector2d(242.5, gf3d_vgraphics_get_height() - 72.5));
+            else
+                ANIMATION_PLAYING = 0;
 
-            // Draw the attack buttons
-            if (selectMoves == NULL && ANIMATION_PLAYING == 0)
-                selectMoves = battle_box(BATTLE_POKEMON->pokemon.moves, onMoveSelected, onRunSelected);
+            if ((int)OP_HEALTH <= 0)
+            {
+                slog("You won");
+                playSound("normal-music", -1, .3, 1, 1);
+                BATTLE = 0;
+                entity_free(entity_get(OP_POKEMON->name));
+            }
+            else if ((int)BATTLER_HEALTH <= 0)
+            {
+                slog("You lost");
+                playSound("normal-music", -1, .3, 1, 1);
+                BATTLE = 0;
+                entity_free(entity_get(OP_POKEMON->name));
+                BATTLER_POKEMON_DEAD = 1;
+            }
+            else
+            {
+
+                // Do some draw calls maybe to draw health and stuff
+
+                // Draw the pokemon infobox opponent
+                gf2d_draw_rect_filled(gfc_rect(20, 20, 300, 100), gfc_color8(255, 255, 255, 150));
+                gf2d_draw_rect(gfc_rect(20, 20, 300, 100), gfc_color8(0, 0, 0, 255));
+                // healthbar
+                gf2d_draw_rect_filled(gfc_rect(30, 70, 200, 30), gfc_color8(100, 100, 100, 150));
+                if ((int)(OP_HEALTH / OP_HEALTH_MAX * 100) > 0)
+                {
+                    if (OP_HEALTH / OP_HEALTH_MAX * 100 > 50)
+                    {
+                        gf2d_draw_rect_filled(gfc_rect(30, 70, OP_HEALTH / OP_HEALTH_MAX * 200, 30), gfc_color8(0, 255, 0, 200));
+                    }
+                    else if (OP_HEALTH / OP_HEALTH_MAX * 100 > 25)
+                    {
+                        gf2d_draw_rect_filled(gfc_rect(30, 70, OP_HEALTH / OP_HEALTH_MAX * 200, 30), gfc_color8(255, 255, 0, 200));
+                    }
+                    else
+                    {
+                        gf2d_draw_rect_filled(gfc_rect(30, 70, OP_HEALTH / OP_HEALTH_MAX * 200, 30), gfc_color8(255, 0, 0, 200));
+                    }
+                }
+                gf2d_draw_rect(gfc_rect(30, 70, 200, 30), gfc_color8(255, 255, 255, 255));
+                gf2d_font_draw_line_tag(OP_POKEMON->name, FT_Normal, gfc_color(0, 0, 0, 1), vector2d(30, 30));
+                gf2d_font_draw_line_tag(OP_HEALTH_TEXT, FT_Small, gfc_color8(0, 0, 0, 255), vector2d(242.5, 67.5));
+
+                // Draw the pokemon infobox player
+                gf2d_draw_rect_filled(gfc_rect(20, gf3d_vgraphics_get_height() - 120, 300, 100), gfc_color8(255, 255, 255, 150));
+                gf2d_draw_rect(gfc_rect(20, gf3d_vgraphics_get_height() - 120, 300, 100), gfc_color8(0, 0, 0, 255));
+                // Health bar
+                gf2d_draw_rect_filled(gfc_rect(30, gf3d_vgraphics_get_height() - 70, 200, 30), gfc_color8(100, 100, 100, 150));
+                if ((int)(BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100) > 0)
+                {
+                    if (BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100 > 50)
+                    {
+                        gf2d_draw_rect_filled(gfc_rect(30, gf3d_vgraphics_get_height() - 70, BATTLER_HEALTH / BATTLER_HEALTH_MAX * 200, 30), gfc_color8(0, 255, 0, 200));
+                    }
+                    else if (BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100 > 25)
+                    {
+                        gf2d_draw_rect_filled(gfc_rect(30, gf3d_vgraphics_get_height() - 70, BATTLER_HEALTH / BATTLER_HEALTH_MAX * 200, 30), gfc_color8(255, 255, 0, 200));
+                    }
+                    else
+                    {
+                        gf2d_draw_rect_filled(gfc_rect(30, gf3d_vgraphics_get_height() - 70, BATTLER_HEALTH / BATTLER_HEALTH_MAX * 200, 30), gfc_color8(255, 0, 0, 200));
+                    }
+                }
+                gf2d_draw_rect(gfc_rect(30, gf3d_vgraphics_get_height() - 70, 200, 30), gfc_color8(255, 255, 255, 255));
+                gf2d_font_draw_line_tag(BATTLE_POKEMON->name, FT_Normal, gfc_color8(0, 0, 0, 255), vector2d(30, gf3d_vgraphics_get_height() - 110));
+                gf2d_font_draw_line_tag(BATTLER_HEALTH_TEXT, FT_Small, gfc_color8(0, 0, 0, 255), vector2d(242.5, gf3d_vgraphics_get_height() - 72.5));
+
+                // Draw the attack buttons
+                if (selectMoves == NULL && ANIMATION_PLAYING == 0)
+                    selectMoves = battle_box(BATTLE_POKEMON->pokemon.moves, onMoveSelected, onRunSelected);
+            }
         }
-    }
-    if (BATTLER_POKEMON_DEAD)
-    {
-        gf2d_draw_rect_filled(gfc_rect(10, 10, 330, 50), gfc_color8(128, 128, 128, 255));
-        gf2d_font_draw_line_tag("Heal Pokemon To Battle!", FT_H2, gfc_color8(255, 255, 255, 255), vector2d(20, 20));
-        gf2d_draw_rect(gfc_rect(10, 10, 330, 50), gfc_color8(255, 255, 255, 255));
-    }
+        if (BATTLER_POKEMON_DEAD)
+        {
+            gf2d_draw_rect_filled(gfc_rect(10, 10, 330, 50), gfc_color8(128, 128, 128, 255));
+            gf2d_font_draw_line_tag("Heal Pokemon To Battle!", FT_H2, gfc_color8(255, 255, 255, 255), vector2d(20, 20));
+            gf2d_draw_rect(gfc_rect(10, 10, 330, 50), gfc_color8(255, 255, 255, 255));
+        }
 
-    if (SIGN_COLLISION)
-    {
-        gf2d_draw_rect_filled(gfc_rect(10, 10, 300, 50), gfc_color8(128, 128, 128, 255));
-        gf2d_font_draw_line_tag("Vraj's Pokémon World!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
-        gf2d_draw_rect(gfc_rect(10, 10, 300, 50), gfc_color8(255, 255, 255, 255));
+        if (SIGN_COLLISION)
+        {
+            gf2d_draw_rect_filled(gfc_rect(10, 10, 300, 50), gfc_color8(128, 128, 128, 255));
+            gf2d_font_draw_line_tag("Vraj's Pokémon World!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
+            gf2d_draw_rect(gfc_rect(10, 10, 300, 50), gfc_color8(255, 255, 255, 255));
+        }
+        if (PC_COLLISION)
+        {
+            gf2d_draw_rect_filled(gfc_rect(10, 10, 430, 50), gfc_color8(128, 128, 128, 255));
+            gf2d_font_draw_line_tag("Press 'E' to heal your Pokémon!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
+            gf2d_draw_rect(gfc_rect(10, 10, 430, 50), gfc_color8(255, 255, 255, 255));
+        }
+        if (STRENGTH_COLLISION)
+        {
+            gf2d_draw_rect_filled(gfc_rect(10, 10, 360, 50), gfc_color8(128, 128, 128, 255));
+            gf2d_font_draw_line_tag("Press 'E' to use Strength!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
+            gf2d_draw_rect(gfc_rect(10, 10, 360, 50), gfc_color8(255, 255, 255, 255));
+        }
+        if (ROCK_COLLISION)
+        {
+            gf2d_draw_rect_filled(gfc_rect(10, 10, 390, 50), gfc_color8(128, 128, 128, 255));
+            gf2d_font_draw_line_tag("Press 'E' to use Rock Smash!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
+            gf2d_draw_rect(gfc_rect(10, 10, 390, 50), gfc_color8(255, 255, 255, 255));
+        }
+        if (TREE_COLLISION)
+        {
+            gf2d_draw_rect_filled(gfc_rect(10, 10, 290, 50), gfc_color8(128, 128, 128, 255));
+            gf2d_font_draw_line_tag("Press 'E' to use Cut!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
+            gf2d_draw_rect(gfc_rect(10, 10, 290, 50), gfc_color8(255, 255, 255, 255));
+        }
+        gf2d_windows_draw_all();
+        if (LOADING)
+        {
+            gf2d_draw_rect(gfc_rect(gf3d_vgraphics_get_width() / 2 - 100, gf3d_vgraphics_get_height() / 2 - 32.5, 400, 100), gfc_color8(0, 0, 0, 255));
+            gf2d_draw_rect_filled(gfc_rect(gf3d_vgraphics_get_width() / 2 - 100, gf3d_vgraphics_get_height() / 2 - 32.5, 400, 100), gfc_color8(255, 255, 255, 80));
+            gf2d_font_draw_line_tag("L O A D I N G...", FT_H1, gfc_color(1, 1, 1, 1), vector2d(gf3d_vgraphics_get_width() / 2, gf3d_vgraphics_get_height() / 2));
+        }
+        gf2d_mouse_draw();
+        gf3d_vgraphics_render_end();
     }
-    if (PC_COLLISION)
-    {
-        gf2d_draw_rect_filled(gfc_rect(10, 10, 430, 50), gfc_color8(128, 128, 128, 255));
-        gf2d_font_draw_line_tag("Press 'E' to heal your Pokémon!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
-        gf2d_draw_rect(gfc_rect(10, 10, 430, 50), gfc_color8(255, 255, 255, 255));
-    }
-    if (STRENGTH_COLLISION)
-    {
-        gf2d_draw_rect_filled(gfc_rect(10, 10, 360, 50), gfc_color8(128, 128, 128, 255));
-        gf2d_font_draw_line_tag("Press 'E' to use Strength!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
-        gf2d_draw_rect(gfc_rect(10, 10, 360, 50), gfc_color8(255, 255, 255, 255));
-    }
-    if (ROCK_COLLISION)
-    {
-        gf2d_draw_rect_filled(gfc_rect(10, 10, 390, 50), gfc_color8(128, 128, 128, 255));
-        gf2d_font_draw_line_tag("Press 'E' to use Rock Smash!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
-        gf2d_draw_rect(gfc_rect(10, 10, 390, 50), gfc_color8(255, 255, 255, 255));
-    }
-    if (TREE_COLLISION)
-    {
-        gf2d_draw_rect_filled(gfc_rect(10, 10, 290, 50), gfc_color8(128, 128, 128, 255));
-        gf2d_font_draw_line_tag("Press 'E' to use Cut!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
-        gf2d_draw_rect(gfc_rect(10, 10, 290, 50), gfc_color8(255, 255, 255, 255));
-    }
-    gf2d_windows_draw_all();
-    if (LOADING)
-    {
-        gf2d_draw_rect(gfc_rect(gf3d_vgraphics_get_width() / 2 - 100, gf3d_vgraphics_get_height() / 2 - 32.5, 400, 100), gfc_color8(0, 0, 0, 255));
-        gf2d_draw_rect_filled(gfc_rect(gf3d_vgraphics_get_width() / 2 - 100, gf3d_vgraphics_get_height() / 2 - 32.5, 400, 100), gfc_color8(255, 255, 255, 80));
-        gf2d_font_draw_line_tag("L O A D I N G...", FT_H1, gfc_color(1, 1, 1, 1), vector2d(gf3d_vgraphics_get_width() / 2, gf3d_vgraphics_get_height() / 2));
-    }
-    gf2d_mouse_draw();
-    gf3d_vgraphics_render_end();
 }
 
 void gameloop_close(void)

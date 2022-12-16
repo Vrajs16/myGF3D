@@ -126,5 +126,10 @@ int gf3d_vgraphics_get_height();
 */
 int gf3d_vgraphics_get_width();
 
+/**  
+ * @brief returns the renderer
+*/
+SDL_Renderer *gf3d_vgraphics_get_renderer();
+
 
 #endif
