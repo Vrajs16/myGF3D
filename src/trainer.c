@@ -11,6 +11,12 @@ float TRAINER_Y = 0;
 float TRAINER_Z = 1000;
 float TRAINER_ROT_Z = 0;
 
+extern int WORLD_BOUND_X1;
+extern int WORLD_BOUND_Y1;
+extern int WORLD_BOUND_X2;
+extern int WORLD_BOUND_Y2;
+
+
 int SIGN_COLLISION = 0;
 int TREE_COLLISION = 0;
 int PC_COLLISION = 0;
@@ -142,7 +148,6 @@ Entity *trainer_new(Vector3D position, Vector3D rotation, char *trainer, float s
 
 void trainer_think(Entity *self)
 {
-
     if (MULTIPLAYER && sending(self->position.x, self->position.y, self->position.z, self->rotation.z, MOVING, ANIMATION_FRAME_RUNNING, ANIMATION_FRAME_IDLE))
         receiving();
 
@@ -169,7 +174,7 @@ void trainer_think(Entity *self)
     // z is up
     float yaw = self->rotation.z;
 
-    vector3d_set(forward, -sin(yaw) * 30, cos(yaw) * 30, 0);
+    vector3d_set(forward, -sin(yaw) * 100, cos(yaw) * 100, 0);
     vector3d_set(moveDir, 0, 0, 0);
 
     if (keys[SDL_SCANCODE_W])
@@ -219,6 +224,10 @@ void trainer_think(Entity *self)
     }
     vector3d_copy(self->previousPosition, self->position);
     vector3d_add(self->position, self->position, moveDir);
+
+    //Check if player is out of bounds
+    if (self->position.x < WORLD_BOUND_X1 || self->position.x > WORLD_BOUND_X2 || self->position.y < WORLD_BOUND_Y1 || self->position.y > WORLD_BOUND_Y2)
+        vector3d_copy(self->position, self->previousPosition);
 
     TRAINER_X = self->position.x;
     TRAINER_Y = self->position.y;

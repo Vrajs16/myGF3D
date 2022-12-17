@@ -239,14 +239,22 @@ void content_editor_setup_renderer()
             GRID[x][y].rect.y = y * GRID_CELL_SIZE;
             GRID[x][y].rect.w = GRID_CELL_SIZE;
             GRID[x][y].rect.h = GRID_CELL_SIZE;
-            GRID[x][y].BottomTexture = MAP_TEXTURES[0].texture;
-            strcpy(GRID[x][y].BottomTextureName, MAP_TEXTURE_NAMES[0]);
+            if (x == GRID_WIDTH / 2 && y == GRID_HEIGHT / 2)
+            {
+                GRID[x][y].BottomTexture = MAP_TEXTURES[1].texture;
+                strcpy(GRID[x][y].BottomTextureName, MAP_TEXTURE_NAMES[1]);
+            }
+            else
+            {
+                GRID[x][y].BottomTexture = MAP_TEXTURES[0].texture;
+                strcpy(GRID[x][y].BottomTextureName, MAP_TEXTURE_NAMES[0]);
+            }
             GRID[x][y].BottomTextureSet = 1;
+            GRID[x][y].BottomTextureType = MODEL_MAP;
             GRID[x][y].TopTexture = NULL;
             GRID[x][y].TopTextureSet = 0;
             strcpy(GRID[x][y].TopTextureName, "");
             GRID[x][y].TopTextureRotation = 0;
-            GRID[x][y].TopTextureType = MODEL_MAP;
             GRID[x][y].TopTextureType = MODEL_NONE;
         }
     }

@@ -22,6 +22,12 @@ typedef struct
 
 static World *MAIN_WORLD = NULL;
 
+int WORLD_BOUND_X1;
+int WORLD_BOUND_Y1;
+
+int WORLD_BOUND_X2;
+int WORLD_BOUND_Y2;
+
 void world_draw()
 {
     if (!MAIN_WORLD)
@@ -134,6 +140,18 @@ void world_load_json(char *filename)
         }
         Vector3D loc;
         sj_value_as_vector3d(sj_object_get_value(tile, "location"), &loc);
+
+        if (i == 0)
+        {
+            WORLD_BOUND_X1 = loc.x;
+            WORLD_BOUND_Y1 = loc.y;
+        }
+        if (i == tilecount - 1)
+        {
+            WORLD_BOUND_X2 = loc.x;
+            WORLD_BOUND_Y2 = loc.y;
+        }
+
         snprintf(modelfilename, GFCLINELEN, "assets/world/%s/%s.obj", (char *)bottom_model_name, (char *)bottom_model_name);
         snprintf(texturefilename, GFCLINELEN, "assets/world/%s/%s.png", (char *)bottom_model_name, (char *)bottom_model_name);
         MAIN_WORLD[i].worldModel = gf3d_model_load_full(modelfilename, texturefilename);
