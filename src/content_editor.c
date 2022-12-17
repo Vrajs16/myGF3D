@@ -10,8 +10,15 @@
 extern int _done;
 
 const int GRID_CELL_SIZE = 50;
-const int GRID_WIDTH = 15;
-const int GRID_HEIGHT = 15;
+const int GRID_WIDTH = 29;
+const int GRID_HEIGHT = 29;
+
+// Scale for saving the grid
+const int GRID_SIZE = 100;
+const int GRID_SCALE = 20;
+const int GRID_SPACING = GRID_SIZE * GRID_SCALE;
+
+const int GRID_SCALE_FACTOR = GRID_SPACING / GRID_CELL_SIZE;
 
 const SDL_Color grid_background = {22, 22, 22, 255}; // Barely Black
 const SDL_Color grid_line_color = {44, 44, 44, 255}; // Dark grey
@@ -517,6 +524,76 @@ void save_grid()
 {
     SDL_Log("Saving grid to file...");
     // Need to save the grid into a json file
+    /*
+        typedef struct
+        {
+            SDL_Rect rect;
+            SDL_Texture *BottomTexture;
+            int BottomTextureSet;
+            char BottomTextureName[20];
+            SDL_Texture *TopTexture;
+            int TopTextureSet;
+            char TopTextureName[20];
+            double TopTextureRotation;
+            ModelType BottomTextureType;
+            ModelType TopTextureType;
+        } Grid;
+
+        Use GRID_SPACING for the location of the grid centered at 0,0
+
+
+
+    */
+
+    /*
+    Format:
+        {
+            "scale": GRID_SCALE,
+            "world":[
+                {
+                    "location": [x, y, 0],
+                    "bottom_model": "texture_name",
+                    "top_model": "texture_name",
+                    "top_model_rotation": 0
+                },
+                ...
+            ]
+        }
+     */
+
+    SJson *json_file = sj_object_new();
+    sj_object_insert(json_file, "scale", sj_new_int(GRID_SCALE));
+    sj_object_insert(json_file, "spacing", sj_new_int(GRID_SPACING));
+    sj_object_insert(json_file, "grid_width", sj_new_int(GRID_WIDTH));
+    sj_object_insert(json_file, "grid_height", sj_new_int(GRID_HEIGHT));
+    SJson *world = sj_array_new();
+
+    for (int x = 0; x < GRID_WIDTH; x++)
+    {
+        for (int y = 0; y < GRID_HEIGHT; y++)
+        {
+            SJson *world_object = sj_object_new();
+            SJson *location = sj_array_new();
+            sj_array_append(location, sj_new_int(GRID[x][y].rect.x * GRID_SCALE_FACTOR - (GRID_SPACING * GRID_WIDTH / 2 - GRID_SPACING / 2)));
+            sj_array_append(location, sj_new_int(GRID[x][y].rect.y * GRID_SCALE_FACTOR - (GRID_SPACING * GRID_WIDTH / 2 - GRID_SPACING / 2)));
+            sj_array_append(location, sj_new_int(0));
+            sj_object_insert(world_object, "location", location);
+            if (GRID[x][y].BottomTextureSet)
+                sj_object_insert(world_object, "bottom_model", sj_new_str(GRID[x][y].BottomTextureName));
+            else
+                sj_object_insert(world_object, "bottom_model", sj_new_str("path"));
+            if (GRID[x][y].TopTextureSet)
+            {
+                sj_object_insert(world_object, "top_model", sj_new_str(GRID[x][y].TopTextureName));
+                sj_object_insert(world_object, "top_model_rotation", sj_new_float(GRID[x][y].TopTextureRotation));
+            }
+            sj_array_append(world, world_object);
+        }
+    }
+
+    sj_object_insert(json_file, "world", world);
+    sj_save(json_file, "config/generated_world.json");
+    SDL_Log("Saved grid to file!");
 }
 
 void clean_grid()
