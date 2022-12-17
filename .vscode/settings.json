@@ -43,6 +43,7 @@
     "gf3d_commands.h": "c",
     "gfc_color.h": "c",
     "unistd.h": "c",
-    "content_editor.h": "c"
+    "content_editor.h": "c",
+    "close_code.h": "c"
   }
 }

@@ -656,6 +656,6 @@ int gf3d_vgraphics_get_width()
 
 SDL_Renderer *gf3d_vgraphics_get_renderer()
 {
-    return SDL_CreateRenderer(gf3d_vgraphics.main_window, -1, SDL_RENDERER_ACCELERATED);
+    return SDL_CreateRenderer(gf3d_vgraphics.main_window, -1, SDL_RENDERER_PRESENTVSYNC);
 }
 /*eol@eof*/

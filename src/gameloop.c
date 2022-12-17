@@ -126,8 +126,10 @@ void gameloop_load(void)
 
 void gameloop_update(void)
 {
-
-    gfc_input_update();
+    if (CONTENT_EDITOR_GAME_DRAW)
+        content_editor_update();
+    else
+        gfc_input_update();
     gf2d_mouse_update();
     gf2d_font_update();
     gf2d_windows_update_all();
@@ -310,9 +312,9 @@ void gameloop_draw(void)
         gf2d_windows_draw_all();
         if (LOADING)
         {
-            gf2d_draw_rect(gfc_rect(gf3d_vgraphics_get_width() / 2 - 100, gf3d_vgraphics_get_height() / 2 - 32.5, 400, 100), gfc_color8(0, 0, 0, 255));
-            gf2d_draw_rect_filled(gfc_rect(gf3d_vgraphics_get_width() / 2 - 100, gf3d_vgraphics_get_height() / 2 - 32.5, 400, 100), gfc_color8(255, 255, 255, 80));
-            gf2d_font_draw_line_tag("L O A D I N G...", FT_H1, gfc_color(1, 1, 1, 1), vector2d(gf3d_vgraphics_get_width() / 2, gf3d_vgraphics_get_height() / 2));
+            gf2d_draw_rect(gfc_rect(gf3d_vgraphics_get_width() / 2 - 200, gf3d_vgraphics_get_height() / 2 - 50, 400, 100), gfc_color8(0, 0, 0, 255));
+            gf2d_draw_rect_filled(gfc_rect(gf3d_vgraphics_get_width() / 2 - 200, gf3d_vgraphics_get_height() / 2 - 50, 400, 100), gfc_color8(255, 255, 255, 80));
+            gf2d_font_draw_line_tag("L O A D I N G...", FT_H1, gfc_color(1, 1, 1, 1), vector2d(gf3d_vgraphics_get_width() / 2 - 100, gf3d_vgraphics_get_height() / 2 - 12.5));
         }
         gf2d_mouse_draw();
         gf3d_vgraphics_render_end();
