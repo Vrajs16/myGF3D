@@ -136,6 +136,7 @@ void gameloop_update(void)
     gf2d_font_update();
     gf2d_windows_update_all();
     entity_think_all();
+    slog("NO CRASH");
     entity_update_all();
     entity_collide_check_all();
     gf3d_camera_update_view();

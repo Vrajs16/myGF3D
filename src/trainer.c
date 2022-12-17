@@ -150,9 +150,7 @@ void trainer_think(Entity *self)
         return;
 
     if (BATTLE)
-    {
         return;
-    }
 
     Vector3D rotate = {0};
     Vector3D forward = {0};
@@ -221,50 +219,15 @@ void trainer_think(Entity *self)
     }
     vector3d_copy(self->previousPosition, self->position);
     vector3d_add(self->position, self->position, moveDir);
+
+    TRAINER_X = self->position.x;
+    TRAINER_Y = self->position.y;
+    TRAINER_Z = 1000;
+
     if (SIGN_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition))
         SIGN_COLLISION = 1;
     else
         SIGN_COLLISION = 0;
-
-    if ((TREE_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition)) || ANIMATION_TREE_PLAYING)
-    {
-        Entity *tree = entity_get("tree", CURRENT_COLLISION_ENTITY_ID);
-        if (!tree)
-        {
-            slog("tree is null");
-            return;
-        }
-
-        if (keys[SDL_SCANCODE_E] && !ANIMATION_TREE_PLAYING)
-        {
-            // Delete tree
-            ANIMATION_TREE_PLAYING = 1;
-            slog("You used Cut!");
-            TREE_COLLISION = 0;
-            playSound("tree-falling", 0, 5, 7, 1);
-        }
-        else if (ANIMATION_TREE_PLAYING)
-        {
-            if (ANIMATION_FRAME_TREE > 99)
-            {
-                ANIMATION_ROCK_PLAYING = 0;
-                entity_free(tree);
-                TREE_COLLISION = 0;
-            }
-            else
-            {
-                tree->model = tree->runAniModels[ANIMATION_FRAME_TREE];
-                if (ANIMAITON_INTERVAL_TREE == 2)
-                {
-                    ANIMATION_FRAME_TREE++;
-                    ANIMAITON_INTERVAL_TREE = 0;
-                }
-                ANIMAITON_INTERVAL_TREE++;
-            }
-        }
-    }
-    else
-        TREE_COLLISION = 0;
 
     if (PC_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition))
     {
@@ -282,6 +245,42 @@ void trainer_think(Entity *self)
     }
     else
         PC_COLLISION = 0;
+
+    if ((TREE_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition)) || ANIMATION_TREE_PLAYING)
+    {
+        Entity *tree = entity_get("tree", CURRENT_COLLISION_ENTITY_ID);
+
+        if (keys[SDL_SCANCODE_E] && !ANIMATION_TREE_PLAYING)
+        {
+            // Delete tree
+            ANIMATION_TREE_PLAYING = 1;
+            slog("You used Cut!");
+            TREE_COLLISION = 0;
+            playSound("tree-falling", 0, 5, 7, 1);
+        }
+        else if (ANIMATION_TREE_PLAYING)
+        {
+            if (ANIMATION_FRAME_TREE > 99)
+            {
+                ANIMATION_TREE_PLAYING = 0;
+                entity_free(tree);
+                TREE_COLLISION = 0;
+                ANIMATION_FRAME_TREE = 0;
+            }
+            else
+            {
+                tree->model = tree->runAniModels[ANIMATION_FRAME_TREE];
+                if (ANIMAITON_INTERVAL_TREE == 2)
+                {
+                    ANIMATION_FRAME_TREE++;
+                    ANIMAITON_INTERVAL_TREE = 0;
+                }
+                ANIMAITON_INTERVAL_TREE++;
+            }
+        }
+    }
+    else
+        TREE_COLLISION = 0;
 
     if ((ROCK_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition)) || ANIMATION_ROCK_PLAYING)
     {
@@ -301,6 +300,7 @@ void trainer_think(Entity *self)
                 ANIMATION_ROCK_PLAYING = 0;
                 entity_free(rock);
                 ROCK_COLLISION = 0;
+                ANIMATION_FRAME_ROCK = 0;
             }
             else
             {
@@ -342,10 +342,6 @@ void trainer_think(Entity *self)
     }
     else
         STRENGTH_COLLISION = 0;
-
-    TRAINER_X = self->position.x;
-    TRAINER_Y = self->position.y;
-    TRAINER_Z = 1000;
 }
 
 void trainer_collide(struct Entity_S *self, struct Entity_S *other)
@@ -383,6 +379,9 @@ void trainer_collide(struct Entity_S *self, struct Entity_S *other)
     {
         self->position = self->previousPosition;
 
+        if (ANIMATION_ROCK_PLAYING || ANIMATION_TREE_PLAYING || ANIMATION_STRENGTH_PLAYING)
+            return;
+
         // Depending on the interactable, do something
         if (strcmp(other->name, "sign") == 0 && SIGN_COLLISION == 0)
         {
@@ -390,26 +389,25 @@ void trainer_collide(struct Entity_S *self, struct Entity_S *other)
             CURRENT_COLLISION_ENTITY_ID = other->entityID;
             return;
         }
-        else if (strcmp(other->name, "tree") == 0 && TREE_COLLISION == 0)
+        if (strcmp(other->name, "tree") == 0 && TREE_COLLISION == 0)
         {
             TREE_COLLISION = 1;
-            slog("%d",other->entityID);
             CURRENT_COLLISION_ENTITY_ID = other->entityID;
             return;
         }
-        else if (strcmp(other->name, "rock") == 0 && ROCK_COLLISION == 0)
+        if (strcmp(other->name, "rock") == 0 && ROCK_COLLISION == 0)
         {
             ROCK_COLLISION = 1;
             CURRENT_COLLISION_ENTITY_ID = other->entityID;
             return;
         }
-        else if (strcmp(other->name, "pc") == 0 && PC_COLLISION == 0)
+        if (strcmp(other->name, "pc") == 0 && PC_COLLISION == 0)
         {
             PC_COLLISION = 1;
             CURRENT_COLLISION_ENTITY_ID = other->entityID;
             return;
         }
-        else if (strcmp(other->name, "strength") == 0 && STRENGTH_COLLISION == 0)
+        if (strcmp(other->name, "strength") == 0 && STRENGTH_COLLISION == 0)
         {
             STRENGTH_COLLISION = 1;
             CURRENT_COLLISION_ENTITY_ID = other->entityID;

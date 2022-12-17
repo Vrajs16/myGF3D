@@ -20,7 +20,8 @@ Entity *interactable_new(Vector3D position, Vector3D rotation, char *filename)
     snprintf(texturefilename, GFCLINELEN, "assets/interactables/%s/%s-bake.png", filename, filename);
     ent->model = gf3d_model_load_full(modelfilename, texturefilename);
 
-    if(strcmp("rock", filename) == 0){
+    if (strcmp("rock", filename) == 0)
+    {
         ent->runAniModels = gfc_allocate_array(sizeof(Model), 250);
         for (int i = 0; i < 250; i++)
         {
@@ -29,8 +30,8 @@ Entity *interactable_new(Vector3D position, Vector3D rotation, char *filename)
         }
         scale = 15;
     }
-
-    if(strcmp("tree", filename) == 0){
+    else if (strcmp("tree", filename) == 0)
+    {
         ent->runAniModels = gfc_allocate_array(sizeof(Model), 100);
         for (int i = 0; i < 100; i++)
         {
@@ -39,24 +40,19 @@ Entity *interactable_new(Vector3D position, Vector3D rotation, char *filename)
         }
         scale = 250;
     }
-
-    if(strcmp("sign", filename) == 0){
+    else if (strcmp("sign", filename) == 0)
         scale = 15;
-    }
-    if(strcmp("pc", filename) == 0){
+    else if (strcmp("pc", filename) == 0)
         scale = 250;
-    }
-    if(strcmp("strength", filename) == 0){
+    else if (strcmp("strength", filename) == 0)
         scale = 400;
-    }
-
+    else
+        slog("ERROR!");
 
     ent->isBox = 1;
     ent->boundingBox = gfc_box(0, 0, 350, 350, 350, 350);
-    slog("filename %s", filename);
     ent->name = malloc(sizeof(char) * strlen(filename) + 1);
     strcpy(ent->name, filename);
-
     ent->type = ET_INTERACTABLE;
     vector3d_copy(ent->scale, vector3d(scale, scale, scale));
     vector3d_copy(ent->rotation, rotation);
