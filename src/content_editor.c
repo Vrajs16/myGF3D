@@ -43,6 +43,14 @@ SDL_bool pan = SDL_FALSE;
 
 typedef enum
 {
+    MODEL_MAP,
+    MODEL_POKEMON,
+    MODEL_INTERACTABLE,
+    MODEL_NONE,
+} ModelType;
+
+typedef enum
+{
     MAP,
     POKEMON,
     INTERACTABLE,
@@ -52,9 +60,14 @@ typedef struct
 {
     SDL_Rect rect;
     SDL_Texture *BottomTexture;
-    SDL_Texture *TopTexture;
     int BottomTextureSet;
+    char BottomTextureName[20];
+    SDL_Texture *TopTexture;
     int TopTextureSet;
+    char TopTextureName[20];
+    double TopTextureRotation;
+    ModelType BottomTextureType;
+    ModelType TopTextureType;
 } Grid;
 
 typedef struct
@@ -72,7 +85,7 @@ Grid GRID[GRID_WIDTH][GRID_HEIGHT];
 const int MAP_TEXTURE_COUNT = 2;
 const int POKEMON_TEXTURE_COUNT = 10;
 const int INTERACTABLE_TEXTURE_COUNT = 5;
-const int ACTION_TEXTURE_COUNT = 3;
+const int ACTION_TEXTURE_COUNT = 4;
 
 const char *MAP_TEXTURE_NAMES[MAP_TEXTURE_COUNT] = {
     "path",
@@ -103,7 +116,7 @@ const char *ACTION_TEXTURE_NAMES[ACTION_TEXTURE_COUNT] = {
     "save",
     "clean",
     "delete",
-};
+    "rotate"};
 
 TileTexture MAP_TEXTURES[MAP_TEXTURE_COUNT];
 TileTexture POKEMON_TEXTURES[POKEMON_TEXTURE_COUNT];
@@ -218,9 +231,14 @@ void content_editor_setup_renderer()
             GRID[x][y].rect.w = GRID_CELL_SIZE;
             GRID[x][y].rect.h = GRID_CELL_SIZE;
             GRID[x][y].BottomTexture = MAP_TEXTURES[0].texture;
-            GRID[x][y].TopTexture = NULL;
+            strcpy(GRID[x][y].BottomTextureName, MAP_TEXTURE_NAMES[0]);
             GRID[x][y].BottomTextureSet = 1;
+            GRID[x][y].TopTexture = NULL;
             GRID[x][y].TopTextureSet = 0;
+            strcpy(GRID[x][y].TopTextureName, "");
+            GRID[x][y].TopTextureRotation = 0;
+            GRID[x][y].TopTextureType = MODEL_MAP;
+            GRID[x][y].TopTextureType = MODEL_NONE;
         }
     }
     CURRENTLY_SELECTED_TEXTURE = MAP_TEXTURES[0];
@@ -287,6 +305,11 @@ void content_editor_update()
                             CURRENTLY_SELECTED_TEXTURE_ITEM = ACTION_TEXTURES[i].rect;
                             CURRENTLY_SELECTED_TEXTURE.id = -2;
                         }
+                        else if (strcmp(ACTION_TEXTURES[i].name, "rotate") == 0)
+                        {
+                            CURRENTLY_SELECTED_TEXTURE_ITEM = ACTION_TEXTURES[i].rect;
+                            CURRENTLY_SELECTED_TEXTURE.id = -3;
+                        }
 
                         return;
                     }
@@ -334,25 +357,44 @@ void content_editor_update()
                 {
                     if (CURRENTLY_SELECTED_TEXTURE.id == -1)
                         return;
-                    if (CURRENTLY_SELECTED_TEXTURE.id == -2)
+                    else if (CURRENTLY_SELECTED_TEXTURE.id == -2)
                     {
                         GRID[gridX][gridY].BottomTexture = NULL;
                         GRID[gridX][gridY].TopTexture = NULL;
                         GRID[gridX][gridY].BottomTextureSet = 0;
                         GRID[gridX][gridY].TopTextureSet = 0;
+                        GRID[gridX][gridY].TopTextureRotation = 0;
+                        strcpy(GRID[gridX][gridY].TopTextureName, "");
+                        strcpy(GRID[gridX][gridY].BottomTextureName, "");
+                        GRID[gridX][gridY].BottomTextureType = MODEL_NONE;
+                        GRID[gridX][gridY].TopTextureType = MODEL_NONE;
                     }
-                    else
+                    else if (CURRENTLY_SELECTED_TEXTURE.id == -3)
                     {
-                        if (CURRENTLY_SELECTED_TEXTURE.type == MAP)
-                        {
-                            GRID[gridX][gridY].BottomTexture = CURRENTLY_SELECTED_TEXTURE.texture;
-                            GRID[gridX][gridY].BottomTextureSet = 1;
-                        }
-                        else if (CURRENTLY_SELECTED_TEXTURE.type == POKEMON || CURRENTLY_SELECTED_TEXTURE.type == INTERACTABLE)
-                        {
-                            GRID[gridX][gridY].TopTexture = CURRENTLY_SELECTED_TEXTURE.texture;
-                            GRID[gridX][gridY].TopTextureSet = 1;
-                        }
+                        GRID[gridX][gridY].TopTextureRotation += 45;
+                        if (GRID[gridX][gridY].TopTextureRotation >= 360)
+                            GRID[gridX][gridY].TopTextureRotation = 0;
+                    }
+                    else if (CURRENTLY_SELECTED_TEXTURE.type == MAP)
+                    {
+                        GRID[gridX][gridY].BottomTexture = CURRENTLY_SELECTED_TEXTURE.texture;
+                        GRID[gridX][gridY].BottomTextureSet = 1;
+                        strcpy(GRID[gridX][gridY].BottomTextureName, CURRENTLY_SELECTED_TEXTURE.name);
+                        GRID[gridX][gridY].BottomTextureType = MODEL_MAP;
+                    }
+                    else if (CURRENTLY_SELECTED_TEXTURE.type == MODEL_POKEMON)
+                    {
+                        GRID[gridX][gridY].TopTexture = CURRENTLY_SELECTED_TEXTURE.texture;
+                        GRID[gridX][gridY].TopTextureSet = 1;
+                        strcpy(GRID[gridX][gridY].TopTextureName, CURRENTLY_SELECTED_TEXTURE.name);
+                        GRID[gridX][gridY].TopTextureType = MODEL_POKEMON;
+                    }
+                    else if (CURRENTLY_SELECTED_TEXTURE.type == INTERACTABLE)
+                    {
+                        GRID[gridX][gridY].TopTexture = CURRENTLY_SELECTED_TEXTURE.texture;
+                        GRID[gridX][gridY].TopTextureSet = 1;
+                        strcpy(GRID[gridX][gridY].TopTextureName, CURRENTLY_SELECTED_TEXTURE.name);
+                        GRID[gridX][gridY].TopTextureType = MODEL_INTERACTABLE;
                     }
                 }
             }
@@ -404,7 +446,7 @@ void content_editor_draw()
             if (GRID[x][y].BottomTextureSet)
                 SDL_RenderCopy(renderer, GRID[x][y].BottomTexture, NULL, &pixel_rect);
             if (GRID[x][y].TopTextureSet)
-                SDL_RenderCopy(renderer, GRID[x][y].TopTexture, NULL, &pixel_rect);
+                SDL_RenderCopyEx(renderer, GRID[x][y].TopTexture, NULL, &pixel_rect, GRID[x][y].TopTextureRotation, NULL, SDL_FLIP_NONE);
 
             SDL_SetRenderDrawColor(renderer, grid_line_color.r, grid_line_color.g, grid_line_color.b, grid_line_color.a);
             SDL_RenderDrawRect(renderer, &pixel_rect);
@@ -485,6 +527,11 @@ void clean_grid()
             GRID[x][y].TopTexture = NULL;
             GRID[x][y].BottomTextureSet = 0;
             GRID[x][y].TopTextureSet = 0;
+            GRID[x][y].TopTextureRotation = 0;
+            strcpy(GRID[x][y].TopTextureName, "");
+            strcpy(GRID[x][y].BottomTextureName, "");
+            GRID[x][y].BottomTextureType = MODEL_NONE;
+            GRID[x][y].TopTextureType = MODEL_NONE;
         }
     }
 }
