@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "simple_logger.h"
+#include "simple_json.h"
 #include "gf3d_vgraphics.h"
 #include "gf2d_font.h"
 #include "gf2d_draw.h"
@@ -493,7 +494,7 @@ void content_editor_draw()
     SDL_SetRenderDrawColor(renderer, 200, 200, 200, 125);
     SDL_RenderFillRect(renderer, &CURRENTLY_SELECTED_TEXTURE_ITEM);
     SDL_RenderPresent(renderer);
-};
+}
 
 void content_editor_cleanup(void)
 {
@@ -515,6 +516,7 @@ void screen_to_world(int nScreenX, int nScreenY, int *fWorldX, int *fWorldY)
 void save_grid()
 {
     SDL_Log("Saving grid to file...");
+    // Need to save the grid into a json file
 }
 
 void clean_grid()
