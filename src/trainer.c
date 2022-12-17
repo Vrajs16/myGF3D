@@ -361,12 +361,12 @@ void trainer_collide(struct Entity_S *self, struct Entity_S *other)
         // Move trainer and pokemon to battle box
         other->position.x = 0;
         other->position.y = 2000;
-        other->position.z = 5000;
+        other->position.z = -10000;
         other->rotation.z = 0;
 
         TRAINER_X = 1000;
         TRAINER_Y = -2000;
-        TRAINER_Z = 6000;
+        TRAINER_Z = -9000;
         TRAINER_ROT_Z = .2;
         OP_POKEMON = other;
         OP_HEALTH_MAX = (float)other->pokemon.health;

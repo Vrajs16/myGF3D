@@ -22,400 +22,6 @@ typedef struct
 
 static World *MAIN_WORLD = NULL;
 
-void world_load(char *filename)
-{
-    return;
-    SJson *json, *wjson, *layout, *floor, *wall, *sky;
-    int floorCount;
-    int wallCount;
-    int skyCount;
-    int scale;
-    json = sj_load(filename);
-    if (!json)
-    {
-        slog("failed to load json file (%s) for the world data", filename);
-        return;
-    }
-    wjson = sj_object_get_value(json, "world");
-    if (!wjson)
-    {
-        slog("failed to find world object in %s world config", filename);
-        sj_free(json);
-        return;
-    }
-    sj_get_integer_value(sj_object_get_value(wjson, "scale"), &scale);
-
-    layout = sj_object_get_value(wjson, "layout");
-    if (!layout)
-    {
-        slog("failed to find layout in %s world config", filename);
-        sj_free(json);
-        return;
-    }
-    floor = sj_object_get_value(layout, "floor");
-    if (!floor)
-    {
-        slog("failed to find floor in %s world config", filename);
-        sj_free(json);
-        return;
-    }
-    floorCount = sj_array_get_count(floor);
-    wall = sj_object_get_value(layout, "wall");
-    if (!wall)
-    {
-        slog("failed to find wall in %s world config", filename);
-        sj_free(json);
-        return;
-    }
-    wallCount = sj_array_get_count(wall);
-    sky = sj_object_get_value(layout, "sky");
-    if (!sky)
-    {
-        slog("failed to find sky in %s world config", filename);
-        sj_free(json);
-        return;
-    }
-    skyCount = sj_array_get_count(sky);
-
-    // Load Battle box
-    SJson *jsonB, *wjsonB, *layoutB, *floorB, *wallB, *skyB;
-    int floorCountB;
-    int wallCountB;
-    int skyCountB;
-    int scaleB;
-
-    jsonB = sj_load("config/battle-box.json");
-    if (!jsonB)
-    {
-        slog("failed to load json file (%s) for the world data", filename);
-        return;
-    }
-    wjsonB = sj_object_get_value(jsonB, "world");
-    if (!wjsonB)
-    {
-        slog("failed to find world object in %s world config", filename);
-        sj_free(jsonB);
-        return;
-    }
-    sj_get_integer_value(sj_object_get_value(wjsonB, "scale"), &scaleB);
-
-    layoutB = sj_object_get_value(wjsonB, "layout");
-    if (!layoutB)
-    {
-        slog("failed to find layout in %s world config", filename);
-        sj_free(jsonB);
-        return;
-    }
-    floorB = sj_object_get_value(layoutB, "floor");
-    if (!floorB)
-    {
-        slog("failed to find floor in %s world config", filename);
-        sj_free(jsonB);
-        return;
-    }
-    floorCountB = sj_array_get_count(floorB);
-    wallB = sj_object_get_value(layoutB, "wall");
-    if (!wallB)
-    {
-        slog("failed to find wall in %s world config", filename);
-        sj_free(jsonB);
-        return;
-    }
-    wallCountB = sj_array_get_count(wallB);
-    skyB = sj_object_get_value(layoutB, "sky");
-    if (!skyB)
-    {
-        slog("failed to find sky in %s world config", filename);
-        sj_free(jsonB);
-        return;
-    }
-    skyCountB = sj_array_get_count(skyB);
-
-    // Each world tile is its own model
-    MAIN_WORLD = gfc_allocate_array(sizeof(World), floorCount + wallCount + skyCount + floorCountB + wallCountB + skyCountB); // Remember entity system max 1024
-    MAIN_WORLD->entityCount = floorCount + wallCount + skyCount + floorCountB + wallCountB + skyCountB;
-    if (!MAIN_WORLD)
-    {
-        slog("failed to allocate data for the world");
-        free(MAIN_WORLD);
-        return;
-    }
-
-    if (floor)
-    {
-        for (int i = 0; i < floorCount; i++)
-        {
-            Vector3D loc;
-            TextLine modelfilename;
-            TextLine texturefilename;
-            SJson *floorTileInfo = sj_array_get_nth(floor, i);
-            if (!floorTileInfo)
-            {
-                slog("failed to find floorTileInfo in %s world config", modelfilename);
-                free(MAIN_WORLD);
-                sj_free(json);
-                return;
-            }
-            const char *model = sj_object_get_value_as_string(floorTileInfo, "model");
-            sj_value_as_vector3d(sj_object_get_value(floorTileInfo, "location"), &loc);
-            if (!model)
-            {
-                slog("failed to find model in %s world config", modelfilename);
-                free(MAIN_WORLD);
-                sj_free(json);
-                return;
-            }
-            snprintf(modelfilename, GFCLINELEN, "assets/world/%s/%s.obj", (char *)model, (char *)model);
-            snprintf(texturefilename, GFCLINELEN, "assets/world/%s/%s.png", (char *)model, (char *)model);
-            MAIN_WORLD[i].worldModel = gf3d_model_load_full(modelfilename, texturefilename);
-            MAIN_WORLD[i].color = gfc_color(1, 1, 1, 1);
-            gfc_matrix_identity(MAIN_WORLD[i].modelMat);
-            gfc_matrix_scale(MAIN_WORLD[i].modelMat, vector3d(scale, scale, scale));
-            gfc_matrix_translate(MAIN_WORLD[i].modelMat, loc);
-        }
-
-        for (int i = floorCount; i < floorCount + wallCount; i++)
-        {
-            Vector3D loc;
-            TextLine modelfilename;
-            TextLine texturefilename;
-            SJson *wallTileInfo = sj_array_get_nth(wall, i - floorCount);
-            if (!wallTileInfo)
-            {
-                slog("failed to find wallTileInfo in %s world config", modelfilename);
-                free(MAIN_WORLD);
-                sj_free(json);
-                return;
-            }
-            const char *model = sj_object_get_value_as_string(wallTileInfo, "model");
-            sj_value_as_vector3d(sj_object_get_value(wallTileInfo, "location"), &loc);
-            if (!model)
-            {
-                slog("failed to find model in %s world config", modelfilename);
-                free(MAIN_WORLD);
-                sj_free(json);
-                return;
-            }
-
-            SJson *rotationInfo = sj_object_get_value(wallTileInfo, "rotation");
-            if (!rotationInfo)
-            {
-                slog("failed to find rotation in %s world config", modelfilename);
-                free(MAIN_WORLD);
-                sj_free(json);
-                return;
-            }
-            Vector3D axisVector;
-            int angle;
-            sj_value_as_vector3d(sj_object_get_value(rotationInfo, "axis"), &axisVector);
-            sj_get_integer_value(sj_object_get_value(rotationInfo, "angle"), &angle);
-
-            snprintf(modelfilename, GFCLINELEN, "assets/world/%s/%s.obj", (char *)model, (char *)model);
-            snprintf(texturefilename, GFCLINELEN, "assets/world/%s/%s.png", (char *)model, (char *)model);
-            MAIN_WORLD[i].worldModel = gf3d_model_load_full(modelfilename, texturefilename);
-            MAIN_WORLD[i].color = gfc_color(1, 1, 1, 1);
-            gfc_matrix_identity(MAIN_WORLD[i].modelMat);
-            gfc_matrix_scale(MAIN_WORLD[i].modelMat, vector3d(scale, scale, scale));
-
-            if (angle == 1)
-            {
-                gfc_matrix_rotate(MAIN_WORLD[i].modelMat, MAIN_WORLD[i].modelMat, M_PI / 2, axisVector);
-                gfc_matrix_translate(MAIN_WORLD[i].modelMat, vector3d(loc.x, loc.y + (scale * 100 / 2), loc.z + (scale * 100 / 2)));
-            }
-            else if (angle == 2)
-            {
-                gfc_matrix_rotate(MAIN_WORLD[i].modelMat, MAIN_WORLD[i].modelMat, -M_PI / 2, axisVector);
-                gfc_matrix_translate(MAIN_WORLD[i].modelMat, vector3d(loc.x + (scale * 100 / 2), loc.y, loc.z + (scale * 100 / 2)));
-            }
-            else if (angle == 3)
-            {
-                gfc_matrix_rotate(MAIN_WORLD[i].modelMat, MAIN_WORLD[i].modelMat, 3 * M_PI / 2, axisVector);
-                gfc_matrix_translate(MAIN_WORLD[i].modelMat, vector3d(loc.x, loc.y - (scale * 100 / 2), loc.z + (scale * 100 / 2)));
-            }
-            else if (angle == 4)
-            {
-                gfc_matrix_rotate(MAIN_WORLD[i].modelMat, MAIN_WORLD[i].modelMat, -3 * M_PI / 2, axisVector);
-                gfc_matrix_translate(MAIN_WORLD[i].modelMat, vector3d(loc.x - (scale * 100 / 2), loc.y, loc.z + (scale * 100 / 2)));
-            }
-            else
-            {
-                slog("ENTERED WRONG ANGGLE!, FIX THIS");
-            }
-        }
-
-        for (int i = floorCount + wallCount; i < floorCount + wallCount + skyCount; i++)
-        {
-            Vector3D loc;
-            TextLine modelfilename;
-            TextLine texturefilename;
-            SJson *skyTileInfo = sj_array_get_nth(sky, i - floorCount - wallCount);
-            if (!skyTileInfo)
-            {
-                slog("failed to find skyTileInfo in %s world config", modelfilename);
-                free(MAIN_WORLD);
-                sj_free(json);
-                return;
-            }
-            const char *model = sj_object_get_value_as_string(skyTileInfo, "model");
-            sj_value_as_vector3d(sj_object_get_value(skyTileInfo, "location"), &loc);
-            if (!model)
-            {
-                slog("failed to find model in %s world config", modelfilename);
-                free(MAIN_WORLD);
-                sj_free(json);
-                return;
-            }
-            snprintf(modelfilename, GFCLINELEN, "assets/world/%s/%s.obj", (char *)model, (char *)model);
-            snprintf(texturefilename, GFCLINELEN, "assets/world/%s/%s.png", (char *)model, (char *)model);
-            MAIN_WORLD[i].worldModel = gf3d_model_load_full(modelfilename, texturefilename);
-            MAIN_WORLD[i].color = gfc_color(1, 1, 1, 1);
-            gfc_matrix_identity(MAIN_WORLD[i].modelMat);
-            gfc_matrix_scale(MAIN_WORLD[i].modelMat, vector3d(scale, scale, scale));
-            gfc_matrix_rotate(MAIN_WORLD[i].modelMat, MAIN_WORLD[i].modelMat, M_PI, vector3d(1, 0, 0));
-            gfc_matrix_translate(MAIN_WORLD[i].modelMat, loc);
-        }
-
-        // Loading Battle Arena
-        for (int i = floorCount + wallCount + skyCount; i < floorCount + wallCount + skyCount + floorCountB; i++)
-        {
-            Vector3D loc;
-            TextLine modelfilename;
-            TextLine texturefilename;
-            SJson *floorTileInfo = sj_array_get_nth(floorB, i - floorCount - wallCount - skyCount);
-            if (!floorTileInfo)
-            {
-                slog("failed to find floorTileInfo in %s world config", modelfilename);
-                free(MAIN_WORLD);
-                sj_free(json);
-                return;
-            }
-            const char *model = sj_object_get_value_as_string(floorTileInfo, "model");
-            sj_value_as_vector3d(sj_object_get_value(floorTileInfo, "location"), &loc);
-            if (!model)
-            {
-                slog("failed to find model in %s world config", modelfilename);
-                free(MAIN_WORLD);
-                sj_free(json);
-                return;
-            }
-            snprintf(modelfilename, GFCLINELEN, "assets/world/%s/%s.obj", (char *)model, (char *)model);
-            snprintf(texturefilename, GFCLINELEN, "assets/world/%s/%s.png", (char *)model, (char *)model);
-            MAIN_WORLD[i].worldModel = gf3d_model_load_full(modelfilename, texturefilename);
-            MAIN_WORLD[i].color = gfc_color(1, 1, 1, 1);
-            gfc_matrix_identity(MAIN_WORLD[i].modelMat);
-            gfc_matrix_scale(MAIN_WORLD[i].modelMat, vector3d(scaleB, scaleB, scaleB));
-            gfc_matrix_translate(MAIN_WORLD[i].modelMat, loc);
-        }
-
-        for (int i = floorCount + wallCount + skyCount + floorCountB; i < floorCount + wallCount + skyCount + floorCountB + wallCountB; i++)
-        {
-            Vector3D loc;
-            TextLine modelfilename;
-            TextLine texturefilename;
-            SJson *wallTileInfo = sj_array_get_nth(wallB, i - floorCount - wallCount - skyCount - floorCountB);
-            if (!wallTileInfo)
-            {
-                slog("failed to find wallTileInfo in %s world config", modelfilename);
-                free(MAIN_WORLD);
-                sj_free(json);
-                return;
-            }
-            const char *model = sj_object_get_value_as_string(wallTileInfo, "model");
-            sj_value_as_vector3d(sj_object_get_value(wallTileInfo, "location"), &loc);
-            if (!model)
-            {
-                slog("failed to find model in %s world config", modelfilename);
-                free(MAIN_WORLD);
-                sj_free(json);
-                return;
-            }
-
-            SJson *rotationInfo = sj_object_get_value(wallTileInfo, "rotation");
-            if (!rotationInfo)
-            {
-                slog("failed to find rotation in %s world config", modelfilename);
-                free(MAIN_WORLD);
-                sj_free(json);
-                return;
-            }
-            Vector3D axisVector;
-            int angle;
-            sj_value_as_vector3d(sj_object_get_value(rotationInfo, "axis"), &axisVector);
-            sj_get_integer_value(sj_object_get_value(rotationInfo, "angle"), &angle);
-
-            snprintf(modelfilename, GFCLINELEN, "assets/world/%s/%s.obj", (char *)model, (char *)model);
-            snprintf(texturefilename, GFCLINELEN, "assets/world/%s/%s.png", (char *)model, (char *)model);
-            MAIN_WORLD[i].worldModel = gf3d_model_load_full(modelfilename, texturefilename);
-            MAIN_WORLD[i].color = gfc_color(1, 1, 1, 1);
-            gfc_matrix_identity(MAIN_WORLD[i].modelMat);
-            gfc_matrix_scale(MAIN_WORLD[i].modelMat, vector3d(scaleB, scaleB, scaleB));
-
-            if (angle == 1)
-            {
-                gfc_matrix_rotate(MAIN_WORLD[i].modelMat, MAIN_WORLD[i].modelMat, M_PI / 2, axisVector);
-                gfc_matrix_translate(MAIN_WORLD[i].modelMat, vector3d(loc.x, loc.y + (scaleB * 100 / 2), loc.z + (scaleB * 100 / 2)));
-            }
-            else if (angle == 2)
-            {
-                gfc_matrix_rotate(MAIN_WORLD[i].modelMat, MAIN_WORLD[i].modelMat, -M_PI / 2, axisVector);
-                gfc_matrix_translate(MAIN_WORLD[i].modelMat, vector3d(loc.x + (scaleB * 100 / 2), loc.y, loc.z + (scaleB * 100 / 2)));
-            }
-            else if (angle == 3)
-            {
-                gfc_matrix_rotate(MAIN_WORLD[i].modelMat, MAIN_WORLD[i].modelMat, 3 * M_PI / 2, axisVector);
-                gfc_matrix_translate(MAIN_WORLD[i].modelMat, vector3d(loc.x, loc.y - (scaleB * 100 / 2), loc.z + (scaleB * 100 / 2)));
-            }
-            else if (angle == 4)
-            {
-                gfc_matrix_rotate(MAIN_WORLD[i].modelMat, MAIN_WORLD[i].modelMat, -3 * M_PI / 2, axisVector);
-                gfc_matrix_translate(MAIN_WORLD[i].modelMat, vector3d(loc.x - (scaleB * 100 / 2), loc.y, loc.z + (scaleB * 100 / 2)));
-            }
-            else
-            {
-                slog("ENTERED WRONG ANGGLE!, FIX THIS");
-            }
-        }
-
-        for (int i = floorCount + wallCount + skyCount + floorCountB + wallCountB; i < floorCount + wallCount + skyCount + floorCountB + wallCountB + skyCountB; i++)
-        {
-            Vector3D loc;
-            TextLine modelfilename;
-            TextLine texturefilename;
-            SJson *skyTileInfo = sj_array_get_nth(skyB, i - floorCount - wallCount - skyCount - floorCountB - wallCountB);
-            if (!skyTileInfo)
-            {
-                slog("failed to find skyTileInfo in %s world config", modelfilename);
-                free(MAIN_WORLD);
-                sj_free(json);
-                return;
-            }
-            const char *model = sj_object_get_value_as_string(skyTileInfo, "model");
-            sj_value_as_vector3d(sj_object_get_value(skyTileInfo, "location"), &loc);
-            if (!model)
-            {
-                slog("failed to find model in %s world config", modelfilename);
-                free(MAIN_WORLD);
-                sj_free(json);
-                return;
-            }
-            snprintf(modelfilename, GFCLINELEN, "assets/world/%s/%s.obj", (char *)model, (char *)model);
-            snprintf(texturefilename, GFCLINELEN, "assets/world/%s/%s.png", (char *)model, (char *)model);
-            MAIN_WORLD[i].worldModel = gf3d_model_load_full(modelfilename, texturefilename);
-            MAIN_WORLD[i].color = gfc_color(1, 1, 1, 1);
-            gfc_matrix_identity(MAIN_WORLD[i].modelMat);
-            gfc_matrix_scale(MAIN_WORLD[i].modelMat, vector3d(scaleB, scaleB, scaleB));
-            gfc_matrix_rotate(MAIN_WORLD[i].modelMat, MAIN_WORLD[i].modelMat, M_PI, vector3d(1, 0, 0));
-            gfc_matrix_translate(MAIN_WORLD[i].modelMat, loc);
-        }
-    }
-    else
-    {
-        slog("world data (%s) has no model", filename);
-    }
-    sj_free(json);
-    gf3d_lights_set_global_light(vector4d(1, 1, 1, 1), vector4d(-1, -1, 0, 1));
-}
-
 void world_draw()
 {
     if (!MAIN_WORLD)
@@ -445,6 +51,7 @@ void world_add_entity(World *world, Entity *entity);
 
 void world_load_json(char *filename)
 {
+    // load the world json file
     SJson *json_file;
     int scale;
     int spacing;
@@ -468,17 +75,46 @@ void world_load_json(char *filename)
         sj_free(json_file);
         return;
     }
-    int worldCount = sj_array_get_count(world);
-    slog("worldCount: %i", worldCount);
+    int tilecount = sj_array_get_count(world);
+    slog("tilecount: %i", tilecount);
 
-    if (worldCount > 1024)
+    // load battle box
+    SJson *json_file2;
+    int scale2;
+    int spacing2;
+    int grid_width2;
+    int grid_height2;
+    json_file2 = sj_load("config/battle_box.json");
+
+    if (!json_file2)
     {
-        slog("worldCount is greater than 1024 it may crash the game");
-    }
-    MAIN_WORLD = gfc_allocate_array(sizeof(World), worldCount); // Remember entity system max 1024
-    MAIN_WORLD->entityCount = worldCount;
+        slog("failed to load battle box file");
+        return;
+    };
 
-    for (int i = 0; i < worldCount; i++)
+    sj_object_get_value_as_int(json_file2, "scale", &scale2);
+    sj_object_get_value_as_int(json_file2, "spacing", &spacing2);
+    sj_object_get_value_as_int(json_file2, "grid_width", &grid_width2);
+    sj_object_get_value_as_int(json_file2, "grid_height", &grid_height2);
+
+    SJson *world2 = sj_object_get_value(json_file2, "world");
+    if (!world2)
+    {
+        slog("failed to find world in battle box config");
+        sj_free(json_file2);
+        return;
+    }
+    int tilecount2 = sj_array_get_count(world2);
+    slog("tilecount2: %i", tilecount2);
+
+    if (tilecount + tilecount2 > 1024)
+    {
+        slog("tilecount + tilecount2 is greater than 1024 it may crash the game");
+    }
+    MAIN_WORLD = gfc_allocate_array(sizeof(World), tilecount + tilecount2); // Remember entity system max 1024
+    MAIN_WORLD->entityCount = tilecount + tilecount2;
+
+    for (int i = 0; i < tilecount; i++)
     {
         SJson *tile = sj_array_get_nth(world, i);
         TextLine modelfilename;
@@ -526,7 +162,41 @@ void world_load_json(char *filename)
         }
     }
     sj_free(json_file);
-    gf3d_lights_set_global_light(vector4d(1, 1, 1, 1), vector4d(-1, -1, 0, 1));
+
+    // load battle box
+    for (int i = tilecount; i < tilecount + tilecount2; i++)
+    {
+        SJson *tile2 = sj_array_get_nth(world2, i - tilecount);
+        TextLine modelfilename;
+        TextLine texturefilename;
+        if (!tile2)
+        {
+            slog("failed to find tile2 %d in %s world2 config", i, filename);
+            sj_free(json_file);
+            return;
+        }
+        const char *bottom_model_name2 = sj_object_get_value_as_string(tile2, "bottom_model");
+        if (!bottom_model_name2)
+        {
+            slog("failed to find model in %s world2 config", filename);
+            sj_free(json_file);
+            return;
+        }
+        Vector3D loc2;
+        sj_value_as_vector3d(sj_object_get_value(tile2, "location"), &loc2);
+        slog("loc2: %f %f %f", loc2.x, loc2.y, loc2.z);
+        snprintf(modelfilename, GFCLINELEN, "assets/world/%s/%s.obj", (char *)bottom_model_name2, (char *)bottom_model_name2);
+        snprintf(texturefilename, GFCLINELEN, "assets/world/%s/%s.png", (char *)bottom_model_name2, (char *)bottom_model_name2);
+        MAIN_WORLD[i].worldModel = gf3d_model_load_full(modelfilename, texturefilename);
+        MAIN_WORLD[i].color = gfc_color(1, 1, 1, 1);
+        gfc_matrix_identity(MAIN_WORLD[i].modelMat);
+        gfc_matrix_scale(MAIN_WORLD[i].modelMat, vector3d(scale2, scale2, scale2));
+        gfc_matrix_translate(MAIN_WORLD[i].modelMat, loc2);
+    }
+
+    sj_free(json_file2);
+
+    gf3d_lights_set_global_light(vector4d(1, 1, 1, 1), vector4d(-1, -1, -1, 1));
 }
 
 /*eol@eof*/

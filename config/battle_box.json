@@ -1,0 +1,17 @@
+{
+  "scale": "20",
+  "spacing": "2000",
+  "grid_width": "3",
+  "grid_height": "3",
+  "world": [
+    { "location": ["-2000", "2000", "-10000"], "bottom_model": "grass" },
+    { "location": ["0", "2000", "-10000"], "bottom_model": "path" },
+    { "location": ["2000", "2000", "-10000"], "bottom_model": "grass" },
+    { "location": ["-2000", "0", "-10000"], "bottom_model": "grass" },
+    { "location": ["0", "0", "-10000"], "bottom_model": "grass" },
+    { "location": ["2000", "0", "-10000"], "bottom_model": "grass" },
+    { "location": ["-2000", "-2000", "-10000"], "bottom_model": "grass" },
+    { "location": ["0", "-2000", "-10000"], "bottom_model": "path" },
+    { "location": ["2000", "-2000", "-10000"], "bottom_model": "grass" }
+  ]
+}

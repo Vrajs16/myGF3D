@@ -95,22 +95,12 @@ void gameloop_load(void)
 
     load_pokedex_json("config/pokedex.json");
 
-    // world_load("config/world.json");
     world_load_json("config/generated_world.json");
-
-    // for (int i = 0; i < get_pokedex().total; i++)
-    //     pokemon_new(vector3d(950 * (i - get_pokedex().total / 2), 2000, 0.0), vector3d(0.0, 0.0, 0.0), get_pokedex().pokemon[i], get_pokedex().pokemon[i].scale);
-
-    // interactable_new(vector3d(-4000, -2000, 0), vector3d(0, 0, 0), "sign", 15);
-    // interactable_new(vector3d(-2000, -2000, 0), vector3d(0, 0, 0), "strength", 400);
-    // interactable_new(vector3d(0, -2000, 0), vector3d(0, 0, 0), "rock", 15);
-    // interactable_new(vector3d(2000, -2000, 0), vector3d(0, 0, 0), "pc", 250);
-    // interactable_new(vector3d(4000, -2000, 0), vector3d(0, 0, 0), "tree", 250);
 
     srand(time(0));
     int r = 1;
     r = rand() % get_pokedex().total;
-    BATTLE_POKEMON = pokemon_new(vector3d(0, -2000, 5000), vector3d(0, 0, M_PI), get_pokedex().pokemon[r], get_pokedex().pokemon[r].scale);
+    BATTLE_POKEMON = pokemon_new(vector3d(0, -2000, -10000), vector3d(0, 0, M_PI), get_pokedex().pokemon[r], get_pokedex().pokemon[r].scale);
     BATTLER_HEALTH_MAX = (float)BATTLE_POKEMON->pokemon.health;
     BATTLER_HEALTH = BATTLER_HEALTH_MAX;
     NEW_BATTLER_HEALTH = BATTLER_HEALTH_MAX;
@@ -136,7 +126,6 @@ void gameloop_update(void)
     gf2d_font_update();
     gf2d_windows_update_all();
     entity_think_all();
-    slog("NO CRASH");
     entity_update_all();
     entity_collide_check_all();
     gf3d_camera_update_view();
