@@ -198,7 +198,7 @@ void gf3d_vgraphics_init(const char *config)
     gf3d_command_system_init(16 * gf3d_swapchain_get_swap_image_count(), gf3d_vgraphics.device);
     gf3d_vgraphics.graphicsCommandPool = gf3d_command_graphics_pool_setup(gf3d_swapchain_get_swap_image_count());
 
-    gf3d_model_manager_init(1024);
+    gf3d_model_manager_init(10000);
     gf2d_sprite_manager_init(1024);
     // gf3d_particle_manager_init(4096);
 

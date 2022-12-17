@@ -5,6 +5,7 @@
 static Pokedex POKEDEX;
 
 void pokemon_think(Entity *self);
+Pokemon pokedex_get_pokemon(char *pokemonName);
 
 Entity *pokemon_new(Vector3D position, Vector3D rotation, Pokemon pokemon, float scale)
 {
@@ -29,6 +30,39 @@ Entity *pokemon_new(Vector3D position, Vector3D rotation, Pokemon pokemon, float
     ent->type = ET_POKEMON;
     ent->pokemon = pokemon;
     vector3d_copy(ent->scale, vector3d(scale, scale, scale));
+    vector3d_copy(ent->position, position);
+    vector3d_copy(ent->rotation, rotation);
+
+    return ent;
+}
+
+Entity *pokemon_new_name(Vector3D position, Vector3D rotation, char *pokemonName)
+{
+    Entity *ent = NULL;
+    TextLine modelfilename;
+    TextLine texturefilename;
+
+    ent = entity_new();
+    if (!ent)
+    {
+        slog("UGH OHHHH, no agumon for you!");
+        return NULL;
+    }
+
+    Pokemon got_pokemon = pokedex_get_pokemon(pokemonName);
+
+    snprintf(modelfilename, GFCLINELEN, "assets/pokemon/%s/%s.obj", pokemonName, pokemonName);
+    snprintf(texturefilename, GFCLINELEN, "assets/pokemon/%s/%s-bake.png", pokemonName, pokemonName);
+    ent->model = gf3d_model_load_full(modelfilename, texturefilename);
+    ent->think = pokemon_think;
+
+    ent->isBox = 1;
+    ent->boundingBox = got_pokemon.boundingBox;
+    //add memory
+    ent->name = strdup(got_pokemon.name);
+    ent->type = ET_POKEMON;
+    ent->pokemon = got_pokemon;
+    vector3d_copy(ent->scale, vector3d(got_pokemon.scale, got_pokemon.scale, got_pokemon.scale));
     vector3d_copy(ent->position, position);
     vector3d_copy(ent->rotation, rotation);
 
@@ -278,9 +312,27 @@ float pokemon_move_multiplier(char *attackMoveType, char *defendType)
     return multiplier;
 }
 
-
-Pokedex get_pokedex(void){
+Pokedex get_pokedex(void)
+{
     return POKEDEX;
+}
+
+Pokemon pokedex_get_pokemon(char *pokemonName)
+{
+    Pokemon pokemon;
+    for (int i = 0; i < POKEDEX.total; i++)
+    {
+        if (strcmp(POKEDEX.pokemon[i].name, pokemonName) == 0)
+        {
+            pokemon = POKEDEX.pokemon[i];
+            break;
+        }
+    }
+    if (pokemon.name == NULL)
+    {
+        printf("Pokemon not found");
+    }
+    return pokemon;
 }
 
 /*eol@eof*/

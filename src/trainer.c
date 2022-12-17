@@ -52,6 +52,8 @@ float STRENGTH_FINAL_ROTATION = 0;
 int ANIMATION_STRENGTH_PLAYING = 0;
 int ANIMATION_STRENGTH_MAX = 50;
 
+int CURRENT_COLLISION_ENTITY_ID = 0;
+
 Entity *OtherTrainer;
 
 void trainer_think(Entity *self);
@@ -133,7 +135,7 @@ Entity *trainer_new(Vector3D position, Vector3D rotation, char *trainer, float s
         vector3d_copy(OtherTrainer->scale, vector3d(scale, scale, scale));
         vector3d_copy(OtherTrainer->rotation, rotation);
         vector3d_copy(OtherTrainer->previousPosition, position);
-        vector3d_copy(OtherTrainer->position, vector3d(0,0,-1000));
+        vector3d_copy(OtherTrainer->position, vector3d(0, 0, -1000));
     }
     return ent;
 }
@@ -164,7 +166,7 @@ void trainer_think(Entity *self)
         rotate.z += .05;
 
     vector3d_add(self->rotation, self->rotation, rotate);
-    TRAINER_ROT_Z = self->rotation.z;
+    TRAINER_ROT_Z = self->rotation.z - M_PI;
 
     // z is up
     float yaw = self->rotation.z;
@@ -226,7 +228,12 @@ void trainer_think(Entity *self)
 
     if ((TREE_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition)) || ANIMATION_TREE_PLAYING)
     {
-        Entity *tree = entity_get("tree");
+        Entity *tree = entity_get("tree", CURRENT_COLLISION_ENTITY_ID);
+        if (!tree)
+        {
+            slog("tree is null");
+            return;
+        }
 
         if (keys[SDL_SCANCODE_E] && !ANIMATION_TREE_PLAYING)
         {
@@ -278,7 +285,7 @@ void trainer_think(Entity *self)
 
     if ((ROCK_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition)) || ANIMATION_ROCK_PLAYING)
     {
-        Entity *rock = entity_get("rock");
+        Entity *rock = entity_get("rock", CURRENT_COLLISION_ENTITY_ID);
         if (keys[SDL_SCANCODE_E] && !ANIMATION_ROCK_PLAYING)
         {
             ANIMATION_ROCK_PLAYING = 1;
@@ -307,7 +314,7 @@ void trainer_think(Entity *self)
 
     if ((STRENGTH_COLLISION == 1 && vector3d_equal(self->position, self->previousPosition)) || ANIMATION_STRENGTH_PLAYING)
     {
-        Entity *strength = entity_get("strength");
+        Entity *strength = entity_get("strength", CURRENT_COLLISION_ENTITY_ID);
         if (keys[SDL_SCANCODE_E] && !ANIMATION_STRENGTH_PLAYING)
         {
             // Move Rock
@@ -322,6 +329,7 @@ void trainer_think(Entity *self)
         {
             if (ANIMATION_STRENGTH_MAX > 0)
             {
+                slog("Moving rock %d", ANIMATION_STRENGTH_MAX);
                 vector3d_add(strength->position, strength->position, STRENGTH_FINAL_POSITION);
                 ANIMATION_STRENGTH_MAX--;
             }
@@ -358,11 +366,12 @@ void trainer_collide(struct Entity_S *self, struct Entity_S *other)
         other->position.x = 0;
         other->position.y = 2000;
         other->position.z = 5000;
+        other->rotation.z = 0;
 
         TRAINER_X = 1000;
         TRAINER_Y = -2000;
         TRAINER_Z = 6000;
-        TRAINER_ROT_Z = M_PI + .2;
+        TRAINER_ROT_Z = .2;
         OP_POKEMON = other;
         OP_HEALTH_MAX = (float)other->pokemon.health;
         OP_HEALTH = OP_HEALTH_MAX;
@@ -378,26 +387,32 @@ void trainer_collide(struct Entity_S *self, struct Entity_S *other)
         if (strcmp(other->name, "sign") == 0 && SIGN_COLLISION == 0)
         {
             SIGN_COLLISION = 1;
+            CURRENT_COLLISION_ENTITY_ID = other->entityID;
             return;
         }
         else if (strcmp(other->name, "tree") == 0 && TREE_COLLISION == 0)
         {
             TREE_COLLISION = 1;
+            slog("%d",other->entityID);
+            CURRENT_COLLISION_ENTITY_ID = other->entityID;
             return;
         }
         else if (strcmp(other->name, "rock") == 0 && ROCK_COLLISION == 0)
         {
             ROCK_COLLISION = 1;
+            CURRENT_COLLISION_ENTITY_ID = other->entityID;
             return;
         }
         else if (strcmp(other->name, "pc") == 0 && PC_COLLISION == 0)
         {
             PC_COLLISION = 1;
+            CURRENT_COLLISION_ENTITY_ID = other->entityID;
             return;
         }
         else if (strcmp(other->name, "strength") == 0 && STRENGTH_COLLISION == 0)
         {
             STRENGTH_COLLISION = 1;
+            CURRENT_COLLISION_ENTITY_ID = other->entityID;
             return;
         }
     }

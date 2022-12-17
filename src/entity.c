@@ -17,7 +17,7 @@ typedef struct
 {
     Entity *entity_list;
     Uint32 entity_count;
-
+    int current_count;
 } EntityManager;
 
 static EntityManager entity_manager = {0};
@@ -43,6 +43,7 @@ void entity_system_init(Uint32 maxEntities)
         return;
     }
     entity_manager.entity_count = maxEntities;
+    entity_manager.current_count = 0;
     atexit(entity_system_close);
     slog("entity_system initialized");
 }
@@ -54,6 +55,8 @@ Entity *entity_new()
     {
         if (!entity_manager.entity_list[i]._inuse) // not used yet, so we can!
         {
+            entity_manager.current_count++;
+            entity_manager.entity_list[i].entityID = entity_manager.current_count;
             entity_manager.entity_list[i]._inuse = 1;
             gfc_matrix_identity(entity_manager.entity_list[i].modelMat);
             entity_manager.entity_list[i].scale.x = 1;
@@ -198,8 +201,8 @@ void entity_collide_check_all()
         entity_collide_check(&entity_manager.entity_list[i]);
     }
 }
- 
-Entity *entity_get(char *name)
+
+Entity *entity_get(char *name, int id)
 {
     int i;
     for (i = 0; i < entity_manager.entity_count; i++)
@@ -208,7 +211,7 @@ Entity *entity_get(char *name)
         {
             continue; // skip this iteration of the loop
         }
-        if (strcmp(entity_manager.entity_list[i].name, name) == 0)
+        if (strcmp(entity_manager.entity_list[i].name, name) == 0 && entity_manager.entity_list[i].entityID == id)
         {
             return &entity_manager.entity_list[i];
         }

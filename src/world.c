@@ -6,6 +6,9 @@
 
 #include "gf3d_lights.h"
 
+#include "entity.h"
+#include "pokemon.h"
+#include "interactable.h"
 #include "world.h"
 /*
 typedef struct
@@ -21,6 +24,7 @@ static World *MAIN_WORLD = NULL;
 
 void world_load(char *filename)
 {
+    return;
     SJson *json, *wjson, *layout, *floor, *wall, *sky;
     int floorCount;
     int wallCount;
@@ -73,7 +77,7 @@ void world_load(char *filename)
     }
     skyCount = sj_array_get_count(sky);
 
-    //Load Battle box
+    // Load Battle box
     SJson *jsonB, *wjsonB, *layoutB, *floorB, *wallB, *skyB;
     int floorCountB;
     int wallCountB;
@@ -127,7 +131,7 @@ void world_load(char *filename)
     }
     skyCountB = sj_array_get_count(skyB);
 
-    //Each world tile is its own model
+    // Each world tile is its own model
     MAIN_WORLD = gfc_allocate_array(sizeof(World), floorCount + wallCount + skyCount + floorCountB + wallCountB + skyCountB); // Remember entity system max 1024
     MAIN_WORLD->entityCount = floorCount + wallCount + skyCount + floorCountB + wallCountB + skyCountB;
     if (!MAIN_WORLD)
@@ -271,7 +275,7 @@ void world_load(char *filename)
             gfc_matrix_translate(MAIN_WORLD[i].modelMat, loc);
         }
 
-        //Loading Battle Arena
+        // Loading Battle Arena
         for (int i = floorCount + wallCount + skyCount; i < floorCount + wallCount + skyCount + floorCountB; i++)
         {
             Vector3D loc;
@@ -372,7 +376,7 @@ void world_load(char *filename)
             }
         }
 
-        for (int i = floorCount + wallCount + skyCount + floorCountB + wallCountB; i < floorCount + wallCount + skyCount + floorCountB + wallCountB + skyCountB;  i++)
+        for (int i = floorCount + wallCount + skyCount + floorCountB + wallCountB; i < floorCount + wallCount + skyCount + floorCountB + wallCountB + skyCountB; i++)
         {
             Vector3D loc;
             TextLine modelfilename;
@@ -438,5 +442,91 @@ void world_delete()
 void world_run_updates(World *world);
 
 void world_add_entity(World *world, Entity *entity);
+
+void world_load_json(char *filename)
+{
+    SJson *json_file;
+    int scale;
+    int spacing;
+    int grid_width;
+    int grid_height;
+    json_file = sj_load(filename);
+    if (!json_file)
+    {
+        slog("failed to load world file %s", filename);
+        return;
+    }
+    sj_object_get_value_as_int(json_file, "scale", &scale);
+    sj_object_get_value_as_int(json_file, "spacing", &spacing);
+    sj_object_get_value_as_int(json_file, "grid_width", &grid_width);
+    sj_object_get_value_as_int(json_file, "grid_height", &grid_height);
+
+    SJson *world = sj_object_get_value(json_file, "world");
+    if (!world)
+    {
+        slog("failed to find world in %s world config", filename);
+        sj_free(json_file);
+        return;
+    }
+    int worldCount = sj_array_get_count(world);
+    slog("worldCount: %i", worldCount);
+
+    if (worldCount > 1024)
+    {
+        slog("worldCount is greater than 1024 it may crash the game");
+    }
+    MAIN_WORLD = gfc_allocate_array(sizeof(World), worldCount); // Remember entity system max 1024
+    MAIN_WORLD->entityCount = worldCount;
+
+    for (int i = 0; i < worldCount; i++)
+    {
+        SJson *tile = sj_array_get_nth(world, i);
+        TextLine modelfilename;
+        TextLine texturefilename;
+        if (!tile)
+        {
+            slog("failed to find tile %d in %s world config", i, filename);
+            sj_free(json_file);
+            return;
+        }
+        const char *bottom_model_name = sj_object_get_value_as_string(tile, "bottom_model");
+        if (!bottom_model_name)
+        {
+            slog("failed to find model in %s world config", filename);
+            sj_free(json_file);
+            return;
+        }
+        Vector3D loc;
+        sj_value_as_vector3d(sj_object_get_value(tile, "location"), &loc);
+        snprintf(modelfilename, GFCLINELEN, "assets/world/%s/%s.obj", (char *)bottom_model_name, (char *)bottom_model_name);
+        snprintf(texturefilename, GFCLINELEN, "assets/world/%s/%s.png", (char *)bottom_model_name, (char *)bottom_model_name);
+        MAIN_WORLD[i].worldModel = gf3d_model_load_full(modelfilename, texturefilename);
+        MAIN_WORLD[i].color = gfc_color(1, 1, 1, 1);
+        gfc_matrix_identity(MAIN_WORLD[i].modelMat);
+        gfc_matrix_scale(MAIN_WORLD[i].modelMat, vector3d(scale, scale, scale));
+        gfc_matrix_translate(MAIN_WORLD[i].modelMat, loc);
+
+        const char *top_model_name = sj_object_get_value_as_string(tile, "top_model");
+        if (top_model_name)
+        {
+
+            float rotation;
+            int type;
+            sj_object_get_value_as_float(tile, "top_model_rotation", &rotation);
+            rotation = rotation * (M_PI / 180);
+            sj_object_get_value_as_int(tile, "top_model_type", &type);
+            if (type == 1)
+            {
+                pokemon_new_name(loc, vector3d(0, 0, rotation - M_PI), top_model_name);
+            }
+            else if (type == 2)
+            {
+                interactable_new(loc, vector3d(0, 0, rotation), top_model_name);
+            }
+        }
+    }
+    sj_free(json_file);
+    gf3d_lights_set_global_light(vector4d(1, 1, 1, 1), vector4d(-1, -1, 0, 1));
+}
 
 /*eol@eof*/

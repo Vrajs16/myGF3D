@@ -29,4 +29,6 @@ void world_run_updates(World *world);
 
 void world_add_entity(World *world, Entity *entity);
 
+void world_load_json(char *filename);
+
 #endif

@@ -45,4 +45,6 @@ float pokemon_move_multiplier(char *attackMoveType, char *defendType);
 
 Pokedex get_pokedex(void);
 
+Entity *pokemon_new_name(Vector3D position, Vector3D rotation, char *pokemonName);
+
 #endif

@@ -93,12 +93,19 @@ void gameloop_load(void)
 
     slog_sync();
 
-    world_load("config/world.json");
-
     load_pokedex_json("config/pokedex.json");
 
-    for (int i = 0; i < get_pokedex().total; i++)
-        pokemon_new(vector3d(950 * (i - get_pokedex().total / 2), 2000, 0.0), vector3d(0.0, 0.0, 0.0), get_pokedex().pokemon[i], get_pokedex().pokemon[i].scale);
+    // world_load("config/world.json");
+    world_load_json("config/generated_world.json");
+
+    // for (int i = 0; i < get_pokedex().total; i++)
+    //     pokemon_new(vector3d(950 * (i - get_pokedex().total / 2), 2000, 0.0), vector3d(0.0, 0.0, 0.0), get_pokedex().pokemon[i], get_pokedex().pokemon[i].scale);
+
+    // interactable_new(vector3d(-4000, -2000, 0), vector3d(0, 0, 0), "sign", 15);
+    // interactable_new(vector3d(-2000, -2000, 0), vector3d(0, 0, 0), "strength", 400);
+    // interactable_new(vector3d(0, -2000, 0), vector3d(0, 0, 0), "rock", 15);
+    // interactable_new(vector3d(2000, -2000, 0), vector3d(0, 0, 0), "pc", 250);
+    // interactable_new(vector3d(4000, -2000, 0), vector3d(0, 0, 0), "tree", 250);
 
     srand(time(0));
     int r = 1;
@@ -109,15 +116,10 @@ void gameloop_load(void)
     NEW_BATTLER_HEALTH = BATTLER_HEALTH_MAX;
 
     sprintf(BATTLER_HEALTH_TEXT, "%d%%", (int)(BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100));
-    trainer_new(vector3d(0, 0, 0), vector3d(0, 0, M_PI), "calem", 200.0);
-    interactable_new(vector3d(-4000, -2000, 0), vector3d(0, 0, 0), "sign", 15);
-    interactable_new(vector3d(-2000, -2000, 0), vector3d(0, 0, 0), "strength", 400);
-    interactable_new(vector3d(0, -2000, 0), vector3d(0, 0, 0), "rock", 15);
-    interactable_new(vector3d(2000, -2000, 0), vector3d(0, 0, 0), "pc", 250);
-    interactable_new(vector3d(4000, -2000, 0), vector3d(0, 0, 0), "tree", 250);
+    trainer_new(vector3d(0, 0, 0), vector3d(0, 0, 0), "calem", 200.0);
     slog_sync();
     gf3d_camera_set_scale(vector3d(1, 1, 1));
-    player_new(vector3d(0, -1800, 1000));
+    player_new(vector3d(0, 1800, 1000));
 
     // main game loop
     slog("gf3d main loop begin");
@@ -204,14 +206,14 @@ void gameloop_draw(void)
                 slog("You won");
                 playSound("normal-music", -1, .3, 1, 1);
                 BATTLE = 0;
-                entity_free(entity_get(OP_POKEMON->name));
+                entity_free(entity_get(OP_POKEMON->name, OP_POKEMON->entityID));
             }
             else if ((int)BATTLER_HEALTH <= 0)
             {
                 slog("You lost");
                 playSound("normal-music", -1, .3, 1, 1);
                 BATTLE = 0;
-                entity_free(entity_get(OP_POKEMON->name));
+                entity_free(entity_get(OP_POKEMON->name, OP_POKEMON->entityID));
                 BATTLER_POKEMON_DEAD = 1;
             }
             else
@@ -389,5 +391,5 @@ void onRunSelected(void *data)
     selectMoves = NULL;
     playSound("normal-music", -1, .3, 1, 1);
     BATTLE = 0;
-    entity_free(entity_get(OP_POKEMON->name));
+    entity_free(entity_get(OP_POKEMON->name, OP_POKEMON->entityID));
 }

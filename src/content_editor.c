@@ -113,8 +113,8 @@ const char *POKEMON_TEXTURE_NAMES[POKEMON_TEXTURE_COUNT] = {
 };
 
 const char *INTERACTABLE_TEXTURE_NAMES[INTERACTABLE_TEXTURE_COUNT] = {
-    "boulder",
-    "healer",
+    "strength",
+    "pc",
     "rock",
     "tree",
     "sign",
@@ -124,7 +124,8 @@ const char *ACTION_TEXTURE_NAMES[ACTION_TEXTURE_COUNT] = {
     "save",
     "clean",
     "delete",
-    "rotate"};
+    "rotate",
+};
 
 TileTexture MAP_TEXTURES[MAP_TEXTURE_COUNT];
 TileTexture POKEMON_TEXTURES[POKEMON_TEXTURE_COUNT];
@@ -586,6 +587,7 @@ void save_grid()
             {
                 sj_object_insert(world_object, "top_model", sj_new_str(GRID[x][y].TopTextureName));
                 sj_object_insert(world_object, "top_model_rotation", sj_new_float(GRID[x][y].TopTextureRotation));
+                sj_object_insert(world_object, "top_model_type", sj_new_int(GRID[x][y].TopTextureType));
             }
             sj_array_append(world, world_object);
         }

@@ -3,11 +3,12 @@
 #include "entity.h"
 #include "gfc_vector.h"
 
-Entity *interactable_new(Vector3D position, Vector3D rotation, char *filename, float scale)
+Entity *interactable_new(Vector3D position, Vector3D rotation, char *filename)
 {
     Entity *ent = NULL;
     TextLine modelfilename;
     TextLine texturefilename;
+    float scale;
 
     ent = entity_new();
     if (!ent)
@@ -26,6 +27,7 @@ Entity *interactable_new(Vector3D position, Vector3D rotation, char *filename, f
             snprintf(modelfilename, GFCLINELEN, "assets/interactables/%s/breaking/%s%d.obj", filename, filename, i + 1);
             ent->runAniModels[i] = gf3d_model_load_full(modelfilename, texturefilename);
         }
+        scale = 15;
     }
 
     if(strcmp("tree", filename) == 0){
@@ -35,12 +37,26 @@ Entity *interactable_new(Vector3D position, Vector3D rotation, char *filename, f
             snprintf(modelfilename, GFCLINELEN, "assets/interactables/%s/breaking/%s%d.obj", filename, filename, i + 1);
             ent->runAniModels[i] = gf3d_model_load_full(modelfilename, texturefilename);
         }
+        scale = 250;
+    }
+
+    if(strcmp("sign", filename) == 0){
+        scale = 15;
+    }
+    if(strcmp("pc", filename) == 0){
+        scale = 250;
+    }
+    if(strcmp("strength", filename) == 0){
+        scale = 400;
     }
 
 
     ent->isBox = 1;
     ent->boundingBox = gfc_box(0, 0, 350, 350, 350, 350);
-    ent->name = filename;
+    slog("filename %s", filename);
+    ent->name = malloc(sizeof(char) * strlen(filename) + 1);
+    strcpy(ent->name, filename);
+
     ent->type = ET_INTERACTABLE;
     vector3d_copy(ent->scale, vector3d(scale, scale, scale));
     vector3d_copy(ent->rotation, rotation);

@@ -41,6 +41,7 @@ typedef struct Entity_S
     void (*draw)(struct Entity_S *self);                                             /**<pointer to an optional extra draw funciton*/
     void (*damage)(struct Entity_S *self, float damage, struct Entity_S *inflictor); /**<pointer to the think function*/
     void (*onDeath)(struct Entity_S *self);                                          /**<pointer to an funciton to call when the entity dies*/
+    int entityID;                                                                    /**<unique ID for the entity*/
 
     Vector3D previousPosition; /**<position of the entity last frame*/
     Vector3D position;
@@ -63,6 +64,7 @@ typedef struct Entity_S
 
     Pokemon pokemon;
 
+
     // animation models
     Model **runAniModels;
     Model **idleAniModels;
@@ -83,7 +85,7 @@ void entity_system_init(Uint32 maxEntities);
  */
 Entity *entity_new();
 
-Entity *entity_get(char *name);
+Entity *entity_get(char *name, int id);
 
 /**
  * @brief free a previously created entity from memory
