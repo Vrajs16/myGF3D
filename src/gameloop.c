@@ -97,6 +97,8 @@ void gameloop_load(void)
 
     world_load_json("config/generated_world.json");
 
+    interactable_new(vector3d(1000, 1000, 0), vector3d(0, 0, 0), "building_tall");
+
     srand(time(0));
     int r = 1;
     r = rand() % get_pokedex().total;
@@ -270,7 +272,6 @@ void gameloop_draw(void)
             gf2d_font_draw_line_tag("Heal Pokemon To Battle!", FT_H2, gfc_color8(255, 255, 255, 255), vector2d(20, 20));
             gf2d_draw_rect(gfc_rect(10, 10, 330, 50), gfc_color8(255, 255, 255, 255));
         }
-
         if (SIGN_COLLISION)
         {
             gf2d_draw_rect_filled(gfc_rect(10, 10, 300, 50), gfc_color8(128, 128, 128, 255));

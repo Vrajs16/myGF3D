@@ -29,7 +29,7 @@ const SDL_Rect MENU_BACKGROUND = {
     .x = 0,
     .y = 0,
     .w = GRID_CELL_SIZE * 5,
-    .h = GRID_CELL_SIZE * 7,
+    .h = GRID_CELL_SIZE * 8,
 };
 
 int mouseX;
@@ -92,7 +92,7 @@ Grid GRID[GRID_WIDTH][GRID_HEIGHT];
 
 const int MAP_TEXTURE_COUNT = 2;
 const int POKEMON_TEXTURE_COUNT = 10;
-const int INTERACTABLE_TEXTURE_COUNT = 7;
+const int INTERACTABLE_TEXTURE_COUNT = 8;
 const int ACTION_TEXTURE_COUNT = 4;
 
 const char *MAP_TEXTURE_NAMES[MAP_TEXTURE_COUNT] = {
@@ -118,8 +118,9 @@ const char *INTERACTABLE_TEXTURE_NAMES[INTERACTABLE_TEXTURE_COUNT] = {
     "rock",
     "tree",
     "sign",
-    "small_building",
-    "tall_building"
+    "building_small",
+    "building_tall",
+    "npc"
 };
 
 const char *ACTION_TEXTURE_NAMES[ACTION_TEXTURE_COUNT] = {

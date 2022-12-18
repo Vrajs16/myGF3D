@@ -46,8 +46,14 @@ Entity *interactable_new(Vector3D position, Vector3D rotation, char *filename)
         scale = 250;
     else if (strcmp("strength", filename) == 0)
         scale = 400;
+    else if (strcmp("npc", filename) == 0)
+        scale = 15;
+    else if (strcmp("building_small", filename) == 0)
+        scale = 1;
+    else if (strcmp("building_tall", filename) == 0)
+        scale = 1000;
     else
-        slog("ERROR!");
+        scale = 15;
 
     ent->isBox = 1;
     ent->boundingBox = gfc_box(0, 0, 350, 350, 350, 350);
