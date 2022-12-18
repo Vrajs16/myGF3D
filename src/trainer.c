@@ -330,7 +330,7 @@ void trainer_think(Entity *self)
             slog("You used Strength!");
             // Move bolder 1500 units in the direction the trainer is facing
             STRENGTH_FINAL_ROTATION = TRAINER_ROT_Z;
-            vector3d_set(STRENGTH_FINAL_POSITION, round(30 * sin(TRAINER_ROT_Z)), round(30 * cos(TRAINER_ROT_Z + M_PI)), 0);
+            vector3d_set(STRENGTH_FINAL_POSITION, -round(30 * sin(TRAINER_ROT_Z)), -round(30 * cos(TRAINER_ROT_Z + M_PI)), 0);
             STRENGTH_COLLISION = 0;
             ANIMATION_STRENGTH_PLAYING = 1;
         }
