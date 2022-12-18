@@ -93,7 +93,7 @@ Grid GRID[GRID_WIDTH][GRID_HEIGHT];
 const int MAP_TEXTURE_COUNT = 2;
 const int POKEMON_TEXTURE_COUNT = 10;
 const int INTERACTABLE_TEXTURE_COUNT = 8;
-const int ACTION_TEXTURE_COUNT = 4;
+const int ACTION_TEXTURE_COUNT = 5;
 
 const char *MAP_TEXTURE_NAMES[MAP_TEXTURE_COUNT] = {
     "path",
@@ -120,15 +120,14 @@ const char *INTERACTABLE_TEXTURE_NAMES[INTERACTABLE_TEXTURE_COUNT] = {
     "sign",
     "building_small",
     "building_tall",
-    "npc"
-};
+    "npc"};
 
 const char *ACTION_TEXTURE_NAMES[ACTION_TEXTURE_COUNT] = {
     "save",
     "clean",
     "delete",
     "rotate",
-};
+    "upload"};
 
 TileTexture MAP_TEXTURES[MAP_TEXTURE_COUNT];
 TileTexture POKEMON_TEXTURES[POKEMON_TEXTURE_COUNT];
@@ -144,6 +143,7 @@ void world_to_screen(int fWorldX, int fWorldY, int *nScreenX, int *nScreenY);
 void screen_to_world(int nScreenX, int nScreenY, int *fWorldX, int *fWorldY);
 void save_grid(void);
 void clean_grid(void);
+void load_grid(void);
 
 void content_editor_setup_renderer()
 {
@@ -320,6 +320,12 @@ void content_editor_update()
                             CURRENTLY_SELECTED_TEXTURE_ITEM = ACTION_TEXTURES[i].rect;
                             CURRENTLY_SELECTED_TEXTURE.id = -1;
                         }
+                        else if (strcmp(ACTION_TEXTURES[i].name, "upload") == 0)
+                        {
+                            load_grid();
+                            CURRENTLY_SELECTED_TEXTURE_ITEM = ACTION_TEXTURES[i].rect;
+                            CURRENTLY_SELECTED_TEXTURE.id = -1;
+                        }
                         else if (strcmp(ACTION_TEXTURES[i].name, "delete") == 0)
                         {
                             CURRENTLY_SELECTED_TEXTURE_ITEM = ACTION_TEXTURES[i].rect;
@@ -379,15 +385,22 @@ void content_editor_update()
                         return;
                     else if (CURRENTLY_SELECTED_TEXTURE.id == -2)
                     {
-                        GRID[gridX][gridY].BottomTexture = NULL;
-                        GRID[gridX][gridY].TopTexture = NULL;
-                        GRID[gridX][gridY].BottomTextureSet = 0;
-                        GRID[gridX][gridY].TopTextureSet = 0;
-                        GRID[gridX][gridY].TopTextureRotation = 0;
-                        strcpy(GRID[gridX][gridY].TopTextureName, "");
-                        strcpy(GRID[gridX][gridY].BottomTextureName, "");
-                        GRID[gridX][gridY].BottomTextureType = MODEL_NONE;
-                        GRID[gridX][gridY].TopTextureType = MODEL_NONE;
+                        if (GRID[gridX][gridY].TopTextureSet)
+                        {
+                            GRID[gridX][gridY].TopTexture = NULL;
+                            GRID[gridX][gridY].TopTextureSet = 0;
+                            GRID[gridX][gridY].TopTextureRotation = 0;
+                            strcpy(GRID[gridX][gridY].TopTextureName, "");
+                            GRID[gridX][gridY].TopTextureType = MODEL_NONE;
+                        }
+                        else if (GRID[gridX][gridY].BottomTextureSet)
+                        {
+
+                            GRID[gridX][gridY].BottomTexture = NULL;
+                            GRID[gridX][gridY].BottomTextureSet = 0;
+                            strcpy(GRID[gridX][gridY].BottomTextureName, "");
+                            GRID[gridX][gridY].BottomTextureType = MODEL_NONE;
+                        }
                     }
                     else if (CURRENTLY_SELECTED_TEXTURE.id == -3)
                     {
@@ -406,6 +419,7 @@ void content_editor_update()
                     {
                         GRID[gridX][gridY].TopTexture = CURRENTLY_SELECTED_TEXTURE.texture;
                         GRID[gridX][gridY].TopTextureSet = 1;
+                        GRID[gridX][gridY].TopTextureRotation = 0;
                         strcpy(GRID[gridX][gridY].TopTextureName, CURRENTLY_SELECTED_TEXTURE.name);
                         GRID[gridX][gridY].TopTextureType = MODEL_POKEMON;
                     }
@@ -413,6 +427,7 @@ void content_editor_update()
                     {
                         GRID[gridX][gridY].TopTexture = CURRENTLY_SELECTED_TEXTURE.texture;
                         GRID[gridX][gridY].TopTextureSet = 1;
+                        GRID[gridX][gridY].TopTextureRotation = 0;
                         strcpy(GRID[gridX][gridY].TopTextureName, CURRENTLY_SELECTED_TEXTURE.name);
                         GRID[gridX][gridY].TopTextureType = MODEL_INTERACTABLE;
                     }
@@ -535,44 +550,6 @@ void screen_to_world(int nScreenX, int nScreenY, int *fWorldX, int *fWorldY)
 void save_grid()
 {
     SDL_Log("Saving grid to file...");
-    // Need to save the grid into a json file
-    /*
-        typedef struct
-        {
-            SDL_Rect rect;
-            SDL_Texture *BottomTexture;
-            int BottomTextureSet;
-            char BottomTextureName[20];
-            SDL_Texture *TopTexture;
-            int TopTextureSet;
-            char TopTextureName[20];
-            double TopTextureRotation;
-            ModelType BottomTextureType;
-            ModelType TopTextureType;
-        } Grid;
-
-        Use GRID_SPACING for the location of the grid centered at 0,0
-
-
-
-    */
-
-    /*
-    Format:
-        {
-            "scale": GRID_SCALE,
-            "world":[
-                {
-                    "location": [x, y, 0],
-                    "bottom_model": "texture_name",
-                    "top_model": "texture_name",
-                    "top_model_rotation": 0
-                },
-                ...
-            ]
-        }
-     */
-
     SJson *json_file = sj_object_new();
     sj_object_insert(json_file, "scale", sj_new_int(GRID_SCALE));
     sj_object_insert(json_file, "spacing", sj_new_int(GRID_SPACING));
@@ -626,4 +603,97 @@ void clean_grid()
             GRID[x][y].TopTextureType = MODEL_NONE;
         }
     }
+}
+
+void load_grid()
+{
+    SDL_Log("Loading grid from file...");
+    SJson *json_file = sj_load("config/generated_world.json");
+    if (json_file == NULL)
+    {
+        SDL_Log("Failed to load grid from file!");
+        return;
+    }
+    SJson *world = sj_object_get_value(json_file, "world");
+    if (world == NULL)
+    {
+        SDL_Log("Failed to load grid from file!");
+        return;
+    }
+    int count = 0;
+
+    for (int x = 0; x < GRID_WIDTH; x++)
+    {
+        for (int y = 0; y < GRID_HEIGHT; y++)
+        {
+            SJson *world_object = sj_array_get_nth(world, count);
+            count++;
+            SJson *location = sj_object_get_value(world_object, "location");
+            int loc_x, loc_y;
+            sj_get_integer_value(sj_array_get_nth(location, 0), &loc_x);
+            sj_get_integer_value(sj_array_get_nth(location, 1), &loc_y);
+
+            loc_x = (loc_x + (GRID_SPACING * GRID_WIDTH / 2 - GRID_SPACING / 2)) / GRID_SCALE_FACTOR;
+            loc_y = (loc_y + (GRID_SPACING * GRID_WIDTH / 2 - GRID_SPACING / 2)) / GRID_SCALE_FACTOR;
+
+            GRID[x][y].rect.x = loc_x;
+            GRID[x][y].rect.y = loc_y;
+            GRID[x][y].rect.w = GRID_CELL_SIZE;
+            GRID[x][y].rect.h = GRID_CELL_SIZE;
+
+            const char *bottom_name = sj_object_get_value_as_string(world_object, "bottom_model");
+            if (bottom_name == NULL)
+            {
+                SDL_Log("Failed to bottom_model from file!");
+                return;
+            }
+
+            for (int k = 0; k < MAP_TEXTURE_COUNT; k++)
+            {
+                if (strcmp(bottom_name, MAP_TEXTURES[k].name) == 0)
+                {
+                    GRID[x][y].BottomTexture = MAP_TEXTURES[k].texture;
+                    GRID[x][y].BottomTextureSet = 1;
+                    GRID[x][y].BottomTextureType = MODEL_MAP;
+                    strcpy(GRID[x][y].BottomTextureName, bottom_name);
+                    break;
+                }
+            }
+
+            const char *top_name = sj_object_get_value_as_string(world_object, "top_model");
+            if (top_name != NULL)
+            {
+                for (int l = 0; l < POKEMON_TEXTURE_COUNT; l++)
+                {
+                    if (strcmp(top_name, POKEMON_TEXTURES[l].name) == 0)
+                    {
+                        GRID[x][y].TopTexture = POKEMON_TEXTURES[l].texture;
+                        GRID[x][y].TopTextureSet = 1;
+                        GRID[x][y].TopTextureType = MODEL_POKEMON;
+                        strcpy(GRID[x][y].TopTextureName, top_name);
+                        float rotation;
+                        sj_object_get_value_as_float(world_object, "top_model_rotation", &rotation);
+                        GRID[x][y].TopTextureRotation = (double)rotation;
+                        break;
+                    }
+                }
+
+                for (int h = 0; h < INTERACTABLE_TEXTURE_COUNT; h++)
+                {
+                    if (strcmp(top_name, INTERACTABLE_TEXTURES[h].name) == 0)
+                    {
+                        GRID[x][y].TopTexture = INTERACTABLE_TEXTURES[h].texture;
+                        GRID[x][y].TopTextureSet = 1;
+                        GRID[x][y].TopTextureType = MODEL_INTERACTABLE;
+                        strcpy(GRID[x][y].TopTextureName, top_name);
+                        float rotation;
+                        sj_object_get_value_as_float(world_object, "top_model_rotation", &rotation);
+                        GRID[x][y].TopTextureRotation = (double)rotation;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    SDL_Log("Loaded grid from file!");
 }

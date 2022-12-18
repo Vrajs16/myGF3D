@@ -46,6 +46,7 @@
     "content_editor.h": "c",
     "close_code.h": "c",
     "simple_json_object.h": "c",
-    "simple_json_list.h": "c"
+    "simple_json_list.h": "c",
+    "gf3d_uniform_buffers.h": "c"
   }
 }
