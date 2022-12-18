@@ -97,8 +97,6 @@ void gameloop_load(void)
 
     world_load_json("config/generated_world.json");
 
-    interactable_new(vector3d(1000, 1000, 0), vector3d(0, 0, 0), "building_tall");
-
     srand(time(0));
     int r = 1;
     r = rand() % get_pokedex().total;

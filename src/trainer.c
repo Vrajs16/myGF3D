@@ -174,7 +174,7 @@ void trainer_think(Entity *self)
     // z is up
     float yaw = self->rotation.z;
 
-    vector3d_set(forward, -sin(yaw) * 30, cos(yaw) * 30, 0);
+    vector3d_set(forward, -sin(yaw) * 100, cos(yaw) * 100, 0);
     vector3d_set(moveDir, 0, 0, 0);
 
     if (keys[SDL_SCANCODE_W])

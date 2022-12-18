@@ -37,6 +37,10 @@ void world_draw()
         slog("world has no model");
         return; // no model to draw, do nothing
     }
+    if (!MAIN_WORLD->sky)
+        slog("world has no sky");
+    else
+        gf3d_model_draw_sky(MAIN_WORLD->sky, MAIN_WORLD->skyMat, gfc_color(1, 1, 1, 1));
     for (int i = 0; i < MAIN_WORLD->entityCount; i++)
     {
         gf3d_model_draw(MAIN_WORLD[i].worldModel, MAIN_WORLD[i].modelMat, gfc_color_to_vector4f(MAIN_WORLD[i].color), vector4d(0, 0, 0, 0));
@@ -82,7 +86,6 @@ void world_load_json(char *filename)
         return;
     }
     int tilecount = sj_array_get_count(world);
-    slog("tilecount: %i", tilecount);
 
     // load battle box
     SJson *json_file2;
@@ -111,7 +114,6 @@ void world_load_json(char *filename)
         return;
     }
     int tilecount2 = sj_array_get_count(world2);
-    slog("tilecount2: %i", tilecount2);
 
     if (tilecount + tilecount2 > 1024)
     {
@@ -202,7 +204,6 @@ void world_load_json(char *filename)
         }
         Vector3D loc2;
         sj_value_as_vector3d(sj_object_get_value(tile2, "location"), &loc2);
-        slog("loc2: %f %f %f", loc2.x, loc2.y, loc2.z);
         snprintf(modelfilename, GFCLINELEN, "assets/world/%s/%s.obj", (char *)bottom_model_name2, (char *)bottom_model_name2);
         snprintf(texturefilename, GFCLINELEN, "assets/world/%s/%s.png", (char *)bottom_model_name2, (char *)bottom_model_name2);
         MAIN_WORLD[i].worldModel = gf3d_model_load_full(modelfilename, texturefilename);
@@ -215,6 +216,18 @@ void world_load_json(char *filename)
     sj_free(json_file2);
 
     gf3d_lights_set_global_light(vector4d(1, 1, 1, 1), vector4d(-1, -1, -1, 1));
+
+    // Load skybox
+    Vector3D skyboxScale = {1, 1, 1};
+    TextLine modelfilenameSky;
+    TextLine texturefilenameSky;
+    snprintf(modelfilenameSky, GFCLINELEN, "assets/models/sky/skybox.obj");
+    snprintf(texturefilenameSky, GFCLINELEN, "assets/models/sky/skybox-bake.png");
+    MAIN_WORLD->sky = gf3d_model_load_full(modelfilenameSky, texturefilenameSky);
+    gfc_matrix_identity(MAIN_WORLD->skyMat);
+    gfc_matrix_scale(MAIN_WORLD->skyMat, skyboxScale);
+    //shift skybox up so I can see it
+    gfc_matrix_translate(MAIN_WORLD->skyMat, vector3d(0, 0, .4));
 }
 
 /*eol@eof*/

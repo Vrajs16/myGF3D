@@ -15,6 +15,8 @@ typedef struct
 {
     Matrix4 modelMat;
     Model *worldModel;
+    Model *sky;
+    Matrix4 skyMat;
     int entityCount;
     Color color;
 } World;
