@@ -227,7 +227,6 @@ void world_load_json(char *filename)
     gfc_matrix_identity(MAIN_WORLD->skyMat);
     gfc_matrix_scale(MAIN_WORLD->skyMat, skyboxScale);
     //shift skybox up so I can see it
-    gfc_matrix_translate(MAIN_WORLD->skyMat, vector3d(0, 0, .4));
 }
 
 /*eol@eof*/
