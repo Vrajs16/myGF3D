@@ -58,7 +58,7 @@ Entity *pokemon_new_name(Vector3D position, Vector3D rotation, char *pokemonName
 
     ent->isBox = 1;
     ent->boundingBox = got_pokemon.boundingBox;
-    //add memory
+    // add memory
     ent->name = strdup(got_pokemon.name);
     ent->type = ET_POKEMON;
     ent->pokemon = got_pokemon;
@@ -150,7 +150,7 @@ void load_pokedex_json(char *filename)
         }
         POKEDEX.pokemon[i].type = (char *)type;
         sj_get_bool_value(sj_object_get_value(pokemon, "evolution"), &POKEDEX.pokemon[i].evolution);
-        if(POKEDEX.pokemon[i].evolution)
+        if (POKEDEX.pokemon[i].evolution)
         {
             const char *evolution = sj_object_get_value_as_string(pokemon, "evolution_name");
             if (!evolution)

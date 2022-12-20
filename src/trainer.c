@@ -5,6 +5,7 @@
 #include "gf2d_windows_common.h"
 #include "soundmanager.h"
 #include "multiplayer.h"
+#include "pokemon.h";
 
 float TRAINER_X = 0;
 float TRAINER_Y = 0;
@@ -39,6 +40,8 @@ extern float NEW_BATTLER_HEALTH;
 extern char BATTLER_HEALTH_TEXT[5];
 extern int BATTLER_POKEMON_DEAD;
 
+extern Sprite *BATTLE_SPRITE;
+
 extern int MULTIPLAYER;
 
 int MOVING = 0;
@@ -61,6 +64,11 @@ int ANIMATION_STRENGTH_PLAYING = 0;
 int ANIMATION_STRENGTH_MAX = 50;
 
 int CURRENT_COLLISION_ENTITY_ID = 0;
+
+int startingAnimationEvolution = 1;
+float animationFinishRot;
+float animationRot;
+Entity *animationFinishEntity;
 
 Entity *OtherTrainer;
 
@@ -161,20 +169,32 @@ void trainer_think(Entity *self)
     float evolveAnimationRotation = self->rotation.z;
     if (EVOLVE_ANIMATION)
     {
-        // Need to rotate camera around the pokemon and the pokemon to switch between models
-        // slog("Playing evolve animation");
-        float animationFinishRot = evolveAnimationRotation + (4 * M_PI);
-        // Move the position of the pokemon to be infront of the trainer 1000 units away depending on the rotation of the trainer
-        BATTLE_POKEMON->position = vector3d(self->position.x + cos(self->rotation.z - M_PI_2) * 2000, self->position.y + sin(self->rotation.z - M_PI_2) * 2000, 0);
-        BATTLE_POKEMON->rotation = vector3d(0, 0, self->rotation.z - M_PI);
-        TRAINER_X = BATTLE_POKEMON->position.x;
-        TRAINER_Y = BATTLE_POKEMON->position.y;
-
-        // Set the TRAINER ROT_Z infront of the camera and increase the camera rotation until it makes 360 degrees which is 2PI
-
+        if (startingAnimationEvolution)
+        {
+            animationFinishEntity = pokemon_new_name(vector3d(self->position.x + cos(self->rotation.z - M_PI_2) * 2000, self->position.y + sin(self->rotation.z - M_PI_2) * 2000, 0), vector3d(0, 0, self->rotation.z - M_PI), BATTLE_POKEMON->pokemon.evolutionName);
+            animationFinishRot = evolveAnimationRotation + (4 * M_PI);
+            BATTLE_POKEMON->position = vector3d(self->position.x + cos(self->rotation.z - M_PI_2) * 2000, self->position.y + sin(self->rotation.z - M_PI_2) * 2000, 0);
+            BATTLE_POKEMON->rotation = vector3d(0, 0, self->rotation.z - M_PI);
+            TRAINER_X = BATTLE_POKEMON->position.x;
+            TRAINER_Y = BATTLE_POKEMON->position.y;
+            startingAnimationEvolution = 0;
+            animationRot = 0;
+        }
         if (TRAINER_ROT_Z < animationFinishRot)
         {
-            TRAINER_ROT_Z += .02;
+
+            // Scale the animationFinishEntity and The BATTLE_POKEMON so that they look like they are evolving and switching places, use animationRot
+            if (animationRot > 8 * M_PI)
+            {
+                animationFinishEntity->scale = vector3d(animationFinishEntity->pokemon.scale, animationFinishEntity->pokemon.scale, animationFinishEntity->pokemon.scale);
+            }
+            else
+            {
+                animationFinishEntity->scale = vector3d(animationFinishEntity->pokemon.scale * sin(animationRot), animationFinishEntity->pokemon.scale * sin(animationRot), animationFinishEntity->pokemon.scale * sin(animationRot));
+                BATTLE_POKEMON->scale = vector3d(BATTLE_POKEMON->pokemon.scale * sin(animationRot + M_PI), BATTLE_POKEMON->pokemon.scale * sin(animationRot + M_PI), BATTLE_POKEMON->pokemon.scale * sin(animationRot + M_PI));
+                animationRot += M_PI / 40;
+            }
+            TRAINER_ROT_Z += M_PI_4 / 40;
             return;
         }
         else
@@ -185,8 +205,20 @@ void trainer_think(Entity *self)
             self->rotation.z = animationFinishRot;
             TRAINER_X = self->position.x;
             TRAINER_Y = self->position.y;
+
+            // Need to set BATTLE_POKEMON to the new pokemon
+            entity_free(BATTLE_POKEMON);
+            gf2d_sprite_free(BATTLE_SPRITE);
+            BATTLE_POKEMON = animationFinishEntity;
+            BATTLE_POKEMON->scale = vector3d(BATTLE_POKEMON->pokemon.scale, BATTLE_POKEMON->pokemon.scale, BATTLE_POKEMON->pokemon.scale);
+            BATTLER_HEALTH_MAX = (float)BATTLE_POKEMON->pokemon.health;
+            NEW_BATTLER_HEALTH = BATTLER_HEALTH_MAX;
+            BATTLER_HEALTH = BATTLER_HEALTH_MAX;
             BATTLE_POKEMON->rotation = vector3d(0, 0, M_PI);
             BATTLE_POKEMON->position = vector3d(0, -2000, -10000);
+            TextLine pokemon_sprite;
+            snprintf(pokemon_sprite, GFCLINELEN, "assets/content_editor/%s.png", BATTLE_POKEMON->pokemon.name);
+            BATTLE_SPRITE = gf2d_sprite_load_image(pokemon_sprite);
         }
         // CAN_EVOLVE = 0;
         // EVOLVE_ANIMATION = 0;
