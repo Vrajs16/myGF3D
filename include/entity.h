@@ -18,6 +18,7 @@ typedef struct
     int level;
     float scale;
     short evolution;
+    char *evolutionName;
     int health;
     char *type;
     Box boundingBox;

@@ -150,6 +150,17 @@ void load_pokedex_json(char *filename)
         }
         POKEDEX.pokemon[i].type = (char *)type;
         sj_get_bool_value(sj_object_get_value(pokemon, "evolution"), &POKEDEX.pokemon[i].evolution);
+        if(POKEDEX.pokemon[i].evolution)
+        {
+            const char *evolution = sj_object_get_value_as_string(pokemon, "evolution_name");
+            if (!evolution)
+            {
+                slog("failed to find evolutionName in %s", filename);
+                sj_free(json);
+                return;
+            }
+            POKEDEX.pokemon[i].evolutionName = (char *)evolution;
+        }
         sj_get_integer_value(sj_object_get_value(pokemon, "health"), &POKEDEX.pokemon[i].health);
 
         SJson *moves = sj_object_get_value(pokemon, "moves");

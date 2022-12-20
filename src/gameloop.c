@@ -52,6 +52,10 @@ float NEW_BATTLER_HEALTH;
 float BATTLER_HEALTH_MAX;
 char BATTLER_HEALTH_TEXT[5];
 int BATTLER_POKEMON_DEAD;
+short CAN_EVOLVE = -1;
+int EVOLVE_ANIMATION = 0;
+
+Sprite *BATTLE_SPRITE;
 
 int CONTENT_EDITOR_GAME_DRAW = 0;
 
@@ -100,10 +104,19 @@ void gameloop_load(void)
     srand(time(0));
     int r = 1;
     r = rand() % get_pokedex().total;
-    BATTLE_POKEMON = pokemon_new(vector3d(0, -2000, -10000), vector3d(0, 0, M_PI), get_pokedex().pokemon[r], get_pokedex().pokemon[r].scale);
+    BATTLE_POKEMON = pokemon_new(vector3d(0, -2000, -10000), vector3d(0, 0, M_PI), get_pokedex().pokemon[0], get_pokedex().pokemon[0].scale);
     BATTLER_HEALTH_MAX = (float)BATTLE_POKEMON->pokemon.health;
     BATTLER_HEALTH = BATTLER_HEALTH_MAX;
     NEW_BATTLER_HEALTH = BATTLER_HEALTH_MAX;
+    TextLine pokemon_name;
+    snprintf(pokemon_name, GFCLINELEN, "assets/content_editor/%s.png", BATTLE_POKEMON->pokemon.name);
+    slog("POKEMON NAME: %s", pokemon_name);
+    CAN_EVOLVE = BATTLE_POKEMON->pokemon.evolution;
+    BATTLE_SPRITE = gf2d_sprite_load_image(pokemon_name);
+    if (!BATTLE_SPRITE)
+    {
+        slog("Failed to load sprite: %s", pokemon_name);
+    }
 
     sprintf(BATTLER_HEALTH_TEXT, "%d%%", (int)(BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100));
     trainer_new(vector3d(0, 0, 0), vector3d(0, 0, 0), "calem", 200.0);
@@ -118,6 +131,17 @@ void gameloop_load(void)
 
 void gameloop_update(void)
 {
+    if (gfc_input_command_down("activate"))
+    {
+        if (CAN_EVOLVE != -1)
+        {
+            if (CAN_EVOLVE && !BATTLE)
+            {
+                EVOLVE_ANIMATION = 1;
+                slog("POKEMON CAN EVOLVE!");
+            }
+        }
+    }
     if (CONTENT_EDITOR_GAME_DRAW)
         content_editor_update();
     else
@@ -264,6 +288,34 @@ void gameloop_draw(void)
                     selectMoves = battle_box(BATTLE_POKEMON->pokemon.moves, onMoveSelected, onRunSelected);
             }
         }
+        else
+        {
+            // Need to draw battle pokemon health info percentage and name and avatar
+            gf2d_draw_rect_filled(gfc_rect(30, gf3d_vgraphics_get_height() - 100, 300, 70), gfc_color8(255, 255, 255, 150));
+            if (BATTLE_SPRITE)
+            {
+                gf2d_sprite_draw_image(BATTLE_SPRITE, vector2d(40, gf3d_vgraphics_get_height() - 90), NULL);
+                // Health bar
+                gf2d_draw_rect_filled(gfc_rect(100, gf3d_vgraphics_get_height() - 80, 200, 30), gfc_color8(100, 100, 100, 150));
+                if ((int)(BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100) > 0)
+                {
+                    if (BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100 > 50)
+                    {
+                        gf2d_draw_rect_filled(gfc_rect(100, gf3d_vgraphics_get_height() - 80, BATTLER_HEALTH / BATTLER_HEALTH_MAX * 200, 30), gfc_color8(0, 255, 0, 200));
+                    }
+                    else if (BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100 > 25)
+                    {
+                        gf2d_draw_rect_filled(gfc_rect(100, gf3d_vgraphics_get_height() - 80, BATTLER_HEALTH / BATTLER_HEALTH_MAX * 200, 30), gfc_color8(255, 255, 0, 200));
+                    }
+                    else
+                    {
+                        gf2d_draw_rect_filled(gfc_rect(100, gf3d_vgraphics_get_height() - 80, BATTLER_HEALTH / BATTLER_HEALTH_MAX * 200, 30), gfc_color8(255, 0, 0, 200));
+                    }
+                }
+                gf2d_draw_rect(gfc_rect(100, gf3d_vgraphics_get_height() - 80, 200, 30), gfc_color8(255, 255, 255, 255));
+            }
+        }
+
         if (BATTLER_POKEMON_DEAD)
         {
             gf2d_draw_rect_filled(gfc_rect(10, 10, 330, 50), gfc_color8(128, 128, 128, 255));

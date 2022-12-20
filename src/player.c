@@ -40,7 +40,7 @@ void player_think(Entity *self)
     if (!self)
         return;
 
-    Vector3D finalRotation = vector3d(M_PI + .2, 0, TRAINER_ROT_Z);
+    Vector3D finalRotation = vector3d(M_PI + .2, 0, TRAINER_ROT_Z - M_PI);
     Vector3D nextRotation = vector3d(0, 0, 0);
     nextRotation.x = self->rotation.x + (finalRotation.x - self->rotation.x) * .05;
     nextRotation.y = self->rotation.y + (finalRotation.y - self->rotation.y) * .05;

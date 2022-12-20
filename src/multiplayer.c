@@ -17,7 +17,7 @@ void setup_connection()
     CurrentPos.x = 0;
     CurrentPos.y = 0;
     CurrentPos.z = 0;
-    CurrentPos.rotz = M_PI;
+    CurrentPos.rotz = 0;
     CurrentPos.id = -1;
 
     // Get the id of the player

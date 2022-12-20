@@ -4,6 +4,8 @@
     "pokemons": [
       {
         "name": "growlithe",
+        "evolution": true,
+        "evolution_name": "arcanine",
         "scale": 6,
         "boundingBox": {
           "x": 0.0,
@@ -15,7 +17,6 @@
         },
         "type": "fire",
         "level": "",
-        "evolution": true,
         "health": 500,
         "moves": [
           {
@@ -96,6 +97,8 @@
       },
       {
         "name": "kirlia",
+        "evolution": true,
+        "evolution_name": "",
         "scale": 180,
         "boundingBox": {
           "x": 0.0,
@@ -106,8 +109,7 @@
           "d": 400.0
         },
         "type": "physic",
-        "level": "",
-        "evolution": true,
+        "level": "gallade",
         "health": 500,
         "moves": [
           {
@@ -188,6 +190,8 @@
       },
       {
         "name": "krabby",
+        "evolution": true,
+        "evolution_name": "kingler",
         "scale": 6,
         "boundingBox": {
           "x": 0.0,
@@ -199,7 +203,6 @@
         },
         "type": "water",
         "level": "",
-        "evolution": true,
         "health": 500,
         "moves": [
           {
@@ -280,6 +283,8 @@
       },
       {
         "name": "skiddo",
+        "evolution": true,
+        "evolution_name": "gogoat",
         "scale": 180,
         "boundingBox": {
           "x": 0.0,
@@ -291,7 +296,6 @@
         },
         "type": "grass",
         "level": "",
-        "evolution": true,
         "health": 500,
         "moves": [
           {
@@ -372,6 +376,8 @@
       },
       {
         "name": "zorua",
+        "evolution": true,
+        "evolution_name": "zoroark",
         "scale": 180,
         "boundingBox": {
           "x": 0.0,
@@ -383,7 +389,6 @@
         },
         "type": "dark",
         "level": "",
-        "evolution": true,
         "health": 500,
         "moves": [
           {

@@ -16,6 +16,8 @@ extern int WORLD_BOUND_Y1;
 extern int WORLD_BOUND_X2;
 extern int WORLD_BOUND_Y2;
 
+extern int EVOLVE_ANIMATION;
+extern int CAN_EVOLVE;
 
 int SIGN_COLLISION = 0;
 int TREE_COLLISION = 0;
@@ -156,6 +158,40 @@ void trainer_think(Entity *self)
 
     if (BATTLE)
         return;
+    float evolveAnimationRotation = self->rotation.z;
+    if (EVOLVE_ANIMATION)
+    {
+        // Need to rotate camera around the pokemon and the pokemon to switch between models
+        // slog("Playing evolve animation");
+        float animationFinishRot = evolveAnimationRotation + (4 * M_PI);
+        // Move the position of the pokemon to be infront of the trainer 1000 units away depending on the rotation of the trainer
+        BATTLE_POKEMON->position = vector3d(self->position.x + cos(self->rotation.z - M_PI_2) * 2000, self->position.y + sin(self->rotation.z - M_PI_2) * 2000, 0);
+        BATTLE_POKEMON->rotation = vector3d(0, 0, self->rotation.z - M_PI);
+        TRAINER_X = BATTLE_POKEMON->position.x;
+        TRAINER_Y = BATTLE_POKEMON->position.y;
+
+        // Set the TRAINER ROT_Z infront of the camera and increase the camera rotation until it makes 360 degrees which is 2PI
+
+        if (TRAINER_ROT_Z < animationFinishRot)
+        {
+            TRAINER_ROT_Z += .02;
+            return;
+        }
+        else
+        {
+            EVOLVE_ANIMATION = 0;
+            CAN_EVOLVE = 0;
+            TRAINER_ROT_Z = animationFinishRot;
+            self->rotation.z = animationFinishRot;
+            TRAINER_X = self->position.x;
+            TRAINER_Y = self->position.y;
+            BATTLE_POKEMON->rotation = vector3d(0, 0, M_PI);
+            BATTLE_POKEMON->position = vector3d(0, -2000, -10000);
+        }
+        // CAN_EVOLVE = 0;
+        // EVOLVE_ANIMATION = 0;
+        // After the animation need to update the battle pokemon and all of the stats like health name, etc and put the pokemon back in the previous position
+    }
 
     Vector3D rotate = {0};
     Vector3D forward = {0};
@@ -169,7 +205,7 @@ void trainer_think(Entity *self)
         rotate.z += .05;
 
     vector3d_add(self->rotation, self->rotation, rotate);
-    TRAINER_ROT_Z = self->rotation.z - M_PI;
+    TRAINER_ROT_Z = self->rotation.z;
 
     // z is up
     float yaw = self->rotation.z;
@@ -225,7 +261,7 @@ void trainer_think(Entity *self)
     vector3d_copy(self->previousPosition, self->position);
     vector3d_add(self->position, self->position, moveDir);
 
-    //Check if player is out of bounds
+    // Check if player is out of bounds
     if (self->position.x < WORLD_BOUND_X1 || self->position.x > WORLD_BOUND_X2 || self->position.y < WORLD_BOUND_Y1 || self->position.y > WORLD_BOUND_Y2)
         vector3d_copy(self->position, self->previousPosition);
 
@@ -376,7 +412,7 @@ void trainer_collide(struct Entity_S *self, struct Entity_S *other)
         TRAINER_X = 1000;
         TRAINER_Y = -2000;
         TRAINER_Z = -9000;
-        TRAINER_ROT_Z = .2;
+        TRAINER_ROT_Z = .2 + M_PI;
         OP_POKEMON = other;
         OP_HEALTH_MAX = (float)other->pokemon.health;
         OP_HEALTH = OP_HEALTH_MAX;
