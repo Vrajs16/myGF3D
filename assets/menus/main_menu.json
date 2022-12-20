@@ -43,6 +43,7 @@
                 "bounds": [0, 0, 160, 42],
                 "hotkey": "newgame",
                 "label": {
+                  "id": 101,
                   "type": "label",
                   "bounds": [0, 0, 168, 64],
                   "text": "New Game",

@@ -21,7 +21,7 @@ extern State CurrentState;
 
 int LOADING = 0;
 extern int _done;
-
+Window *win;
 typedef struct
 {
     int selectedOption;
@@ -117,7 +117,7 @@ int main_menu_update(Window *win, List *updateList)
 
 Window *main_menu()
 {
-    Window *win;
+
     MainMenuData *data;
     win = gf2d_window_load("assets/menus/main_menu.json");
     if (!win)
@@ -134,6 +134,11 @@ Window *main_menu()
     win->data = data;
     data->win = win;
     return win;
+}
+
+void main_menu_change_value()
+{
+    gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 101), "Continue");
 }
 
 /*eol@eof*/

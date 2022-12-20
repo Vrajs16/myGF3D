@@ -139,6 +139,8 @@ SDL_Rect CURRENTLY_SELECTED_TEXTURE_ITEM;
 
 SDL_Renderer *renderer;
 
+int RENDERER_ALREADY_CREATED = 0;
+
 void world_to_screen(int fWorldX, int fWorldY, int *nScreenX, int *nScreenY);
 void screen_to_world(int nScreenX, int nScreenY, int *fWorldX, int *fWorldY);
 void save_grid(void);
@@ -147,9 +149,12 @@ void load_grid(void);
 
 void content_editor_setup_renderer()
 {
+    if (RENDERER_ALREADY_CREATED){
+        return;
+    }
+    RENDERER_ALREADY_CREATED = 1;
     renderer = gf3d_vgraphics_get_renderer();
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_ShowCursor(SDL_ENABLE);
 
     foffsetX = -gf3d_vgraphics_get_width() / 2 + GRID_CELL_SIZE * GRID_WIDTH / 2;
     foffsetY = -gf3d_vgraphics_get_height() / 2 + GRID_CELL_SIZE * GRID_HEIGHT / 2;

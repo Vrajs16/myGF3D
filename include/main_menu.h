@@ -14,4 +14,6 @@ typedef enum
 
 Window *main_menu();
 
+void main_menu_change_value();
+
 #endif

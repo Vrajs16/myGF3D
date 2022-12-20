@@ -85,6 +85,9 @@ static Window *selectMoves = NULL;
 
 State CurrentState = MAIN_MENU;
 
+State PreviousState = MAIN_MENU;
+int GAME_LOADED = 0;
+
 // Battle
 void onRunSelected(void *data);
 void onMoveSelected(void *data);
@@ -114,7 +117,12 @@ void gameloop_setup(void)
 void gameloop_load(void)
 {
     slog("LOADING GAME!");
-
+    if (GAME_LOADED)
+    {
+        slog("GAME ALREADY LOADED!");
+        return;
+    }
+    GAME_LOADED = 1;
     slog_sync();
 
     load_pokedex_json("config/pokedex.json");
@@ -164,10 +172,18 @@ void gameloop_update(void)
             }
         }
     }
-    if (CONTENT_EDITOR_GAME_DRAW)
-        content_editor_update();
-    else
-        gfc_input_update();
+    if (gfc_input_command_down("main_menu") && CurrentState != MAIN_MENU)
+    {
+        MULTIPLAYER = 0;
+        SDL_ShowCursor(SDL_DISABLE);
+        CONTENT_EDITOR_GAME_DRAW = 0;
+        DrawLoading = 0;
+        CurrentState = MAIN_MENU;
+        main_menu();
+        main_menu_change_value();
+    }
+    content_editor_update();
+    gfc_input_update();
     gf2d_mouse_update();
     gf2d_font_update();
     gf2d_windows_update_all();
@@ -187,6 +203,7 @@ void gameloop_update(void)
     }
     if (CurrentState == MULTIPLAYER_GAME)
     {
+
         if (DrawLoading == 1)
         {
             CurrentState = LOADED_GAME;
@@ -203,6 +220,7 @@ void gameloop_update(void)
         {
             CurrentState = LOADED_GAME;
             content_editor_setup_renderer();
+            SDL_ShowCursor(SDL_ENABLE);
             CONTENT_EDITOR_GAME_DRAW = 1;
         }
         DrawLoading++;
