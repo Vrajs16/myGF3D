@@ -5,7 +5,7 @@
 #include "gf2d_windows_common.h"
 #include "soundmanager.h"
 #include "multiplayer.h"
-#include "pokemon.h";
+#include "pokemon.h"
 
 float TRAINER_X = 0;
 float TRAINER_Y = 0;
@@ -40,6 +40,13 @@ extern float NEW_BATTLER_HEALTH;
 extern char BATTLER_HEALTH_TEXT[5];
 extern int BATTLER_POKEMON_DEAD;
 
+extern int BATTLE_TEXT_BATTLER_TIMER;
+extern int BATTLE_TEXT_OPPONENET_TIMER;
+extern int BATTLE_TEXT_BATTLER_TIMER_MAX;
+extern int BATTLE_TEXT_OPPONENET_TIMER_MAX;
+extern int RAN_AWAY;
+int BATTLE_FINAL_TIMER;
+
 extern Sprite *BATTLE_SPRITE;
 
 extern int MULTIPLAYER;
@@ -69,6 +76,7 @@ int startingAnimationEvolution = 1;
 float animationFinishRot;
 float animationRot;
 Entity *animationFinishEntity;
+extern int EVOLVE_ANIMATION_HALFWAY;
 
 Entity *OtherTrainer;
 
@@ -186,6 +194,7 @@ void trainer_think(Entity *self)
             // Scale the animationFinishEntity and The BATTLE_POKEMON so that they look like they are evolving and switching places, use animationRot
             if (animationRot > 8 * M_PI)
             {
+                EVOLVE_ANIMATION_HALFWAY = 1;
                 animationFinishEntity->scale = vector3d(animationFinishEntity->pokemon.scale, animationFinishEntity->pokemon.scale, animationFinishEntity->pokemon.scale);
             }
             else
@@ -398,7 +407,7 @@ void trainer_think(Entity *self)
             slog("You used Strength!");
             // Move bolder 1500 units in the direction the trainer is facing
             STRENGTH_FINAL_ROTATION = TRAINER_ROT_Z;
-            vector3d_set(STRENGTH_FINAL_POSITION, -round(30 * sin(TRAINER_ROT_Z)), -round(30 * cos(TRAINER_ROT_Z + M_PI)), 0);
+            vector3d_set(STRENGTH_FINAL_POSITION, round(30 * sin(TRAINER_ROT_Z)), round(30 * cos(TRAINER_ROT_Z + M_PI)), 0);
             STRENGTH_COLLISION = 0;
             ANIMATION_STRENGTH_PLAYING = 1;
         }
@@ -434,6 +443,12 @@ void trainer_collide(struct Entity_S *self, struct Entity_S *other)
             return;
         }
         BATTLE = 1;
+
+        BATTLE_TEXT_BATTLER_TIMER = BATTLE_TEXT_BATTLER_TIMER_MAX;
+        BATTLE_TEXT_OPPONENET_TIMER = BATTLE_TEXT_OPPONENET_TIMER_MAX;
+        BATTLE_FINAL_TIMER = 0;
+
+        RAN_AWAY = 0;
 
         // Move trainer and pokemon to battle box
         other->position.x = 0;

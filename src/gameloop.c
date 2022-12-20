@@ -39,6 +39,19 @@ int DrawLoading = 0;
 
 float HEALTH_RATE = 1;
 int ANIMATION_PLAYING = 0;
+int ANIMATION_TEXT = 0;
+TextLine BATTLE_TEXT_BATTLER;
+TextLine BATTLE_TEXT_OPPONENET;
+int BATTLE_TEXT_BATTLER_TIMER = 0;
+int BATTLE_TEXT_OPPONENET_TIMER = 0;
+int BATTLE_TEXT_BATTLER_TIMER_MAX = 120;
+int BATTLE_TEXT_OPPONENET_TIMER_MAX = 120;
+int BATTLE_FINAL_TIMER = 0;
+int BATTLE_FINAL_TIMER_MAX = 160;
+
+TextLine BATTLE_TEXT_DISPLAY;
+
+TextLine EVOLVE_TEXT_DISPLAY;
 
 extern Entity *OP_POKEMON;
 extern float OP_HEALTH;
@@ -54,6 +67,10 @@ char BATTLER_HEALTH_TEXT[5];
 int BATTLER_POKEMON_DEAD;
 short CAN_EVOLVE = -1;
 int EVOLVE_ANIMATION = 0;
+int EVOLVE_ANIMATION_HALFWAY = 0;
+int RAN_AWAY = 0;
+
+extern Entity *animationFinishEntity;
 
 Sprite *BATTLE_SPRITE;
 
@@ -134,7 +151,7 @@ void gameloop_load(void)
 
 void gameloop_update(void)
 {
-    if (gfc_input_command_down("activate"))
+    if (gfc_input_command_down("evolve"))
     {
         if (CAN_EVOLVE != -1)
         {
@@ -204,33 +221,70 @@ void gameloop_draw(void)
 
         if (BATTLE)
         {
-            if (OP_HEALTH > NEW_OP_HEALTH)
+            if (BATTLE_TEXT_BATTLER_TIMER <= BATTLE_TEXT_BATTLER_TIMER_MAX || OP_HEALTH > NEW_OP_HEALTH)
             {
-                OP_HEALTH -= HEALTH_RATE;
-                sprintf(OP_HEALTH_TEXT, "%d%%", (int)(OP_HEALTH / OP_HEALTH_MAX * 100));
+                slog("BATTLE_TEXT_BATTLER_TIMER: %d", BATTLE_TEXT_BATTLER_TIMER);
+                snprintf(BATTLE_TEXT_DISPLAY, GFCLINELEN, "%s", BATTLE_TEXT_BATTLER);
+                BATTLE_TEXT_BATTLER_TIMER++;
+                if (OP_HEALTH > NEW_OP_HEALTH)
+                {
+                    OP_HEALTH -= HEALTH_RATE;
+                    sprintf(OP_HEALTH_TEXT, "%d%%", (int)(OP_HEALTH / OP_HEALTH_MAX * 100));
+                }
             }
-            else if (BATTLER_HEALTH > NEW_BATTLER_HEALTH)
+            else if (BATTLE_TEXT_OPPONENET_TIMER <= BATTLE_TEXT_OPPONENET_TIMER_MAX || BATTLER_HEALTH > NEW_BATTLER_HEALTH)
             {
-                BATTLER_HEALTH -= HEALTH_RATE;
-                sprintf(BATTLER_HEALTH_TEXT, "%d%%", (int)(BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100));
+                slog("BATTLE_TEXT_OPPONENET_TIMER: %d", BATTLE_TEXT_OPPONENET_TIMER);
+                snprintf(BATTLE_TEXT_DISPLAY, GFCLINELEN, "%s", BATTLE_TEXT_OPPONENET);
+                BATTLE_TEXT_OPPONENET_TIMER++;
+                if (BATTLER_HEALTH > NEW_BATTLER_HEALTH)
+                {
+                    BATTLER_HEALTH -= HEALTH_RATE;
+                    sprintf(BATTLER_HEALTH_TEXT, "%d%%", (int)(BATTLER_HEALTH / BATTLER_HEALTH_MAX * 100));
+                }
             }
             else
-                ANIMATION_PLAYING = 0;
-
-            if ((int)OP_HEALTH <= 0)
             {
-                slog("You won");
-                playSound("normal-music", -1, .3, 1, 1);
-                BATTLE = 0;
-                entity_free(entity_get(OP_POKEMON->name, OP_POKEMON->entityID));
+                snprintf(BATTLE_TEXT_DISPLAY, GFCLINELEN, "Your Turn! Choose a move!");
+                ANIMATION_PLAYING = 0;
+            }
+
+            if (RAN_AWAY)
+            {
+                snprintf(BATTLE_TEXT_DISPLAY, GFCLINELEN, "%s ran away!", BATTLE_POKEMON->name);
+                if (BATTLE_FINAL_TIMER > BATTLE_FINAL_TIMER_MAX)
+                {
+                    selectMoves = NULL;
+                    playSound("normal-music", -1, .3, 1, 1);
+                    BATTLE = 0;
+                    entity_free(entity_get(OP_POKEMON->name, OP_POKEMON->entityID));
+                }
+                BATTLE_FINAL_TIMER++;
+            }
+            else if ((int)OP_HEALTH <= 0)
+            {
+                slog("You won!");
+                snprintf(BATTLE_TEXT_DISPLAY, GFCLINELEN, "You won!");
+                if (BATTLE_FINAL_TIMER > BATTLE_FINAL_TIMER_MAX)
+                {
+                    playSound("normal-music", -1, .3, 1, 1);
+                    BATTLE = 0;
+                    entity_free(entity_get(OP_POKEMON->name, OP_POKEMON->entityID));
+                }
+                BATTLE_FINAL_TIMER++;
             }
             else if ((int)BATTLER_HEALTH <= 0)
             {
-                slog("You lost");
-                playSound("normal-music", -1, .3, 1, 1);
-                BATTLE = 0;
-                entity_free(entity_get(OP_POKEMON->name, OP_POKEMON->entityID));
-                BATTLER_POKEMON_DEAD = 1;
+                slog("You lost!");
+                snprintf(BATTLE_TEXT_DISPLAY, GFCLINELEN, "You lost!");
+                if (BATTLE_FINAL_TIMER > BATTLE_FINAL_TIMER_MAX)
+                {
+                    playSound("normal-music", -1, .3, 1, 1);
+                    BATTLE = 0;
+                    entity_free(entity_get(OP_POKEMON->name, OP_POKEMON->entityID));
+                    BATTLER_POKEMON_DEAD = 1;
+                }
+                BATTLE_FINAL_TIMER++;
             }
             else
             {
@@ -258,6 +312,7 @@ void gameloop_draw(void)
                     }
                 }
                 gf2d_draw_rect(gfc_rect(30, 70, 200, 30), gfc_color8(255, 255, 255, 255));
+                OP_POKEMON->name[0] = toupper(OP_POKEMON->name[0]);
                 gf2d_font_draw_line_tag(OP_POKEMON->name, FT_Normal, gfc_color(0, 0, 0, 1), vector2d(30, 30));
                 gf2d_font_draw_line_tag(OP_HEALTH_TEXT, FT_Small, gfc_color8(0, 0, 0, 255), vector2d(242.5, 67.5));
 
@@ -282,13 +337,27 @@ void gameloop_draw(void)
                     }
                 }
                 gf2d_draw_rect(gfc_rect(30, gf3d_vgraphics_get_height() - 70, 200, 30), gfc_color8(255, 255, 255, 255));
+                BATTLE_POKEMON->name[0] = toupper(BATTLE_POKEMON->name[0]);
                 gf2d_font_draw_line_tag(BATTLE_POKEMON->name, FT_Normal, gfc_color8(0, 0, 0, 255), vector2d(30, gf3d_vgraphics_get_height() - 110));
                 gf2d_font_draw_line_tag(BATTLER_HEALTH_TEXT, FT_Small, gfc_color8(0, 0, 0, 255), vector2d(242.5, gf3d_vgraphics_get_height() - 72.5));
 
                 // Draw the attack buttons
                 if (selectMoves == NULL && ANIMATION_PLAYING == 0)
+                {
                     selectMoves = battle_box(BATTLE_POKEMON->pokemon.moves, onMoveSelected, onRunSelected);
+                }
             }
+
+            // Draw the battle text box
+            gf2d_draw_rect_filled(gfc_rect(gf3d_vgraphics_get_width() - 400, gf3d_vgraphics_get_height() - 70, 390, 60), gfc_color8(255, 255, 255, 150));
+            gf2d_draw_rect(gfc_rect(gf3d_vgraphics_get_width() - 400, gf3d_vgraphics_get_height() - 70, 390, 60), gfc_color8(0, 0, 0, 255));
+            char *ptr;
+            char *temp = strdup(BATTLE_TEXT_DISPLAY);
+            strtok_r(temp, "\n", &ptr);
+            gf2d_font_draw_line_tag(temp, FT_H6, gfc_color8(0, 0, 0, 255), vector2d(gf3d_vgraphics_get_width() - 390, gf3d_vgraphics_get_height() - 60));
+            if (ptr != NULL)
+                gf2d_font_draw_line_tag(ptr, FT_H6, gfc_color8(0, 0, 0, 255), vector2d(gf3d_vgraphics_get_width() - 390, gf3d_vgraphics_get_height() - 35));
+            free(temp);
         }
         else
         {
@@ -354,6 +423,22 @@ void gameloop_draw(void)
             gf2d_font_draw_line_tag("Press 'E' to use Cut!", FT_H2, gfc_color(1, 1, 1, 1), vector2d(20, 20));
             gf2d_draw_rect(gfc_rect(10, 10, 290, 50), gfc_color8(255, 255, 255, 255));
         }
+        if (EVOLVE_ANIMATION)
+        {
+            if (EVOLVE_ANIMATION_HALFWAY)
+            {
+                snprintf(EVOLVE_TEXT_DISPLAY, GFCLINELEN, "Your %s evolved into %s! Congrats!", BATTLE_POKEMON->pokemon.name, animationFinishEntity->pokemon.name);
+                int len = strlen(EVOLVE_TEXT_DISPLAY);
+                gf2d_font_draw_line_tag(EVOLVE_TEXT_DISPLAY, FT_H2, gfc_color8(0, 191, 255, 255), vector2d(gf3d_vgraphics_get_width() / 2 - len * 12 / 2, 100));
+            }
+            else
+            {
+                snprintf(EVOLVE_TEXT_DISPLAY, GFCLINELEN, "Your %s is evolving!", BATTLE_POKEMON->pokemon.name);
+                int len = strlen(EVOLVE_TEXT_DISPLAY);
+                gf2d_font_draw_line_tag(EVOLVE_TEXT_DISPLAY, FT_H2, gfc_color8(0, 191, 255, 255), vector2d(gf3d_vgraphics_get_width() / 2 - len * 12 / 2, 100));
+            }
+        }
+
         gf2d_windows_draw_all();
         if (LOADING)
         {
@@ -378,7 +463,11 @@ void gameloop_close(void)
 
 void onMoveSelected(void *move)
 {
+    BATTLE_TEXT_BATTLER_TIMER = 0;
+    BATTLE_TEXT_OPPONENET_TIMER = 0;
     // print void callbackdata
+    snprintf(BATTLE_TEXT_BATTLER, GFCLINELEN, "%s used %s!\n", BATTLE_POKEMON->name, ((Move *)move)->move);
+    BATTLE_TEXT_BATTLER[0] = toupper(BATTLE_TEXT_BATTLER[0]);
     slog("%s used %s", BATTLE_POKEMON->name, ((Move *)move)->move);
     selectMoves = NULL;
     ANIMATION_PLAYING = 1;
@@ -390,22 +479,33 @@ void onMoveSelected(void *move)
     {
         if (multiplier > 1)
         {
+            snprintf(BATTLE_TEXT_BATTLER, GFCLINELEN, "%sIt's super effective!", BATTLE_TEXT_BATTLER);
             slog("It's super effective!\n");
         }
         else if (multiplier == 1)
         {
+            snprintf(BATTLE_TEXT_BATTLER, GFCLINELEN, "%sIt's effective!", BATTLE_TEXT_BATTLER);
             slog("It's effective!\n");
         }
         else if (multiplier < 1)
         {
+            snprintf(BATTLE_TEXT_BATTLER, GFCLINELEN, "%sIt's not very effective!", BATTLE_TEXT_BATTLER);
             slog("It's not very effective!\n");
         }
     }
+    else
+    {
+        snprintf(BATTLE_TEXT_BATTLER, GFCLINELEN, "%sMove does no damage", BATTLE_TEXT_BATTLER);
+        slog("Move does no damage!\n");
+    }
+
     if (NEW_OP_HEALTH < 0)
         return;
 
     // do damage to player
     Move moveSelected = OP_POKEMON->pokemon.moves[rand() % 4];
+    snprintf(BATTLE_TEXT_OPPONENET, GFCLINELEN, "%s used %s!\n", OP_POKEMON->name, moveSelected.move);
+    BATTLE_TEXT_OPPONENET[0] = toupper(BATTLE_TEXT_OPPONENET[0]);
     slog("%s used %s", OP_POKEMON->name, moveSelected.move);
     multiplier = pokemon_move_multiplier(moveSelected.type, BATTLE_POKEMON->pokemon.type);
     NEW_BATTLER_HEALTH -= moveSelected.power * multiplier;
@@ -413,14 +513,17 @@ void onMoveSelected(void *move)
     {
         if (multiplier > 1)
         {
+            strcat(BATTLE_TEXT_OPPONENET, "It was super effective!");
             slog("It's super effective!\n");
         }
         else if (multiplier == 1)
         {
+            strcat(BATTLE_TEXT_OPPONENET, "It was effective!");
             slog("It's effective!\n");
         }
         else if (multiplier < 1)
         {
+            strcat(BATTLE_TEXT_OPPONENET, "It was not effective!");
             slog("It's not very effective!\n");
         }
     }
@@ -431,8 +534,5 @@ void onMoveSelected(void *move)
 void onRunSelected(void *data)
 {
     slog("%s ran away", BATTLE_POKEMON->name);
-    selectMoves = NULL;
-    playSound("normal-music", -1, .3, 1, 1);
-    BATTLE = 0;
-    entity_free(entity_get(OP_POKEMON->name, OP_POKEMON->entityID));
+    RAN_AWAY = 1;
 }
