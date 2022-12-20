@@ -114,8 +114,6 @@ void gameloop_setup(void)
 void gameloop_load(void)
 {
     slog("LOADING GAME!");
-    if (MULTIPLAYER)
-        setup_connection();
 
     slog_sync();
 
@@ -193,6 +191,8 @@ void gameloop_update(void)
         {
             CurrentState = LOADED_GAME;
             MULTIPLAYER = 1;
+            if (MULTIPLAYER)
+                setup_connection();
             gameloop_load();
         }
         DrawLoading++;
@@ -228,7 +228,6 @@ void gameloop_draw(void)
         {
             if (BATTLE_TEXT_BATTLER_TIMER <= BATTLE_TEXT_BATTLER_TIMER_MAX || OP_HEALTH > NEW_OP_HEALTH)
             {
-                slog("BATTLE_TEXT_BATTLER_TIMER: %d", BATTLE_TEXT_BATTLER_TIMER);
                 snprintf(BATTLE_TEXT_DISPLAY, GFCLINELEN, "%s", BATTLE_TEXT_BATTLER);
                 BATTLE_TEXT_BATTLER_TIMER++;
                 if (OP_HEALTH > NEW_OP_HEALTH)
@@ -239,7 +238,6 @@ void gameloop_draw(void)
             }
             else if (BATTLE_TEXT_OPPONENET_TIMER <= BATTLE_TEXT_OPPONENET_TIMER_MAX || BATTLER_HEALTH > NEW_BATTLER_HEALTH)
             {
-                slog("BATTLE_TEXT_OPPONENET_TIMER: %d", BATTLE_TEXT_OPPONENET_TIMER);
                 snprintf(BATTLE_TEXT_DISPLAY, GFCLINELEN, "%s", BATTLE_TEXT_OPPONENET);
                 BATTLE_TEXT_OPPONENET_TIMER++;
                 if (BATTLER_HEALTH > NEW_BATTLER_HEALTH)
@@ -500,7 +498,6 @@ void onMoveSelected(void *move)
     // print void callbackdata
     snprintf(BATTLE_TEXT_BATTLER, GFCLINELEN, "%s used %s!\n", BATTLE_POKEMON->name, ((Move *)move)->move);
     BATTLE_TEXT_BATTLER[0] = toupper(BATTLE_TEXT_BATTLER[0]);
-    slog("%s used %s", BATTLE_POKEMON->name, ((Move *)move)->move);
     selectMoves = NULL;
     ANIMATION_PLAYING = 1;
     float multiplier = pokemon_move_multiplier(((Move *)move)->type, OP_POKEMON->pokemon.type);
@@ -511,24 +508,20 @@ void onMoveSelected(void *move)
     {
         if (multiplier > 1)
         {
-            snprintf(BATTLE_TEXT_BATTLER, GFCLINELEN, "%sIt's super effective!", BATTLE_TEXT_BATTLER);
-            slog("It's super effective!\n");
+            snprintf(BATTLE_TEXT_BATTLER, GFCLINELEN, "%sIt was super effective!", BATTLE_TEXT_BATTLER);
         }
         else if (multiplier == 1)
         {
-            snprintf(BATTLE_TEXT_BATTLER, GFCLINELEN, "%sIt's effective!", BATTLE_TEXT_BATTLER);
-            slog("It's effective!\n");
+            snprintf(BATTLE_TEXT_BATTLER, GFCLINELEN, "%sIt was effective!", BATTLE_TEXT_BATTLER);
         }
         else if (multiplier < 1)
         {
-            snprintf(BATTLE_TEXT_BATTLER, GFCLINELEN, "%sIt's not very effective!", BATTLE_TEXT_BATTLER);
-            slog("It's not very effective!\n");
+            snprintf(BATTLE_TEXT_BATTLER, GFCLINELEN, "%sIt was not effective!", BATTLE_TEXT_BATTLER);
         }
     }
     else
     {
         snprintf(BATTLE_TEXT_BATTLER, GFCLINELEN, "%sMove does no damage", BATTLE_TEXT_BATTLER);
-        slog("Move does no damage!\n");
     }
 
     if (NEW_OP_HEALTH < 0)
@@ -538,26 +531,26 @@ void onMoveSelected(void *move)
     Move moveSelected = OP_POKEMON->pokemon.moves[rand() % 4];
     snprintf(BATTLE_TEXT_OPPONENET, GFCLINELEN, "%s used %s!\n", OP_POKEMON->name, moveSelected.move);
     BATTLE_TEXT_OPPONENET[0] = toupper(BATTLE_TEXT_OPPONENET[0]);
-    slog("%s used %s", OP_POKEMON->name, moveSelected.move);
     multiplier = pokemon_move_multiplier(moveSelected.type, BATTLE_POKEMON->pokemon.type);
     NEW_BATTLER_HEALTH -= moveSelected.power * multiplier;
     if (moveSelected.power > 0)
     {
         if (multiplier > 1)
         {
-            strcat(BATTLE_TEXT_OPPONENET, "It was super effective!");
-            slog("It's super effective!\n");
+            snprintf(BATTLE_TEXT_OPPONENET, GFCLINELEN, "%sIt was super effective!", BATTLE_TEXT_OPPONENET);
         }
         else if (multiplier == 1)
         {
-            strcat(BATTLE_TEXT_OPPONENET, "It was effective!");
-            slog("It's effective!\n");
+            snprintf(BATTLE_TEXT_OPPONENET, GFCLINELEN, "%sIt was effective!", BATTLE_TEXT_OPPONENET);
         }
         else if (multiplier < 1)
         {
-            strcat(BATTLE_TEXT_OPPONENET, "It was not effective!");
-            slog("It's not very effective!\n");
+            snprintf(BATTLE_TEXT_OPPONENET, GFCLINELEN, "%sIt was not effective!", BATTLE_TEXT_OPPONENET);
         }
+    }
+    else
+    {
+        snprintf(BATTLE_TEXT_OPPONENET, GFCLINELEN, "%sMove does no damage", BATTLE_TEXT_OPPONENET);
     }
     if (NEW_BATTLER_HEALTH < 0)
         return;
@@ -565,6 +558,5 @@ void onMoveSelected(void *move)
 
 void onRunSelected(void *data)
 {
-    slog("%s ran away", BATTLE_POKEMON->name);
     RAN_AWAY = 1;
 }
