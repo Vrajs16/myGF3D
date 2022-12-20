@@ -65,6 +65,7 @@ typedef struct Entity_S
 
     Pokemon pokemon;
 
+    int NpcBattled;
 
     // animation models
     Model **runAniModels;

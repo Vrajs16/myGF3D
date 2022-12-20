@@ -70,6 +70,11 @@ int EVOLVE_ANIMATION = 0;
 int EVOLVE_ANIMATION_HALFWAY = 0;
 int RAN_AWAY = 0;
 
+extern int NPC_BATTLE;
+extern Entity *NPC;
+extern Vector3D NPC_PREVIOUS_POSITION;
+extern Vector3D NPC_PREVIOUS_ROTATION;
+
 extern Entity *animationFinishEntity;
 
 Sprite *BATTLE_SPRITE;
@@ -125,7 +130,7 @@ void gameloop_load(void)
     while (r == get_pokedex().total - 1);
     if (r % 2 == 1)
         r++;
-    BATTLE_POKEMON = pokemon_new(vector3d(0, -2000, -10000), vector3d(0, 0, M_PI), get_pokedex().pokemon[r], get_pokedex().pokemon[r].scale);
+    BATTLE_POKEMON = pokemon_new(vector3d(0, -2000, -10000), vector3d(0, 0, M_PI), r);
     BATTLER_HEALTH_MAX = (float)BATTLE_POKEMON->pokemon.health;
     BATTLER_HEALTH = BATTLER_HEALTH_MAX;
     NEW_BATTLER_HEALTH = BATTLER_HEALTH_MAX;
@@ -251,22 +256,43 @@ void gameloop_draw(void)
 
             if (RAN_AWAY)
             {
-                snprintf(BATTLE_TEXT_DISPLAY, GFCLINELEN, "%s ran away!", BATTLE_POKEMON->name);
-                if (BATTLE_FINAL_TIMER > BATTLE_FINAL_TIMER_MAX)
+                if (NPC_BATTLE)
                 {
-                    selectMoves = NULL;
-                    playSound("normal-music", -1, .3, 1, 1);
-                    BATTLE = 0;
-                    entity_free(entity_get(OP_POKEMON->name, OP_POKEMON->entityID));
+                    snprintf(BATTLE_TEXT_DISPLAY, GFCLINELEN, "You can't run from a trainer battle!");
+                    if (BATTLE_FINAL_TIMER > BATTLE_FINAL_TIMER_MAX)
+                    {
+                        RAN_AWAY = 0;
+                        BATTLE_FINAL_TIMER = 0;
+                        selectMoves = NULL;
+                    }
+                    BATTLE_FINAL_TIMER++;
                 }
-                BATTLE_FINAL_TIMER++;
+                else
+                {
+                    snprintf(BATTLE_TEXT_DISPLAY, GFCLINELEN, "%s ran away!", BATTLE_POKEMON->name);
+                    if (BATTLE_FINAL_TIMER > BATTLE_FINAL_TIMER_MAX)
+                    {
+                        selectMoves = NULL;
+                        playSound("normal-music", -1, .3, 1, 1);
+                        BATTLE = 0;
+                        entity_free(entity_get(OP_POKEMON->name, OP_POKEMON->entityID));
+                    }
+                    BATTLE_FINAL_TIMER++;
+                }
             }
             else if ((int)OP_HEALTH <= 0)
             {
-                slog("You won!");
                 snprintf(BATTLE_TEXT_DISPLAY, GFCLINELEN, "You won!");
                 if (BATTLE_FINAL_TIMER > BATTLE_FINAL_TIMER_MAX)
                 {
+                    if (NPC_BATTLE)
+                    {
+                        NPC_BATTLE = 0;
+                        // Move npc to its previous and rotation
+                        NPC->position = NPC_PREVIOUS_POSITION;
+                        NPC->rotation = NPC_PREVIOUS_ROTATION;
+                        NPC->NpcBattled = 1;
+                    }
                     playSound("normal-music", -1, .3, 1, 1);
                     BATTLE = 0;
                     entity_free(entity_get(OP_POKEMON->name, OP_POKEMON->entityID));
@@ -275,10 +301,16 @@ void gameloop_draw(void)
             }
             else if ((int)BATTLER_HEALTH <= 0)
             {
-                slog("You lost!");
                 snprintf(BATTLE_TEXT_DISPLAY, GFCLINELEN, "You lost!");
                 if (BATTLE_FINAL_TIMER > BATTLE_FINAL_TIMER_MAX)
                 {
+                    if (NPC_BATTLE)
+                    {
+                        NPC_BATTLE = 0;
+                        // Move npc to its previous and rotation
+                        NPC->position = NPC_PREVIOUS_POSITION;
+                        NPC->rotation = NPC_PREVIOUS_ROTATION;
+                    }
                     playSound("normal-music", -1, .3, 1, 1);
                     BATTLE = 0;
                     entity_free(entity_get(OP_POKEMON->name, OP_POKEMON->entityID));

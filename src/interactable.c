@@ -47,7 +47,10 @@ Entity *interactable_new(Vector3D position, Vector3D rotation, char *filename)
     else if (strcmp("strength", filename) == 0)
         scale = 400;
     else if (strcmp("npc", filename) == 0)
+    {
         scale = 15;
+        ent->NpcBattled = 0;
+    }
     else if (strcmp("building_small", filename) == 0)
         scale = 1000;
     else if (strcmp("building_tall", filename) == 0)

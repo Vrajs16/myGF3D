@@ -7,7 +7,7 @@ static Pokedex POKEDEX;
 void pokemon_think(Entity *self);
 Pokemon pokedex_get_pokemon(char *pokemonName);
 
-Entity *pokemon_new(Vector3D position, Vector3D rotation, Pokemon pokemon, float scale)
+Entity *pokemon_new(Vector3D position, Vector3D rotation, int pokemon)
 {
     Entity *ent = NULL;
     TextLine modelfilename;
@@ -19,20 +19,20 @@ Entity *pokemon_new(Vector3D position, Vector3D rotation, Pokemon pokemon, float
         slog("UGH OHHHH, no agumon for you!");
         return NULL;
     }
-    snprintf(modelfilename, GFCLINELEN, "assets/pokemon/%s/%s.obj", pokemon.name, pokemon.name);
-    snprintf(texturefilename, GFCLINELEN, "assets/pokemon/%s/%s-bake.png", pokemon.name, pokemon.name);
+    Pokemon current_pokemon = POKEDEX.pokemon[pokemon];
+    snprintf(modelfilename, GFCLINELEN, "assets/pokemon/%s/%s.obj", current_pokemon.name, current_pokemon.name);
+    snprintf(texturefilename, GFCLINELEN, "assets/pokemon/%s/%s-bake.png", current_pokemon.name, current_pokemon.name);
     ent->model = gf3d_model_load_full(modelfilename, texturefilename);
     ent->think = pokemon_think;
 
     ent->isBox = 1;
-    ent->boundingBox = pokemon.boundingBox;
-    ent->name = pokemon.name;
+    ent->boundingBox = current_pokemon.boundingBox;
+    ent->name = current_pokemon.name;
     ent->type = ET_POKEMON;
-    ent->pokemon = pokemon;
-    vector3d_copy(ent->scale, vector3d(scale, scale, scale));
+    ent->pokemon = current_pokemon;
+    vector3d_copy(ent->scale, vector3d(current_pokemon.scale, current_pokemon.scale, current_pokemon.scale));
     vector3d_copy(ent->position, position);
     vector3d_copy(ent->rotation, rotation);
-
     return ent;
 }
 

@@ -513,7 +513,7 @@ void content_editor_draw()
 
     // Draw Textures on the side of the screen, you can use the SCREEN_WIDTH and SCREEN_HEIGHT only here
 
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 40);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 100);
     SDL_RenderFillRect(renderer, &MENU_BACKGROUND);
 
     for (int i = 0; i < MAP_TEXTURE_COUNT; i++)

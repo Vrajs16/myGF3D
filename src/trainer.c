@@ -72,6 +72,11 @@ int ANIMATION_STRENGTH_MAX = 50;
 
 int CURRENT_COLLISION_ENTITY_ID = 0;
 
+int NPC_BATTLE = 0;
+Vector3D NPC_PREVIOUS_POSITION = {0, 0, 0};
+Vector3D NPC_PREVIOUS_ROTATION = {0, 0, 0};
+Entity *NPC;
+
 int startingAnimationEvolution = 1;
 float animationFinishRot;
 float animationRot;
@@ -229,9 +234,6 @@ void trainer_think(Entity *self)
             snprintf(pokemon_sprite, GFCLINELEN, "assets/content_editor/%s.png", BATTLE_POKEMON->pokemon.name);
             BATTLE_SPRITE = gf2d_sprite_load_image(pokemon_sprite);
         }
-        // CAN_EVOLVE = 0;
-        // EVOLVE_ANIMATION = 0;
-        // After the animation need to update the battle pokemon and all of the stats like health name, etc and put the pokemon back in the previous position
     }
 
     Vector3D rotate = {0};
@@ -503,6 +505,48 @@ void trainer_collide(struct Entity_S *self, struct Entity_S *other)
         {
             STRENGTH_COLLISION = 1;
             CURRENT_COLLISION_ENTITY_ID = other->entityID;
+            return;
+        }
+        if (strcmp(other->name, "npc") == 0)
+        {
+            if (other->NpcBattled)
+                return;
+            if (BATTLER_HEALTH <= 0)
+            {
+                return;
+            }
+            slog("NPC collision - Starting Battle!");
+            NPC = other;
+            NPC_BATTLE = 1;
+            BATTLE = 1;
+
+            BATTLE_TEXT_BATTLER_TIMER = BATTLE_TEXT_BATTLER_TIMER_MAX;
+            BATTLE_TEXT_OPPONENET_TIMER = BATTLE_TEXT_OPPONENET_TIMER_MAX;
+            BATTLE_FINAL_TIMER = 0;
+
+            RAN_AWAY = 0;
+
+            // Move npc and generate new pokemon
+            int r = rand() % 10;
+            Entity *npc_pokemon = pokemon_new(vector3d(0, 2000, -10000), vector3d(0, 0, 0), r);
+
+            TRAINER_X = 1000;
+            TRAINER_Y = -2000;
+            TRAINER_Z = -9000;
+            TRAINER_ROT_Z = .2 + M_PI;
+            NPC_PREVIOUS_ROTATION = other->rotation;
+            NPC_PREVIOUS_POSITION = other->position;
+
+            other->position.x = -1000;
+            other->position.y = 2000;
+            other->position.z = -10000;
+            other->rotation.z = M_PI + .4;
+            OP_POKEMON = npc_pokemon;
+            OP_HEALTH_MAX = (float)npc_pokemon->pokemon.health;
+            OP_HEALTH = OP_HEALTH_MAX;
+            NEW_OP_HEALTH = OP_HEALTH_MAX;
+            sprintf(OP_HEALTH_TEXT, "%d%%", (int)(OP_HEALTH / OP_HEALTH_MAX * 100));
+            playSound("battle-music", -1, .3, 1, 1);
             return;
         }
     }

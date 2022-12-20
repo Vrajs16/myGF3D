@@ -37,7 +37,7 @@ typedef struct
     TypeChart typeChart;
 } Pokedex;
 
-Entity *pokemon_new(Vector3D position, Vector3D rotation, Pokemon pokemon, float scale);
+Entity *pokemon_new(Vector3D position, Vector3D rotation, int pokemon);
 
 void load_pokedex_json(char *filename);
 
